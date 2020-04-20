@@ -1,11 +1,10 @@
 ---
 title: {{ title }}
 categories:
-description:
+description: {{ title }}
 tags:
 copyright: true
 top: 0
-language: zh-Hans
 date: {{ date }}
 comments: true
 ---
