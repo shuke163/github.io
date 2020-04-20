@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Django," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Django基于Admin原理实现的CURD组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django基于Admin原理实现的CURD组件">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Django基于Admin原理实现的CURD组件">
+<meta property="article:published_time" content="2020-04-20T06:10:38.000Z">
+<meta property="article:modified_time" content="2020-04-20T06:11:00.597Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="Django">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Django基于Admin原理实现的CURD组件/"/>
+
+
+
+
+
+  <title>Django基于Admin原理实现的CURD组件 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Django基于Admin原理实现的CURD组件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T14:10:38+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">2.6k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">12(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/" class="leancloud_visitors" data-flag-title="Django基于Admin原理实现的CURD组件">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Django基于Admin原理实现的CURD组件
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Django基于Admin原理实现的CURD组件"><a href="#Django基于Admin原理实现的CURD组件" class="headerlink" title="Django基于Admin原理实现的CURD组件"></a>Django基于Admin原理实现的CURD组件</h1><hr>
+</br>
+
+<h2 id="Django管理后台admin"><a href="#Django管理后台admin" class="headerlink" title="Django管理后台admin"></a>Django管理后台admin</h2><p>常用共29个功能: <a href="http://www.cnblogs.com/wupeiqi/articles/7444717.html" target="_blank" rel="noopener">参考</a></p>
+<ol>
+<li>在项目的app中的admin.py文件中注册models类，示例如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"># cat app_name&#x2F;admin.py</span><br><span class="line"></span><br><span class="line">from django.contrib import admin</span><br><span class="line">from django.contrib.admin import ModelAdmin</span><br><span class="line">from . import models</span><br><span class="line">from django.shortcuts import HttpResponse</span><br><span class="line">from django.forms import ModelForm</span><br><span class="line">from django.forms import fields</span><br><span class="line">from django.forms import widgets</span><br><span class="line"></span><br><span class="line"># 用户表,自定义admin后台错误信息提示</span><br><span class="line">class UserModelForm(ModelForm):</span><br><span class="line">    others &#x3D; fields.CharField()</span><br><span class="line">    class Meta:</span><br><span class="line">        model &#x3D; models.UserInfo</span><br><span class="line">        fields &#x3D; &quot;__all__&quot;</span><br><span class="line">        error_messages &#x3D; &#123;</span><br><span class="line">            &#39;name&#39;:&#123;&#39;required&#39;:&#39;用户名不能问空&#39;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">class UserInfoModelAdmin(ModelAdmin):</span><br><span class="line">    # 使用自定义的form表单验证功能</span><br><span class="line">    form &#x3D; UserModelForm</span><br><span class="line"></span><br><span class="line">    # 1.定义列表页面，显示列数据</span><br><span class="line">    list_display &#x3D; [&#39;name&#39;,&#39;pwd&#39;,&#39;email&#39;]</span><br><span class="line"></span><br><span class="line">    def email(self, obj):</span><br><span class="line">        return obj.name + obj.pwd</span><br><span class="line"></span><br><span class="line">    email.empty_value_display &#x3D; &quot;默认为空时显示的值&quot;</span><br><span class="line"></span><br><span class="line">    # 2.定义列表页面，列可以进行点击进入编辑页面</span><br><span class="line">    list_display_links &#x3D; [&#39;pwd&#39;]</span><br><span class="line">    </span><br><span class="line">    # 3.定义列表页面，快速搜索</span><br><span class="line">    list_filter &#x3D; [&#39;ut&#39;]</span><br><span class="line">    </span><br><span class="line">    # 4.定义列表页面，分页功能</span><br><span class="line">    list_per_page &#x3D; 10</span><br><span class="line">    </span><br><span class="line">    # 5. 列是否可编辑</span><br><span class="line">    list_editable &#x3D; [&#39;name&#39;]</span><br><span class="line"></span><br><span class="line">    # 6. 查询列</span><br><span class="line">    search_fields &#x3D; [&#39;name&#39;,&#39;pwd&#39;]</span><br><span class="line"></span><br><span class="line">    # 7. 是否在页面顶端显示保存按钮</span><br><span class="line">    # save_on_top &#x3D; True</span><br><span class="line"></span><br><span class="line">    # 8. 下拉选项的批量操作，类似于批量删除功能</span><br><span class="line">    def func(self, request, queryset):</span><br><span class="line">        print(self, request, queryset)</span><br><span class="line">        id_list &#x3D; request.POST.getlist(&#39;_selected_action&#39;)</span><br><span class="line">        # models.UserInfo.objects.filter(id__in&#x3D;id_list).delete()</span><br><span class="line"></span><br><span class="line">    func.short_description &#x3D; &quot;批量初始化&quot;</span><br><span class="line"></span><br><span class="line">    actions &#x3D; [func, ]</span><br><span class="line"></span><br><span class="line">    # 9. 列表页面使用模板文件</span><br><span class="line">    change_list_template &#x3D; [&#39;xxx.html&#39;]</span><br><span class="line">    </span><br><span class="line">    # raw_id_fields &#x3D; [&#39;ut&#39;,]</span><br><span class="line">    # fields &#x3D; [&#39;name&#39;]</span><br><span class="line">    # exclude &#x3D; [&#39;name&#39;,]</span><br><span class="line">    </span><br><span class="line">    # 10. 分类展示</span><br><span class="line">    # fieldsets &#x3D; (</span><br><span class="line">    #     (&#39;基本数据&#39;, &#123;</span><br><span class="line">    #         &#39;fields&#39;: (&#39;name&#39;,)</span><br><span class="line">    #     &#125;),</span><br><span class="line">    #     (&#39;其他&#39;, &#123;</span><br><span class="line">    #         &#39;classes&#39;: (&#39;collapse&#39;, &#39;wide&#39;, &#39;extrapretty&#39;),  # &#39;collapse&#39;,&#39;wide&#39;, &#39;extrapretty&#39;</span><br><span class="line">    #         &#39;fields&#39;: (&#39;pwd&#39;, &#39;ut&#39;),</span><br><span class="line">    #     &#125;),</span><br><span class="line">    # )</span><br><span class="line"></span><br><span class="line">    # 11.快速过滤</span><br><span class="line">    # filter_vertical &#x3D; (&quot;roles&quot;,)</span><br><span class="line">    filter_horizontal &#x3D; (&quot;roles&quot;,)</span><br><span class="line">    </span><br><span class="line">    # 12. 排序</span><br><span class="line">    ordering &#x3D; [&#39;-id&#39;]</span><br><span class="line"></span><br><span class="line"># 注册使用自定义的UserInfoModelAdmin类的页面展示规则</span><br><span class="line">admin.site.register(models.UserInfo,UserInfoModelAdmin)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 2. 用户类型表(基于ModelAdmin类)</span><br><span class="line">class UserTypeModelAdmin(ModelAdmin):</span><br><span class="line">    list_display &#x3D; [&#39;title&#39;]</span><br><span class="line">    </span><br><span class="line">admin.site.register(models.UserType,UserTypeModelAdmin)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><em>注: 默认使用ModelAdmin类进行后台操作，可以定义自己的calss，通过继承ModelAdmin类实现定制页面展示功能</em><br>2. Django自带Admin原理<br>2.1 每注册一个model类，Django内部会生成4个对应的增删改查URL，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">URL:</span><br><span class="line">    &#x2F;admin&#x2F;app_name&#x2F;model_name&#x2F;</span><br><span class="line">    &#x2F;admin&#x2F;app_name&#x2F;model_name&#x2F;add&#x2F;</span><br><span class="line">    &#x2F;admin&#x2F;app_name&#x2F;model_name&#x2F;1&#x2F;change&#x2F;</span><br><span class="line">    &#x2F;admin&#x2F;app_name&#x2F;model_name&#x2F;1&#x2F;delete&#x2F;</span><br><span class="line">    例：&#x2F;admin&#x2F;app01&#x2F;userinfo&#x2F;</span><br></pre></td></tr></table></figure>
+<p>2.2 内部实现机制</p>
+<ul>
+<li>在app下面的admin.py文件中注册models类;</li>
+<li>Django程序在启动时会循环所有app下面的admin文件中注册的models类，为每个models类生成对应的增删改查4个URL;</li>
+<li>每个注册的model类会封装一个用于处理当前类所对应的URL的view对象,用于处理CURD操作，默认为ModelAdmin类对象;<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. self.model&#x3D;models.UserInfo</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;userinfo&#x2F;                obj1.changelist_view</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;userinfo&#x2F;add&#x2F;            obj1.add_view</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;userinfo&#x2F;(\d+)&#x2F;delete&#x2F;   obj1.delete_view</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;userinfo&#x2F;(\d+)&#x2F;change&#x2F;   obj1.change_view</span><br><span class="line"></span><br><span class="line">2. self.model&#x3D;models.UserType</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;usertype&#x2F;                obj2.changelist_view</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;usertype&#x2F;add&#x2F;            obj2.add_view</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;usertype&#x2F;(\d+)&#x2F;delete&#x2F;   obj2.delete_view</span><br><span class="line">&#x2F;admin&#x2F;app01&#x2F;usertype&#x2F;(\d+)&#x2F;change&#x2F;   obj2.change_view</span><br></pre></td></tr></table></figure>
+</br>
+
+</li>
+</ul>
+<h2 id="自定义实现CURD类似Admin功能"><a href="#自定义实现CURD类似Admin功能" class="headerlink" title="自定义实现CURD类似Admin功能"></a>自定义实现CURD类似Admin功能</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>了解django启动时执行的启动文件顺序</li>
+<li>制作启动文件</li>
+<li>settings.py配置文件中注册启动文件使全局生效</li>
+<li>实现组件CURD业务逻辑</li>
+<li>主要参考Django Admin的实现，利用单利模式和include原理实现路由分发</li>
+</ul>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p><em>假设组件app名称为: arya</em></p>
+<ol>
+<li>Django程序启动顺序<br>在程序启动时，django会根据配置项INSTALLED_APPS中注册的启动文件，遍历每个App下面对应的注册启动文件,在arya组件下面的app.py文件中实现ready方法激活启动文件,如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># arya&#x2F;app.py</span><br><span class="line"></span><br><span class="line">from django.apps import AppConfig</span><br><span class="line"></span><br><span class="line">class AryaConfig(AppConfig):</span><br><span class="line">    name &#x3D; &#39;arya&#39;</span><br><span class="line"></span><br><span class="line">    # Django启动时自动扫描所有app下面的arya模块</span><br><span class="line">    def ready(self):</span><br><span class="line">        from django.utils.module_loading import autodiscover_modules</span><br><span class="line">        autodiscover_modules(&#39;arya&#39;)</span><br></pre></td></tr></table></figure></li>
+<li>在项目的setting.py文件中配置，激活组件，使全局生效，此时Django启动时，在完全启动前，便会扫描所有app下面的arya.py文件并加载生效<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS &#x3D; [</span><br><span class="line">    ...</span><br><span class="line">    &#39;arya.apps.AryaConfig&#39;,</span><br><span class="line">    ...</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
+<li>核心代码逻辑实现<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"># cat arya&#x2F;seevice&#x2F;v1.py</span><br><span class="line"></span><br><span class="line">from django.conf.urls import url</span><br><span class="line">from django.shortcuts import render, HttpResponse, redirect</span><br><span class="line"></span><br><span class="line">class AryaConfig(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    每个models类的URL对应处理的View实现</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, model_class, site):</span><br><span class="line">        self.model_class &#x3D; model_class</span><br><span class="line">        # View对象</span><br><span class="line">        self.site &#x3D; site</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def urls(self):</span><br><span class="line">        partterns &#x3D; [</span><br><span class="line">            url(r&#39;^$&#39;, self.changelist_view),</span><br><span class="line">            url(r&#39;^add&#x2F;&#39;, self.add_view),</span><br><span class="line">            url(r&#39;^(\d+)&#x2F;change&#x2F;$&#39;, self.change_view),</span><br><span class="line">            url(r&#39;^(\d+)&#x2F;delete&#x2F;$&#39;, self.delete_view)</span><br><span class="line">        ]</span><br><span class="line">        return partterns</span><br><span class="line"></span><br><span class="line">    def changelist_view(self, request):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        列表试图</span><br><span class="line">        :param request:</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        # return HttpResponse(&quot;列表页面&quot;)</span><br><span class="line">        return render(request, &#39;arya&#x2F;changelist.html&#39;)</span><br><span class="line"></span><br><span class="line">    def add_view(self, request):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        添加试图</span><br><span class="line">        :param request:</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return HttpResponse(&quot;添加试图&quot;)</span><br><span class="line"></span><br><span class="line">    def change_view(self, request):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        修改试图</span><br><span class="line">        :param request:</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return HttpResponse(&quot;修改试图&quot;)</span><br><span class="line"></span><br><span class="line">    def delete_view(self, request):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        删除试图</span><br><span class="line">        :param request:</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return HttpResponse(&quot;删除试图&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class AryaSite(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    实现类似于admin.site.register()功能</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    # 存放所有的models类及对应处理UTRL的的view对象</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self._registry &#x3D; &#123;&#125;</span><br><span class="line"></span><br><span class="line">    def register(self, class_name, config_class):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        注册方法,封装对象</span><br><span class="line">        self._registry &#x3D; &#123;</span><br><span class="line">            module.UserInfo: obj1,  # obj1 &#x3D; AryaConfig(models.UserInfo,site),</span><br><span class="line">            module.UserType: obj2,  # obj2 &#x3D; AryaConfig(models.UserType,site),</span><br><span class="line">        &#125;</span><br><span class="line">        :param class_name: models类</span><br><span class="line">        :param config_class: 对应的View类(AryaConfig)</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self._registry[class_name] &#x3D; config_class(class_name, self)</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def urls(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        处理子路由</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        partterns &#x3D; [</span><br><span class="line">            url(r&#39;^login&#x2F;$&#39;, self.login),</span><br><span class="line">            url(r&#39;^logout&#x2F;$&#39;, self.logout),</span><br><span class="line">        ]</span><br><span class="line">        # 循环self._registry属性里面的每一个元素，key为models类，value为URLS对应处理的类obj对象</span><br><span class="line">        for model_class, arya_config_obj in self._registry.items():</span><br><span class="line">            # 分别为app名称和models的类名称</span><br><span class="line">            print(&quot;*&quot; * 50)</span><br><span class="line">            print(model_class._meta.app_label, model_class._meta.model_name)</span><br><span class="line">            app_model_name_urls &#x3D; r&#39;^&#123;0&#125;&#x2F;&#123;1&#125;&#x2F;&#39;.format(model_class._meta.app_label, model_class._meta.model_name)</span><br><span class="line">            # arya_config_obj.urls self._registry字典中存放的values对象obj下面的urls方法</span><br><span class="line">            pt &#x3D; url(app_model_name_urls, (arya_config_obj.urls, None, None))</span><br><span class="line">            partterns.append(pt)</span><br><span class="line">        # 3元组</span><br><span class="line">        return partterns, None, None</span><br><span class="line"></span><br><span class="line">    def login(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        登陆</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return redirect(&#39;login&#39;)</span><br><span class="line"></span><br><span class="line">    def logout(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        退出</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return redirect(&#39;login&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 实例化，利用单例模式</span><br><span class="line">site &#x3D; AryaSite()</span><br></pre></td></tr></table></figure>
+</br>
+
+</li>
+</ol>
+<h3 id="引入arya组件并使用"><a href="#引入arya组件并使用" class="headerlink" title="引入arya组件并使用"></a>引入arya组件并使用</h3><ol>
+<li><p>创建app，引入arya组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">创建多个app，并在每个app下面创建arya.py文件，用于实现CURD操作</span><br><span class="line">django startapp app01</span><br><span class="line">...</span><br></pre></td></tr></table></figure></li>
+<li><p>在app01下面创建models模型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># cat app01&#x2F;models.py</span><br><span class="line"></span><br><span class="line">from django.db import models</span><br><span class="line"></span><br><span class="line">class UserType(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    用户类型表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    title &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;用户类型&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;用户类型表&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.title</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Role(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    角色表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    caption &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;角色名&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;角色表&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.caption</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class UserInfo(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    用户表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    username &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;用户名&quot;)</span><br><span class="line">    password &#x3D; models.CharField(max_length&#x3D;64, verbose_name&#x3D;&quot;密码&quot;)</span><br><span class="line">    email &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;邮箱&quot;)</span><br><span class="line">    ut &#x3D; models.ForeignKey(to&#x3D;&quot;UserType&quot;, blank&#x3D;True, verbose_name&#x3D;&quot;用户类型&quot;)</span><br><span class="line">    roles &#x3D; models.ManyToManyField(to&#x3D;&quot;Role&quot;, blank&#x3D;True, verbose_name&#x3D;&quot;所属角色&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;用户表&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.username</span><br></pre></td></tr></table></figure></li>
+<li><p>生成表结构并制作部分展示数据，可以直接在表中添加，也可以通过admin后台进行添加</p>
+</li>
+<li><p>在app01中的arya.py文件中注册models类并自定义实现展示UI</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># cat app01&#x2F;arya.py</span><br><span class="line"></span><br><span class="line">from arya.service import v1</span><br><span class="line">from . import models</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"># 自定义属性控制UI展示</span><br><span class="line">class UserInfoConfig(v1.AryaConfig):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    自定义用户信息UI</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    list_display &#x3D; [&#39;username&#39;, &#39;ut&#39;, &#39;roles&#39;, &#39;email&#39;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class UserTypeConfig(v1.AryaConfig):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    自定义用户类型UI</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    list_display &#x3D; [&#39;title&#39;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class RoleConfig(v1.AryaConfig):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    自定义角色UI</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    list_display &#x3D; [&#39;caption&#39;]</span><br><span class="line"></span><br><span class="line"># 注册models</span><br><span class="line">v1.site.register(models.UserInfo, UserInfoConfig)</span><br><span class="line">v1.site.register(models.UserType, UserTypeConfig)</span><br><span class="line">v1.site.register(models.Role, RoleConfig)</span><br></pre></td></tr></table></figure></li>
+<li><p>在项目中应用arya组件，使URL生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#cat project_name&#x2F;urls.py</span><br><span class="line"></span><br><span class="line">from django.contrib import admin</span><br><span class="line">from django.conf.urls import url</span><br><span class="line">from arya.service import v1</span><br><span class="line">from . import views</span><br><span class="line"></span><br><span class="line"># url的第二个参数返回类型为([],None,None)的元组,源码见include方法</span><br><span class="line"># 此处的login和logut也可以使用arya&#x2F;service&#x2F;v1.py文件中定义的路由，示例为自己实现</span><br><span class="line">urlpatterns &#x3D; [</span><br><span class="line">    url(r&#39;^admin&#x2F;&#39;, admin.site.urls),</span><br><span class="line">    # 此处会生成对应的多个URL子路由</span><br><span class="line">    url(r&#39;^arya&#x2F;&#39;, v1.site.urls),</span><br><span class="line">    url(r&#39;^index&#x2F;$&#39;, views.index, name&#x3D;&quot;index&quot;),</span><br><span class="line">    url(r&#39;^login&#x2F;$&#39;, views.login, name&#x3D;&quot;login&quot;),</span><br><span class="line">    url(r&#39;^logout&#x2F;$&#39;, views.logout, name&#x3D;&quot;logout&quot;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
+<li><p>路由试图处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># cat project_name&#x2F;views.py</span><br><span class="line"></span><br><span class="line">from django.shortcuts import render, redirect</span><br><span class="line">from app01 import models</span><br><span class="line"></span><br><span class="line">def login(request):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    登陆</span><br><span class="line">    :param request:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    if request.method &#x3D;&#x3D; &quot;GET&quot;:</span><br><span class="line">        return render(request, &#39;login.html&#39;)</span><br><span class="line">    else:</span><br><span class="line">        username &#x3D; request.POST.get(&#39;username&#39;)</span><br><span class="line">        password &#x3D; request.POST.get(&#39;password&#39;)</span><br><span class="line">        obj &#x3D; models.UserInfo.objects.filter(username&#x3D;username, password&#x3D;password).first()</span><br><span class="line">        if obj:</span><br><span class="line">            request.session[&#39;userinfo&#39;] &#x3D; &#123;&#39;username&#39;: obj.username, &#39;is_login&#39;: True&#125;</span><br><span class="line">            return redirect(&#39;index&#39;)</span><br><span class="line">        return render(request, &#39;login.html&#39;, &#123;&#39;msg&#39;: &#39;用户名或密码错误&#39;&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def logout(request):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    退出</span><br><span class="line">    :param request:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    if request.method &#x3D;&#x3D; &quot;GET&quot;:</span><br><span class="line">        return redirect(&#39;login&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def index(request):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    首页</span><br><span class="line">    :param request:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    if request.method &#x3D;&#x3D; &quot;GET&quot;:</span><br><span class="line">        return render(request, &#39;index.html&#39;)</span><br></pre></td></tr></table></figure></li>
+<li><p>项目URL<br>此时在项目的路由中已经存在对应增删改查的4个URL，如下所示:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># app_nmae 应用名</span><br><span class="line"># models_name models类名小写</span><br><span class="line">arya&#x2F;app_name&#x2F;models_name&#x2F;</span><br><span class="line">arya&#x2F;app_name&#x2F;models_name&#x2F;add&#x2F;</span><br><span class="line">arya&#x2F;app_name&#x2F;models_name&#x2F;(\d+)&#x2F;change&#x2F;</span><br><span class="line">arya&#x2F;app_name&#x2F;models_name&#x2F;(\d+)&#x2F;delete&#x2F;</span><br><span class="line"># 在该示例中为: </span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;arya&#x2F;app01&#x2F;userinfo&#x2F;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;arya&#x2F;app01&#x2F;userinfo&#x2F;add&#x2F;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;arya&#x2F;app01&#x2F;userinfo&#x2F;()</span><br><span class="line">....</span><br></pre></td></tr></table></figure></li>
+<li><p>扩展<br>在每个app下面的arya.py文件中继承arya组件中的service.v1.AryaConfig类，自己内部实现处理URL的view以及定制化操作</p>
+</br>  
+
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>  至此，自定义实现的类似Django admin组件基本开发完成，能够满足models模型数据的CURD操作。在Django中作为app引入CustAdmin组件，然后在settings文件中注册后就<br>可以生效使用了,engoy it!</p>
+<p><a href="https://github.com/shuke163/CustAdmin" target="_blank" rel="noopener">github</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/">Django基于Admin原理实现的CURD组件</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/" title="Django基于Admin原理实现的CURD组件">https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/">Django基于Admin原理实现的CURD组件</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/" title="Django基于Admin原理实现的CURD组件">https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Django/" <i class="fa fa-tag"></i> Django</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/Django-%E8%81%9A%E5%90%88/" rel="next" title="Django 聚合">
+                <i class="fa fa-chevron-left"></i> Django 聚合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/" rel="prev" title="Django基于RBAC的权限组件">
+                Django基于RBAC的权限组件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Django基于Admin原理实现的CURD组件"><span class="nav-text">Django基于Admin原理实现的CURD组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Django管理后台admin"><span class="nav-text">Django管理后台admin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义实现CURD类似Admin功能"><span class="nav-text">自定义实现CURD类似Admin功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引入arya组件并使用"><span class="nav-text">引入arya组件并使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

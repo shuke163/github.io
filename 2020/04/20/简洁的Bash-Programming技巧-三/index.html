@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SHELL," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="简洁的Bash Programming技巧(三)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简洁的Bash Programming技巧(三)">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="简洁的Bash Programming技巧(三)">
+<meta property="article:published_time" content="2020-04-20T08:01:16.000Z">
+<meta property="article:modified_time" content="2020-04-20T08:01:39.101Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="SHELL">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/简洁的Bash-Programming技巧-三/"/>
+
+
+
+
+
+  <title>简洁的Bash Programming技巧(三) | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简洁的Bash Programming技巧(三)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T16:01:16+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">5.5k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">23(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SHELL/" itemprop="url" rel="index">
+                    <span itemprop="name">SHELL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/" class="leancloud_visitors" data-flag-title="简洁的Bash Programming技巧(三)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  简洁的Bash Programming技巧(三)
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简洁的Bash-Programming技巧-一"><a href="#简洁的Bash-Programming技巧-一" class="headerlink" title="简洁的Bash Programming技巧(一)"></a>简洁的Bash Programming技巧(一)</h2><h3 id="1-bash中alias的使用"><a href="#1-bash中alias的使用" class="headerlink" title="1. bash中alias的使用"></a>1. bash中alias的使用</h3><p>alias其实是给常用的命令定一个别名，比如很多人会定义一下的一个别名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias ll&#x3D;&#39;ls -l&#39;</span><br></pre></td></tr></table></figure>
+<p>以后就可以使用ll，实际展开后执行的是ls -l。现在很多发行版都会带几个默认的别名，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias grep&#x3D;&#39;grep --color&#x3D;auto&#39;  # 带颜色显示</span><br><span class="line">alias ls&#x3D;&#39;ls --color&#x3D;auto&#39; # 同上</span><br><span class="line">alias rm&#x3D;&#39;rm -i&#39;  # 删除文件需要确认</span><br></pre></td></tr></table></figure>
+<p>alias在某些方面确实提高了很大的效率，但是也是有隐患的，这点可以看我以前的一篇文章终端下肉眼看不见的东西。那么如何不要展开alias，而是用本来的意思呢？答案是使用转义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\ls</span><br><span class="line">\grep</span><br></pre></td></tr></table></figure>
+<p>在命令前面加一个反斜杠后就可以了。 这里要插一段故事，前两天我在shell脚本中定义了下面的一个alias，假设位于文件util.sh：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">alias ssh&#x3D;&#39;ssh -o StrictHostKeyChecking&#x3D;no -o LogLevel&#x3D;quiet -o BatchMode&#x3D;yes&#39;</span><br></pre></td></tr></table></figure>
+<p>后面这串ssh选项是为了去掉一些warning的信息，不提示输入密码等等。具体可以看ssh的文档说明。我自己测试的时候好好的，当时我同事跑得时候却依然有报Warning。我对比了下我们两个人的用法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sh util.sh  # 方式一</span><br><span class="line">.&#x2F;util.sh   # 方式二</span><br></pre></td></tr></table></figure>
+<p>大家应该知道，直接./util.sh执行，shell会去找脚本第一行的shebang中给定的解释器去执行改脚本，所以第二种用法相当于直接用bash来执行。那想必是bash/sh对alias是否默认展开这一点上是有区别的了。翻阅了下Bash的man手册，发现可以通过设置expand_aliases选项来打开alias展开的功能，默认在非交互式Shell下是关闭的（什么是交互式登录Shell)<br>修改下util.sh，打开这个选项就Ok了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line"># Expand aliases in script</span><br><span class="line">shopt -s expand_aliases</span><br><span class="line">alias ssh&#x3D;&#39;ssh -o StrictHostKeyChecking&#x3D;no -o LogLevel&#x3D;quiet -o BatchMode&#x3D;yes&#39;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-awk打印除第一列之外的其他列"><a href="#2-awk打印除第一列之外的其他列" class="headerlink" title="2. awk打印除第一列之外的其他列"></a>2. awk打印除第一列之外的其他列</h3><p>awk用来截取输入行中的某几列很有用，当时如果要排除某几列呢？ 例如有如下的一个文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;tmp&#x2F;test.txt</span><br><span class="line">1 2 3 4 5</span><br><span class="line">10 20 30 40 50</span><br></pre></td></tr></table></figure>
+<p>可以用下面的代码解决:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ awk &#39;&#123;$1&#x3D;&quot;&quot;;print $0&#125;&#39; &#x2F;tmp&#x2F;test.txt</span><br><span class="line"> 2 3 4 5</span><br><span class="line"> 20 30 40 50</span><br></pre></td></tr></table></figure>
+<p>但是前面多了一个空格，可以用cut命令稍微调整下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ awk &#39;&#123;$1&#x3D;&quot;&quot;;print $0&#125;&#39; &#x2F;tmp&#x2F;test.txt | cut -c2-</span><br><span class="line">2 3 4 5</span><br><span class="line">20 30 40 50</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-巧用bash的命令展开功能备份文件"><a href="#3-巧用bash的命令展开功能备份文件" class="headerlink" title="3. 巧用bash的命令展开功能备份文件"></a>3. 巧用bash的命令展开功能备份文件</h3><p>假设要备份文件/your/path/to/file.list为/your/path/to/file.list.20121106，常规的方法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;your&#x2F;path&#x2F;to&#x2F;file.list &#x2F;your&#x2F;path&#x2F;to&#x2F;file.list.20121106</span><br></pre></td></tr></table></figure>
+<p>这样重复写上一长串的路径，是不是很麻烦，这里利用bash的展开特性可以这样做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;your&#x2F;path&#x2F;to&#x2F;file.list&#123;,.20180406&#125;</span><br></pre></td></tr></table></figure>
+<p>/your/path/to/file.list{,.20121106}这一部分会展开为/your/path/to/file.list /your/path/to/file.list.20121106,再将此传给cp命令，就达到了与前面同样的效果。（思路同ls *）。具体可以man bash中的Brace Expansion这一段。</p>
+<h3 id="4-你知道sed的这个特性吗？"><a href="#4-你知道sed的这个特性吗？" class="headerlink" title="4. 你知道sed的这个特性吗？"></a>4. 你知道sed的这个特性吗？</h3><p>假设一个文件的每一行为一个路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;tmp&#x2F;test.txt</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;hello</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;hello&#x2F;world</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;good</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;good&#x2F;bye</span><br></pre></td></tr></table></figure>
+<p>现在要把/home/kodango/good替换成/home/kodango/bad，普通的作法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sed -n &#39;s&#x2F;\&#x2F;home\&#x2F;kodango\&#x2F;good&#x2F;\&#x2F;home\&#x2F;kodango\&#x2F;bye&#x2F;p&#39; &#x2F;tmp&#x2F;test.txt </span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;bye</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;bye&#x2F;bye</span><br></pre></td></tr></table></figure>
+<p>因为路径中的分隔符与sed的替换命令的分隔符都是’/‘，所以需要转义，非常麻烦。幸运的是，sed可以更改分隔符，例如使用#：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;s#&#x2F;home&#x2F;kodango&#x2F;good#&#x2F;home&#x2F;kodango&#x2F;bad#p&#39; &#x2F;tmp&#x2F;test.txt </span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;bad</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;bad&#x2F;bye</span><br></pre></td></tr></table></figure>
+<p>这样就清爽多了。 补充，如果是在地址对中使用，首个分隔符前面要加反斜杠：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sed -n &#39;\#&#x2F;home&#x2F;kodango&#x2F;#p&#39; &#x2F;tmp&#x2F;test.txt </span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;hello</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;hello&#x2F;world</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;good</span><br><span class="line">&#x2F;home&#x2F;kodango&#x2F;good&#x2F;bye</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-合并连续重复的字符（即squeeze操作）"><a href="#5-合并连续重复的字符（即squeeze操作）" class="headerlink" title="5. 合并连续重复的字符（即squeeze操作）"></a>5. 合并连续重复的字符（即squeeze操作）</h3><p>例如要合并一个字符串中连续的多个空格，假设字符串为’print hello, world’。 第一种方法，使用sed命令，扫描整个字符串，替换2个以上的空格为1格:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#39;print  hello,   world  &#39; | sed -r &#39;s&#x2F; &#123;2,&#125;&#x2F; &#x2F;g&#39;</span><br><span class="line">print hello, world</span><br></pre></td></tr></table></figure>
+<p>第二种方法，使用tr命令的-s选项，专门就是为了合并连续重复的字符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#39;print  hello,   world  &#39; | tr -s &#39; &#39;</span><br><span class="line">print hello, world</span><br></pre></td></tr></table></figure>
+<p>第三种方法，使用awk的域赋值来完成该目的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#39;print  hello,   world  &#39; | awk &#39;$1&#x3D;$1&#39;</span><br><span class="line">print hello, world</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-将文本中某列相同的行输出到不同的文件中"><a href="#6-将文本中某列相同的行输出到不同的文件中" class="headerlink" title="6. 将文本中某列相同的行输出到不同的文件中"></a>6. 将文本中某列相同的行输出到不同的文件中</h3><p>标题有点绕口，我们以实际例子来讲解，假设我们有以下的一个文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;tmp&#x2F;test.txt</span><br><span class="line">a char</span><br><span class="line">1 int</span><br><span class="line">2 int</span><br><span class="line">b char</span><br><span class="line">abc string</span><br></pre></td></tr></table></figure>
+<p>我们的目标是将该文本中的行按第二列的值归类，并且输出到相应的文件中，文件名为第二列的名称。例如第2行、第3行会输出到int.txt文件中，而第1行、第4行则输出到char.txt，以此类推。</p>
+<p>我没有找到其它简单的方法，只找到一种用awk来处理的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;&#123;print $1 &gt; $2 &quot;.txt&quot;&#125;&#39; &#x2F;tmp&#x2F;test.txt</span><br></pre></td></tr></table></figure>
+<p>我们来检查结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">grep -nH . *</span><br><span class="line">char.txt:1:a</span><br><span class="line">char.txt:2:b</span><br><span class="line">int.txt:1:1</span><br><span class="line">int.txt:2:2</span><br><span class="line">string.txt:1:abc</span><br></pre></td></tr></table></figure>
+<h3 id="7-用exec命令来完成重定向"><a href="#7-用exec命令来完成重定向" class="headerlink" title="7. 用exec命令来完成重定向"></a>7. 用exec命令来完成重定向</h3><p>以一个简单的例子开始，现在需要一个脚本，它可以接受一个文件名作为参数，然后按行读取该文件的内容并打印到标准输出。如果不指定文件名，则默认从标准输入读。首先按上面的功能需求写出一个可以完成功能的脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.sh </span><br><span class="line"></span><br><span class="line">filename&#x3D;$1</span><br><span class="line"></span><br><span class="line">if [ -z &quot;$filename&quot; ]; then</span><br><span class="line">    while read line; do</span><br><span class="line">        echo $line</span><br><span class="line">    done</span><br><span class="line">else</span><br><span class="line">    while read line; do</span><br><span class="line">        echo $line</span><br><span class="line">    done &lt; $filename</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>如果换exec来实现重定向，可以把脚本写得更优雅：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ cat test1.sh </span><br><span class="line"></span><br><span class="line">filename&#x3D;$1</span><br><span class="line"></span><br><span class="line">if [ -n &quot;$filename&quot; ]; then</span><br><span class="line">    exec 0&lt; $filename</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">while read line; do</span><br><span class="line">    echo $line</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>这里的关键在第5行代码，exec命令不仅可以用于执行命令，还可以用于打开、关闭或者复制文件描述符，这里就是利用exec将指定的文件名打开重定向到标准输入。类似地可以用exec &gt;$filename将文件重定向到标准输出。我们可以在命令行上做一个试验：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ exec 3&gt;&amp;1                   # 首先将fd 3重定向到标准输出，作为标准输出的一个备份</span><br><span class="line"></span><br><span class="line">$ ls &#x2F;proc&#x2F;629&#x2F;fd&#x2F;&#123;1,3&#125; -l    # 现在fd 3和fd 1指向同一个设备文件</span><br><span class="line">lrwx------ 1 kodango kodango 64 Nov 10 00:26 &#x2F;proc&#x2F;629&#x2F;fd&#x2F;1 -&gt; &#x2F;dev&#x2F;pts&#x2F;1</span><br><span class="line">lrwx------ 1 kodango kodango 64 Nov 10 00:26 &#x2F;proc&#x2F;629&#x2F;fd&#x2F;3 -&gt; &#x2F;dev&#x2F;pts&#x2F;1</span><br><span class="line"></span><br><span class="line">$ exec &gt;stdout               # 现在把标准输出重定向到stdout这个文件中</span><br><span class="line"></span><br><span class="line">$ ls &#x2F;proc&#x2F;629&#x2F;fd&#x2F;1 -l        # 如果你此刻在同一个终端下执行本命令是没有返回的</span><br><span class="line"></span><br><span class="line">$ ls &#x2F;proc&#x2F;629&#x2F;fd&#x2F;1 -l        # 现在重新打开一个终端看看，确实已经重定向到stdout这个文件</span><br><span class="line">l-wx------ 1 kodango kodango 64 Nov 10 00:26 &#x2F;proc&#x2F;629&#x2F;fd&#x2F;1 -&gt; &#x2F;home&#x2F;kodango&#x2F;stdout</span><br><span class="line"></span><br><span class="line">$ exec 1&gt;&amp;3                   # 现在重新把标准输出重定向到之前备份的fd 3上</span><br><span class="line">$ ls &#x2F;proc&#x2F;629&#x2F;fd&#x2F;&#123;1,3&#125; -l  # 现在屏幕可以看到输出了，但是fd 3这个描述符还打开，需要关闭</span><br><span class="line">lrwx------ 1 kodango kodango 64 Nov 10 00:26 &#x2F;proc&#x2F;629&#x2F;fd&#x2F;1 -&gt; &#x2F;dev&#x2F;pts&#x2F;1</span><br><span class="line">lrwx------ 1 kodango kodango 64 Nov 10 00:26 &#x2F;proc&#x2F;629&#x2F;fd&#x2F;3 -&gt; &#x2F;dev&#x2F;pts&#x2F;1</span><br><span class="line"></span><br><span class="line">$ exec 3&gt;&amp;-                   # 关闭fd 3</span><br><span class="line">$ ls &#x2F;proc&#x2F;629&#x2F;fd&#x2F;3 -l</span><br><span class="line">ls: cannot access &#x2F;proc&#x2F;629&#x2F;fd&#x2F;3: No such file or directory</span><br><span class="line"></span><br><span class="line">$ cat stdout                  # 检查stdout文件，确实有之前被吃掉的输出</span><br><span class="line">l-wx------ 1 kodango kodango 64 Nov 10 00:26 &#x2F;proc&#x2F;629&#x2F;fd&#x2F;1 -&gt; &#x2F;home&#x2F;kodango&#x2F;stdout</span><br></pre></td></tr></table></figure>
+<p>这一点在while read; do xxx; done &lt; file内部仍需要从标准输入读取内容时非常有用，此时必须要将循环外部的重定向和内部的剥离开来。</p>
+<h3 id="8-引号之间的区别"><a href="#8-引号之间的区别" class="headerlink" title="8. 引号之间的区别"></a>8. 引号之间的区别</h3><p>Shell中比较让人抓狂的是各种引号的处理，其中，反引号(cmd)是最容易掌握的，它其实和$(cmd)是差不多的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">引号的作用有几点，一个是为了将多个因为空格或者回车等分隔符隔开的字符串合在一起，避免被命令行解析分开，例如&quot;one two three&quot;就是一整个字符串，而不是像one two three会被解析成三个单独的字符串；另外一方面，引号可以让一些特殊符号保持原义。</span><br><span class="line"></span><br><span class="line">其中，单引号的处理是比较简单的，被单引号包括的所有字符都保留原有的意思，例如&#39;$a&#39;不会被展开, &#39;cmd&#39;也不会执行命令；而双引号，则相对比较松，在双引号中，以下几个字符$, , \依然有其特殊的含义，比如$可以用于变量展开, 反引号可以执行命令，反斜杠可以用于转义。但是，在双引号包围的字符串里，反斜杠的转义也是有限的，它只能转义$, &#96;, &quot;, 或者newline（回车）这几个字符，后面如果跟着的不是这几个字符，只不会被黑底，反斜杠会被保留，例如：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ echo &quot;\$,\&quot;,\&#96;,\&#39;,\t&quot;</span><br><span class="line">$,&quot;,&#96;,\&#39;,\t</span><br></pre></td></tr></table></figure>
+<p>到此为止，其实双引号和单引号的区别已经说得差不多了。不过还可以再说几个特殊的用法，前面说过可以在双引号内部使用单引号，你有想过在单引号里面使用单引号吗？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#39;\&#39;&#39;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<p>是不是发现不能用，因为单引号中反斜杠是没有转义的效果的，任何字符都没有特殊的含义。那就没有办法了吗？方法总是有的，可以在第一个单引号前面加个$符号：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo $&#39;\&#39;&#39;</span><br><span class="line">&#39;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-特殊用法-’string’"><a href="#9-特殊用法-’string’" class="headerlink" title="9. 特殊用法$’string’"></a>9. 特殊用法$’string’</h3><p>前面一点中已经介绍了 $’string’这种用法，比如 $’’’，之所以可以这样用，通俗地讲，就是在这种语法里一些转义字符串是被认可的，事实上有效地的转义底字符串列表可以看这里，例如b，’,n,f,nnn,xhh等等，是不是很熟悉。 $’string’的这个特性，其实为我们提供了一种很有用的技巧：</p>
+<p>$ echo $’\x41’<br>A<br>他可以将ASCII对应的字符赋值给某个变量或者输出。</p>
+<h3 id="10-用双引号比不用更加安全"><a href="#10-用双引号比不用更加安全" class="headerlink" title="10. 用双引号比不用更加安全"></a>10. 用双引号比不用更加安全</h3><p>双引号除了前面第10点讲到的去除特殊涵义的作用外，还可以避免字符串被分隔解析，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#96;ls -l&#96;</span><br><span class="line">total 4.0K -rw-r--r-- 1 kodango kodango 4 Nov 10 20:09 1 -rw-r--r-- 1 kodango kodango 0 Nov 10 20:09 2</span><br><span class="line">$ echo &quot;&#96;ls -l&#96;&quot;</span><br><span class="line">total 4.0K</span><br><span class="line">-rw-r--r-- 1 kodango kodango 4 Nov 10 20:09 1</span><br><span class="line">-rw-r--r-- 1 kodango kodango 0 Nov 10 20:09 2</span><br></pre></td></tr></table></figure>
+<p>前者没有加双引号，ls -l输出行之间的回车就被吃掉了。原因是，当ls -l返回的结果传递给echo之前，会先被shell进行参数解析，而shell是用IFS定义的分隔符来分隔字符串的，一般包括n，所以它把解析后的结果再传递给echo，就成为echo “line 1….” “line 2…”这种形式了，结果就像上面一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">而用双引号包括起来可以避开字符串被拆开解析，因为shell认为它是一个单独的字符串。所以一般情况下，多用引号包括变量是好的，&quot;$var&quot;比$var更安全。</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-显示一个文件并且在每行开头添加行号"><a href="#11-显示一个文件并且在每行开头添加行号" class="headerlink" title="11. 显示一个文件并且在每行开头添加行号"></a>11. 显示一个文件并且在每行开头添加行号</h3><p>有两种做法，第一种借助cat和nl命令来完成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.txt | nl</span><br><span class="line">     1    line 1 </span><br><span class="line">     2    line 2</span><br><span class="line">$ cat -n test.txt</span><br><span class="line">     1    line 1 </span><br><span class="line">     2    line 2</span><br><span class="line">$ nl test.txt     </span><br><span class="line">     1    line 1 </span><br><span class="line">     2    line 2</span><br></pre></td></tr></table></figure>
+<p>另外一种做法是用sed命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sed &#39;&#x3D;&#39; test.txt | sed &#39;N;s&#x2F;\n&#x2F;\t&#x2F;&#39;</span><br></pre></td></tr></table></figure>
+<p>还有一种方法是通过cat -n或者cat -b命令，两者的区别是后者不会给空行增加行号,nl命令特别方便,而且空行没有行号;</p>
+<h3 id="12-分别输出两个文件相同的行和不同的行"><a href="#12-分别输出两个文件相同的行和不同的行" class="headerlink" title="12. 分别输出两个文件相同的行和不同的行"></a>12. 分别输出两个文件相同的行和不同的行</h3><p>假设我们有以下两个文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ echo test&#123;,2&#125;.txt;paste test&#123;,2&#125;.txt</span><br><span class="line">test.txt test2.txt</span><br><span class="line">line 1     line 11</span><br><span class="line">line 2    line 2</span><br></pre></td></tr></table></figure>
+<p>如果要输出两个文件之间相同的行，只有test.txt拥有的行以及只有test2.txt拥有的行，怎么做？首先可以使用grep -f：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ grep -f test&#123;,2&#125;.txt</span><br><span class="line">line 2</span><br><span class="line">$ grep -vf test&#123;,2&#125;.txt</span><br><span class="line">line 11</span><br><span class="line">$ grep -vf test&#123;2,&#125;.txt</span><br><span class="line">line 1</span><br></pre></td></tr></table></figure>
+<p>还有一种选择是comm命令，这个命令就是专门用于比较文件的： comm - compare two sorted files line by line。 使用方法也很简单，comm比较两个排序好的文件返回的结果有三列，第一列是只有在文件A中有的行，第二列是只有在文件B中有的行，第三列则是两个文件共有的行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ comm test.txt test2.txt                </span><br><span class="line">line 1 </span><br><span class="line">    line 11</span><br><span class="line">        line 2</span><br></pre></td></tr></table></figure>
+<p>要得到最初要求的结果，则只需要取相应的列就可以了。comm命令非常人性化地考虑到这个需求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ comm test.txt test2.txt -1 -2</span><br><span class="line">line 2</span><br><span class="line">$ comm test.txt test2.txt -2 -3</span><br><span class="line">line 1 </span><br><span class="line">$ comm test.txt test2.txt -1 -3</span><br><span class="line">line 11</span><br></pre></td></tr></table></figure>
+<p>其中，=1, -2与-3这个参数分别表示不输出第1、2或者3列。</p>
+<h3 id="13-获取被source的脚本的名称"><a href="#13-获取被source的脚本的名称" class="headerlink" title="13. 获取被source的脚本的名称"></a>13. 获取被source的脚本的名称</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一般的情况下，脚本的名称可以通过$0获取，但是这在被source导入的脚本中却不成立。假设A脚本中source了B脚本，那么它是把B的代码导入到A的环境中直接执行的，因此A和B的代码其实是在同一个执行环境下分不开的，B的代码中访问到的$0，甚至$1, $2等位置参数都是与A脚本是一致的。</span><br></pre></td></tr></table></figure>
+
+<p>因此$0并非是被导入的脚本的名称，实际上，Bash将被source的脚本名称保存在一个叫BASH_SOURCE的数组中，该数组的第一个元素正是当前被source的脚本的名称。该变量与我在bash获取当前函数名中介绍的FUNCNAME是类似的，当一个脚本被source时，它的名称就被压入到这个数组的第一个位置上，举个实际的例子，假设有三个脚本a.sh,b.sh,c.sh，它们的内容如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ cat a.sh </span><br><span class="line">. .&#x2F;b.sh</span><br><span class="line">echo &quot;\$0&#x3D;$0&quot;</span><br><span class="line">echo &quot;\$&#123;BASH_SOURCE[0]&#125;&#x3D;$&#123;BASH_SOURCE[0]&#125;&quot;</span><br><span class="line">echo &quot;\$BASH_SOURCE&#x3D;($&#123;BASH_SOURCE[@]&#125;)&quot;</span><br><span class="line"></span><br><span class="line">$ cat b.sh </span><br><span class="line">. .&#x2F;c.sh</span><br><span class="line">. .&#x2F;c.sh</span><br><span class="line">echo &quot;\$0&#x3D;$0&quot;</span><br><span class="line">echo &quot;\$&#123;BASH_SOURCE[0]&#125;&#x3D;$&#123;BASH_SOURCE[0]&#125;&quot;</span><br><span class="line">echo &quot;\$BASH_SOURCE&#x3D;($&#123;BASH_SOURCE[@]&#125;)&quot;</span><br><span class="line"></span><br><span class="line">$ cat c.sh </span><br><span class="line">$ cat c.sh </span><br><span class="line">echo &quot;\$0&#x3D;$0&quot;</span><br><span class="line">echo &quot;\$&#123;BASH_SOURCE[0]&#125;&#x3D;$&#123;BASH_SOURCE[0]&#125;&quot;</span><br><span class="line">echo &quot;\$BASH_SOURCE&#x3D;($&#123;BASH_SOURCE[@]&#125;)&quot;</span><br></pre></td></tr></table></figure>
+<p>现在执行a.sh这个脚本，实际的输出是（为了方便理解，我在实际的输出中加了一些注释和空行）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ bash a.sh</span><br><span class="line"># c.sh的输出</span><br><span class="line">$0&#x3D;a.sh</span><br><span class="line">$&#123;BASH_SOURCE[0]&#125;&#x3D;.&#x2F;c.sh</span><br><span class="line">$BASH_SOURCE&#x3D;(.&#x2F;c.sh .&#x2F;b.sh a.sh)</span><br><span class="line"></span><br><span class="line"># b.sh的输出</span><br><span class="line">$0&#x3D;a.sh</span><br><span class="line">$&#123;BASH_SOURCE[0]&#125;&#x3D;.&#x2F;b.sh</span><br><span class="line">$BASH_SOURCE&#x3D;(.&#x2F;b.sh a.sh)</span><br><span class="line"></span><br><span class="line"># a.sh的输出</span><br><span class="line">$0&#x3D;a.sh</span><br><span class="line">$&#123;BASH_SOURCE[0]&#125;&#x3D;a.sh</span><br><span class="line">$BASH_SOURCE&#x3D;(a.sh)</span><br></pre></td></tr></table></figure>
+<p>此外，我们还可以利用BASH_SOURCE的值，在脚本中判断是被直接执行还是被导入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if [ -n &quot;$BASH_SOURCE&quot; -a &quot;$BASH_SOURCE&quot; !&#x3D; &quot;$0&quot; ]</span><br><span class="line">then</span><br><span class="line">    echo &quot;be sourced by other scripts&quot;</span><br><span class="line">else</span><br><span class="line">    echo &quot;be run in shell&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<h3 id="14-参数展开"><a href="#14-参数展开" class="headerlink" title="14. ${}参数展开"></a>14. ${}参数展开</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我们知道$&#123;parameter&#125;是展开变量parameter这个值，在上一篇简洁的bash编程技巧中也曾经介绍过$&#123;parameter:-word&#125;这种用法，用于给变量赋一个默认值。 事实上除此之外，参数展开还有许多形式，在此之前，首先要说明一下变量的几种值的形式：</span><br></pre></td></tr></table></figure>
+
+<p>unset： 变量未设置，即变量从未声明，或者被unset命令重置；<br>null: 变量声明但未被赋值（var=）或者被赋值成空（var=””）；<br>not null： 变量被赋值；<br>unset和null在参数展开的时候还是有很大的区别的，以下是参数展开的各种形式：</p>
+<p>${parameter:-word}：假如parameter为unset或者null，则展开后返回word的值；<br>${parameter-word}：假如parameter为unset时，则展开后返回word的值;<br>${parameter:=word}：假如parameter为unset或者null，将word赋值给parameter；<br>${parameter=word}：假如parameter为unset，将word赋值给parameter；<br>${parameter:?word}：假如parameter为unset或者null，则将word作为错误输出到标准输出；<br>${parameter?word}：假如parameter为unset，则将word作为错误输出到标准输出；<br>${parameter:+word}：假如parameter为unset或者null，则不做展开，返回为空；（刚好与:-相反）<br>${parameter:word}：假如parameter为unset，则不做展开，返回为空；（刚好与-相反）<br>上面其实准确地应该是分成2组，一组带:，一组不带:，不带:的这组更加严格，只检查unset这种情况。以:+为例子, unset的情况均无返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ unset var &amp;&amp; echo $&#123;var:+hello&#125;</span><br><span class="line">$ unset var &amp;&amp; echo $&#123;var+hello&#125;</span><br></pre></td></tr></table></figure>
+<p>当var为空时：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ var&#x3D; &amp;&amp; echo &quot;$&#123;var:+hello&#125;&quot;</span><br><span class="line">$ var&#x3D; &amp;&amp; echo &quot;$&#123;var+hello&#125;&quot;</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+<p>当var为非空时：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ var&#x3D;1 &amp;&amp; echo &quot;$&#123;var:+hello&#125;&quot;</span><br><span class="line">hello</span><br><span class="line">$ var&#x3D;1 &amp;&amp; echo &quot;$&#123;var+hello&#125;&quot;</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+<h3 id="15-冒号的多种使用场景"><a href="#15-冒号的多种使用场景" class="headerlink" title="15. 冒号的多种使用场景"></a>15. 冒号的多种使用场景</h3><p>冒号是一个比较奇怪的符号，它的用途有很多，这里介绍几种常用的：</p>
+<ol>
+<li>内置命令null command：nop，表示什么都不做，也可以被当作true值使用；<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ :</span><br><span class="line">$ echo $?    # return 0</span><br></pre></td></tr></table></figure>
+它也可以在循环中当作true值，例如:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">while :; do   # 等价于 while true; do</span><br><span class="line">    take-some-action</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">if condition</span><br><span class="line">then :</span><br><span class="line">else </span><br><span class="line">    take-some-action</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></li>
+<li>占位符 冒号可以在很多场景下充当占位符，例如之前介绍的${parameter=var}，如果直接执行会报错，表示找不到命令；这时可以借用冒号来完成赋值：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">: $&#123;parameter&#x3D;var&#125;</span><br></pre></td></tr></table></figure>
+同样地，可以来判断变量是否赋值：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">: $&#123;parameter1?&#125; $&#123;parameter2?&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="16-扩展的括号展开功能"><a href="#16-扩展的括号展开功能" class="headerlink" title="16. 扩展的括号展开功能"></a>16. 扩展的括号展开功能</h3>这个功能不能说鸡肋，也可以了解下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#123;0..3&#125;</span><br><span class="line">0 1 2 3</span><br><span class="line">$ echo &#123;z..a&#125;</span><br><span class="line">z y x w v u t s r q p o n m l k j i h g f e d c b a</span><br><span class="line">$ echo &#123;a..z&#125;</span><br><span class="line">a b c d e f g h i j k l m n o p q r s t u v w x y z</span><br></pre></td></tr></table></figure>
+<h3 id="17-安全的中括号"><a href="#17-安全的中括号" class="headerlink" title="17. 安全的中括号"></a>17. 安全的中括号</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[[]]的功能比[]更加多，使用起来也更加安全。</span><br><span class="line"></span><br><span class="line">1. 首先[[]]内部不会发生文件名展开和单词分隔。 例如：</span><br><span class="line"></span><br><span class="line">$ touch hello\ world</span><br><span class="line">$ [[ -f $file ]] &amp;&amp; echo yes</span><br><span class="line">yes</span><br><span class="line">$ [ -f $file ] &amp;&amp; echo yes</span><br><span class="line">-bash: [: hello: binary operator expected</span><br><span class="line"></span><br><span class="line">2. 进制之间自动转化 当一个十进制与八进制做比较时，会自动计算两个数的值，统一后做比较：</span><br><span class="line">$ o&#x3D;017</span><br><span class="line">$ h&#x3D;0x0f</span><br><span class="line">$ [[ $o -eq $h ]] &amp;&amp; echo yes</span><br><span class="line">yes</span><br><span class="line">$ [[ $o -eq 15 ]] &amp;&amp; echo yes</span><br><span class="line">yes</span><br><span class="line"></span><br><span class="line">3. [[]]支持&amp;&amp;，||等运算符</span><br><span class="line">$ a&#x3D;1;b&#x3D;3</span><br><span class="line">$ [[ $a &gt; 0 &amp;&amp; $b &lt; 4 ]] &amp;&amp; echo yes</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
+<h3 id="18-获取Bash脚本的最后一个参数"><a href="#18-获取Bash脚本的最后一个参数" class="headerlink" title="18. 获取Bash脚本的最后一个参数"></a>18. 获取Bash脚本的最后一个参数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我们都知道可以用$0，$1等来获取传递给脚本或者函数的参数，也可以用$*或者$@获取所有的参数，但是如果我只想要获取最后一个参数呢？</span><br></pre></td></tr></table></figure>
+首先，你可能想到用遍历地方法（这里为了方便，我们使用set命令来设置位置参数）：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ set -- arg1 arg2 arg3</span><br><span class="line">$ for i in $@; do :; done</span><br><span class="line">$ echo $i</span><br><span class="line">arg3</span><br></pre></td></tr></table></figure>
+这里的循环什么事情都没做，我用冒号（:）完成这个任务；循环结束后, $i就是保存着最后一个参数的值。 下面是两种更加简单的方法的：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo $&#123;@: -1&#125;</span><br><span class="line">$ echo $&#123;!#&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">上面的第一种方法事实上就是Parameter Expansion中的$&#123;parameter:offset:length&#125;这种形式，只不过offset为-1表示最后一个元素，忽略length表明是从offset开始往后直到最后一个元素，即只取最后一个元素。这里要注意的一点是，在冒号和短横之间的空格不能少，否则就变成15. $&#123;&#125;参数展开中介绍的$&#123;parameter:-var&#125;这种用法了。</span><br><span class="line"></span><br><span class="line">而第二种方法则是indirect referencing的一种表现，#这个特殊的变量存放参数的个数，!#则是对最后一个变量的引用。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="19-Bash中的引用-indirect-referencing"><a href="#19-Bash中的引用-indirect-referencing" class="headerlink" title="19. Bash中的引用(indirect referencing)"></a>19. Bash中的引用(indirect referencing)</h3><p>有没有想法在Bash中也可以达到C++引用的效果？你可能不知道，但是你可能曾经有这种需求，我就有过：</p>
+<p>有时候，我想要一个变量存放另外一个变量的名称，然后在后面我想通过这个变量的名称引用它的值<br>例子是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ a&#x3D;b</span><br><span class="line">$ b&#x3D;1</span><br><span class="line">$ echo $a</span><br><span class="line">b</span><br><span class="line">$ eval &quot;echo \$a&quot;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>但是利用indirect referencing的用法，你可以这样获取b的值:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ echo $&#123;!a&#125;</span><br><span class="line">1</span><br><span class="line">$ b&#x3D;2</span><br><span class="line">$ echo $&#123;!a&#125;</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://yq.aliyun.com/articles/68540?spm=a2c4e.11153959.teamhomeleft.71.7e4c8bc1kg1JeI" target="_blank" rel="noopener"> 原文地址</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/">简洁的Bash Programming技巧(三)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 16:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 16:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/" title="简洁的Bash Programming技巧(三)">https://shuke163.github.io/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/">简洁的Bash Programming技巧(三)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 16:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 16:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/" title="简洁的Bash Programming技巧(三)">https://shuke163.github.io/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/%E7%AE%80%E6%B4%81%E7%9A%84Bash-Programming%E6%8A%80%E5%B7%A7-%E4%B8%89/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SHELL/" <i class="fa fa-tag"></i> SHELL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/Mysql-%E8%A1%A8%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%8A%E5%BC%80%E5%8F%91/" rel="next" title=" Mysql 表设计规范及开发">
+                <i class="fa fa-chevron-left"></i>  Mysql 表设计规范及开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/%E5%80%BC%E5%BE%97%E7%9C%8B%E7%9A%847%E6%9C%AC%E4%B9%A6/" rel="prev" title="值得看的7本书">
+                值得看的7本书 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简洁的Bash-Programming技巧-一"><span class="nav-text">简洁的Bash Programming技巧(一)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-bash中alias的使用"><span class="nav-text">1. bash中alias的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-awk打印除第一列之外的其他列"><span class="nav-text">2. awk打印除第一列之外的其他列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-巧用bash的命令展开功能备份文件"><span class="nav-text">3. 巧用bash的命令展开功能备份文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-你知道sed的这个特性吗？"><span class="nav-text">4. 你知道sed的这个特性吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-合并连续重复的字符（即squeeze操作）"><span class="nav-text">5. 合并连续重复的字符（即squeeze操作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-将文本中某列相同的行输出到不同的文件中"><span class="nav-text">6. 将文本中某列相同的行输出到不同的文件中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-用exec命令来完成重定向"><span class="nav-text">7. 用exec命令来完成重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-引号之间的区别"><span class="nav-text">8. 引号之间的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-特殊用法-’string’"><span class="nav-text">9. 特殊用法$’string’</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-用双引号比不用更加安全"><span class="nav-text">10. 用双引号比不用更加安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-显示一个文件并且在每行开头添加行号"><span class="nav-text">11. 显示一个文件并且在每行开头添加行号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-分别输出两个文件相同的行和不同的行"><span class="nav-text">12. 分别输出两个文件相同的行和不同的行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-获取被source的脚本的名称"><span class="nav-text">13. 获取被source的脚本的名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-参数展开"><span class="nav-text">14. ${}参数展开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-冒号的多种使用场景"><span class="nav-text">15. 冒号的多种使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-扩展的括号展开功能"><span class="nav-text">16. 扩展的括号展开功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-安全的中括号"><span class="nav-text">17. 安全的中括号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-获取Bash脚本的最后一个参数"><span class="nav-text">18. 获取Bash脚本的最后一个参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#19-Bash中的引用-indirect-referencing"><span class="nav-text">19. Bash中的引用(indirect referencing)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Django," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Django REST framework API认证(包含JWT认证) + 权限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django REST framework API认证(包含JWT认证) + 权限">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Django REST framework API认证(包含JWT认证) + 权限">
+<meta property="article:published_time" content="2020-04-20T05:55:32.000Z">
+<meta property="article:modified_time" content="2020-04-20T05:56:07.768Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="Django">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Django-REST-framework-API认证-包含JWT认证-权限/"/>
+
+
+
+
+
+  <title>Django REST framework API认证(包含JWT认证) + 权限 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Django REST framework API认证(包含JWT认证) + 权限</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T13:55:32+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">6.9k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">30(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/" class="leancloud_visitors" data-flag-title="Django REST framework API认证(包含JWT认证) + 权限">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Django REST framework API认证(包含JWT认证) + 权限
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Django-REST-framework-API认证-包含JWT认证-权限"><a href="#Django-REST-framework-API认证-包含JWT认证-权限" class="headerlink" title="Django REST framework API认证(包含JWT认证) + 权限"></a>Django REST framework API认证(包含JWT认证) + 权限</h2><h3 id="一-背景"><a href="#一-背景" class="headerlink" title="一. 背景"></a>一. 背景</h3><p>在我们学习Django Rest Framework（简称DRF）时，其非常友好地给我们提供了一个可浏览API的界面。很多测试工作都可以在可浏览API界面完成测试。要使用可浏览API界面很简单，只需要在urls.py文件中添加如下部分即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from django.conf.urls import include</span><br><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-auth&#x2F;&#39;, include(&#39;rest_framework.urls&#39;,</span><br><span class="line">                               namespace&#x3D;&#39;rest_framework&#39;)),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>其中，r’^api-auth/‘部分实际上可以用任何你想使用URL替代。唯一的限制是所包含的URL必须使用’rest_framework’命名空间。在Django 1.9+中，REST framework将自动设置，所以你也无须关心。</p>
+<p>配置完成后，如果再次打开浏览器API界面并刷新页面，你将在页面右上角看到一个“Log in”链接。这就是DRF提供的登录和登出入口，可以用来完成认证。</p>
+<p>然后进入到’rest_framework.urls’源码，是可以看到提供了’login’和’logout’两个接口，分别用来登入和登录的。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if django.VERSION &lt; (1, 11):</span><br><span class="line">    login &#x3D; views.login</span><br><span class="line">    login_kwargs &#x3D; &#123;&#39;template_name&#39;: &#39;rest_framework&#x2F;login.html&#39;&#125;</span><br><span class="line">    logout &#x3D; views.logout</span><br><span class="line">else:</span><br><span class="line">    login &#x3D; views.LoginView.as_view(template_name&#x3D;&#39;rest_framework&#x2F;login.html&#39;)</span><br><span class="line">    login_kwargs &#x3D; &#123;&#125;</span><br><span class="line">    logout &#x3D; views.LogoutView.as_view()</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">app_name &#x3D; &#39;rest_framework&#39;</span><br><span class="line">urlpatterns &#x3D; [</span><br><span class="line">    url(r&#39;^login&#x2F;$&#39;, login, login_kwargs, name&#x3D;&#39;login&#39;),</span><br><span class="line">    url(r&#39;^logout&#x2F;$&#39;, logout, name&#x3D;&#39;logout&#39;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>其中login接口调用LoginView视图，logout接口调用LogoutView视图。这两个视图都是django.contrib.auth应用提供的。在LogoutView视图中，有这么一个装饰器@method_decorator(csrf_protect)，是用来做CSRF code验证的，就是做表单安全验证的，防止跨站攻击。而这个CSRF code是在返回HTML页面的时候Django会自动注册这么一个CSRF code方法，而在template中会自动调用这个方法生成code值。在前端页面元素form部分，可以查看到name=”csrfmiddlewaretoken”标识，且在Django返回的 HTTP 响应的 cookie 里，Django 会为你添加一个csrftoken 字段，其值为一个自动生成的token。这就是用来做表单安全验证的，具体关于CSRF原理见Django章节。</p>
+<p>这里要说明一个问题就是这个LoginView我们是无法直接拿来用的，因为它需要做CSRF验证，而在前后端分离系统中不需要做CSRF验证，这里不存在站内站外的问题，本身就是跨站访问的。那么在我们前后端分离项目中，如何做API接口的验证呢？其实framework也已经提供了多种验证方式。</p>
+<h3 id="二-身份验证"><a href="#二-身份验证" class="headerlink" title="二. 身份验证"></a>二. 身份验证</h3><p>REST framework提供了许多开箱即用的身份验证方案，同时也允许你实施自定义方案。这里需要明确一下用户认证（Authentication）和用户授权（Authorization）是两个不同的概念，认证解决的是“有没有”的问题，而授权解决的是“能不能”的问题。</p>
+<p>BasicAuthentication<br>该认证方案使用 HTTP Basic Authentication，并根据用户的用户名和密码进行签名。Basic Authentication 通常只适用于测试。</p>
+<p>SessionAuthentication<br>此认证方案使用 Django 的默认 session 后端进行认证。Session 身份验证适用于与您的网站在同一会话环境中运行的 AJAX 客户端。</p>
+<p>TokenAuthentication<br>此认证方案使用简单的基于令牌的 HTTP 认证方案。令牌身份验证适用于 client-server 架构，例如本机桌面和移动客户端。</p>
+<p>RemoteUserAuthentication<br>这种身份验证方案允许您将身份验证委托给您的 Web 服务器，该服务器设置 REMOTE_USER 环境变量。</p>
+<p>默认的认证方案可以使用DEFAULT_AUTHENTICATION_CLASSES全局设置，在settings.py文件配置。在默认情况下，DRF开启了 BasicAuthentication 与 SessionAuthentication 的认证。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;: (</span><br><span class="line">        &#39;rest_framework.authentication.BasicAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.SessionAuthentication&#39;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于DRF，几乎所有的配置都定义在MREST_FRAMEWORK变量中。另外，关于认证方式DRF默认会检测配置在DEFAULT_AUTHENTICATION_CLASSES变量中的所有认证方式，只要有一个认证方式通过即可登录成功。这里的DEFAULT_AUTHENTICATION_CLASSES与Django中的MIDDLEWARE类似，在将request通过url映射到views之前，Django和DRF都会调用定义在MREST_FRAMEWORK变量中的类的一些方法。<br>另外，你还可以使用基于APIView类的视图，在每个视图或每个视图集的基础上设置身份验证方案。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authentication import SessionAuthentication, BasicAuthentication</span><br><span class="line">from rest_framework.permissions import IsAuthenticated</span><br><span class="line">from rest_framework.response import Response</span><br><span class="line">from rest_framework.views import APIView</span><br><span class="line"> </span><br><span class="line">class ExampleView(APIView):</span><br><span class="line">    authentication_classes &#x3D; (SessionAuthentication, BasicAuthentication)</span><br><span class="line">    permission_classes &#x3D; (IsAuthenticated,)</span><br><span class="line"> </span><br><span class="line">    def get(self, request, format&#x3D;None):</span><br><span class="line">        content &#x3D; &#123;</span><br><span class="line">            &#39;user&#39;: unicode(request.user),  # &#96;django.contrib.auth.User&#96; instance.</span><br><span class="line">            &#39;auth&#39;: unicode(request.auth),  # None</span><br><span class="line">        &#125;</span><br><span class="line">        return Response(content)</span><br></pre></td></tr></table></figure>
+<p>需要明白的一点是，DRF的认证是在定义有权限类（permission_classes）的视图下才有作用，且权限类（permission_classes）必须要求认证用户才能访问此视图。如果没有定义权限类（permission_classes），那么也就意味着允许匿名用户的访问，自然牵涉不到认证相关的限制了。所以，一般在项目中的使用方式是在全局配置DEFAULT_AUTHENTICATION_CLASSES认证，然后会定义多个base views，根据不同的访问需求来继承不同的base views即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.permissions import (</span><br><span class="line">    IsAuthenticated,</span><br><span class="line">    IsAdminUser,</span><br><span class="line">    IsAuthenticatedOrReadOnly</span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line">class BaseView(APIView):</span><br><span class="line">    &#39;&#39;&#39;普通用户&#39;&#39;&#39;</span><br><span class="line">    permission_classes &#x3D; (</span><br><span class="line">        IsOwnerOrReadOnly,</span><br><span class="line">        IsAuthenticated</span><br><span class="line">    )</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">class SuperUserpermissions(APIView):</span><br><span class="line">    &#39;&#39;&#39;超级用户&#39;&#39;&#39;</span><br><span class="line">    permission_classes &#x3D; (IsAdminUser,)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">class NotLogin(APIView):</span><br><span class="line">    &#39;&#39;&#39;匿名用户&#39;&#39;&#39;</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
+<p>另外，在前后端分离项目中一般不会使用 BasicAuthentication 与 SessionAuthentication 的认证方式。所以，我们只需要关心 TokenAuthentication 认证方式即可。</p>
+<h3 id="三-TokenAuthentication"><a href="#三-TokenAuthentication" class="headerlink" title="三.TokenAuthentication"></a>三.TokenAuthentication</h3><p>要使用<code>TokenAuthentication</code>方案，你需要将认证类配置为包含<code>TokenAuthentication</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;: (</span><br><span class="line">        &#39;rest_framework.authentication.BasicAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.SessionAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.TokenAuthentication&#39;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并在INSTALLED_APPS设置中另外包含 rest_framework.authtoken：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS &#x3D; (</span><br><span class="line">    ...</span><br><span class="line">    &#39;rest_framework.authtoken&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意： rest_framework.authtoken应用一定要放到INSTALLED_APPS，并且确保在更改设置后运行<code>python manage.py migrate</code>。 rest_framework.authtoken应用需要创建一张表用来存储用户与Token的对应关系。<br>数据库迁移完成后，可以看到多了一个authtoken_token表，表结构如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show create table authtoken_token\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: authtoken_token</span><br><span class="line">Create Table: CREATE TABLE &#96;authtoken_token&#96; (</span><br><span class="line">  &#96;key&#96; varchar(40) NOT NULL,</span><br><span class="line">  &#96;created&#96; datetime(6) NOT NULL,</span><br><span class="line">  &#96;user_id&#96; int(11) NOT NULL,</span><br><span class="line">  PRIMARY KEY (&#96;key&#96;),</span><br><span class="line">  UNIQUE KEY &#96;user_id&#96; (&#96;user_id&#96;),</span><br><span class="line">  CONSTRAINT &#96;authtoken_token_user_id_35299eff_fk_auth_user_id&#96; FOREIGN KEY (&#96;user_id&#96;) REFERENCES &#96;auth_user&#96; (&#96;id&#96;)</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8</span><br><span class="line">1 row in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+<p>其中“user_id”字段关联到了用户表。</p>
+<ul>
+<li>配置URLconf<br>使用<code>TokenAuthentication</code>时，你可能希望为客户提供一种机制，以获取给定用户名和密码的令牌。 REST framework 提供了一个内置的视图来支持这种行为。要使用它，请将<code>obtain_auth_token</code>视图添加到您的 URLconf 中：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken import views</span><br><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-auth&#x2F;&#39;, views.obtain_auth_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+其中，<code>r&#39;^api-token-auth/&#39;</code>部分实际上可以用任何你想使用URL替代。</li>
+<li>创建Token<br>你还需要为用户创建令牌，用户令牌与用户是一一对应的。如果你已经创建了一些用户，则可以为所有现有用户生成令牌，例如<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.models import User</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line"> </span><br><span class="line">for user in User.objects.all():</span><br><span class="line">    Token.objects.get_or_create(user&#x3D;user)</span><br></pre></td></tr></table></figure>
+你也可以为某个已经存在的用户创建Token：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for user in User.objects.filter(username&#x3D;&#39;admin&#39;):</span><br><span class="line">    Token.objects.get_or_create(user&#x3D;user)</span><br></pre></td></tr></table></figure>
+创建成功后，会在Token表中生成对应的Token信息。</li>
+</ul>
+<p>如果你希望每个用户都拥有一个自动生成的令牌，则只需捕捉用户的<code>post_save</code>信号即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from django.conf import settings</span><br><span class="line">from django.db.models.signals import post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line"></span><br><span class="line">@receiver(post_save, sender&#x3D;settings.AUTH_USER_MODEL)</span><br><span class="line">def create_auth_token(sender, instance&#x3D;None, created&#x3D;False, **kwargs):</span><br><span class="line">    if created:</span><br><span class="line">        Token.objects.create(user&#x3D;instance)</span><br></pre></td></tr></table></figure>
+<p>请注意，你需要确保将此代码片段放置在已安装的models.py模块或 Django 启动时将导入的其他某个位置。</p>
+<ul>
+<li>获取Token<br>上面虽然介绍了多种创建Token的方式，其实我们最简单的就是只需要配置一下urls.py，然后就可以通过暴露的API来获取Token了。当使用表单数据或 JSON 将有效的username和password字段发布到视图时，obtain_auth_token视图将返回 JSON 响应：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl -d &quot;username&#x3D;admin&amp;password&#x3D;admin123456&quot; http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;api-token-auth&#x2F;</span><br><span class="line">&#123;&quot;token&quot;:&quot;684b41712e8e38549504776613bd5612ba997616&quot;&#125;</span><br></pre></td></tr></table></figure>
+请注意，缺省的<code>obtain_auth_token</code>视图显式使用 JSON 请求和响应，而不是使用你设置的默认的渲染器和解析器类。</li>
+</ul>
+<p>当我们正常获取到Token后，<code>obtain_auth_token</code>视图会自动帮我们在Token表中创建对应的Token。源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">class ObtainAuthToken(APIView):</span><br><span class="line">    throttle_classes &#x3D; ()</span><br><span class="line">    permission_classes &#x3D; ()</span><br><span class="line">    parser_classes &#x3D; (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)</span><br><span class="line">    renderer_classes &#x3D; (renderers.JSONRenderer,)</span><br><span class="line">    serializer_class &#x3D; AuthTokenSerializer</span><br><span class="line">    if coreapi is not None and coreschema is not None:</span><br><span class="line">        schema &#x3D; ManualSchema(</span><br><span class="line">            fields&#x3D;[</span><br><span class="line">                coreapi.Field(</span><br><span class="line">                    name&#x3D;&quot;username&quot;,</span><br><span class="line">                    required&#x3D;True,</span><br><span class="line">                    location&#x3D;&#39;form&#39;,</span><br><span class="line">                    schema&#x3D;coreschema.String(</span><br><span class="line">                        title&#x3D;&quot;Username&quot;,</span><br><span class="line">                        description&#x3D;&quot;Valid username for authentication&quot;,</span><br><span class="line">                    ),</span><br><span class="line">                ),</span><br><span class="line">                coreapi.Field(</span><br><span class="line">                    name&#x3D;&quot;password&quot;,</span><br><span class="line">                    required&#x3D;True,</span><br><span class="line">                    location&#x3D;&#39;form&#39;,</span><br><span class="line">                    schema&#x3D;coreschema.String(</span><br><span class="line">                        title&#x3D;&quot;Password&quot;,</span><br><span class="line">                        description&#x3D;&quot;Valid password for authentication&quot;,</span><br><span class="line">                    ),</span><br><span class="line">                ),</span><br><span class="line">            ],</span><br><span class="line">            encoding&#x3D;&quot;application&#x2F;json&quot;,</span><br><span class="line">        )</span><br><span class="line"> </span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        serializer &#x3D; self.serializer_class(data&#x3D;request.data,</span><br><span class="line">                                           context&#x3D;&#123;&#39;request&#39;: request&#125;)</span><br><span class="line">        serializer.is_valid(raise_exception&#x3D;True)</span><br><span class="line">        user &#x3D; serializer.validated_data[&#39;user&#39;]</span><br><span class="line">        token, created &#x3D; Token.objects.get_or_create(user&#x3D;user)</span><br><span class="line">        return Response(&#123;&#39;token&#39;: token.key&#125;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">obtain_auth_token &#x3D; ObtainAuthToken.as_view()</span><br></pre></td></tr></table></figure>
+<p>默认情况下，没有权限或限制应用于<code>obtain_auth_token</code>视图。 如果您希望应用<code>throttling</code>，则需要重写视图类，并使用<code>throttle_classes</code>属性包含它们。</p>
+<p>如果你需要自定义<code>obtain_auth_token</code>视图，你可以通过继承<code>ObtainAuthToken</code>视图类来实现，并在你的urls.py中使用它。例如，你可能会返回超出token值的其他用户信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken.views import ObtainAuthToken</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line">from rest_framework.response import Response</span><br><span class="line"> </span><br><span class="line">class CustomAuthToken(ObtainAuthToken):</span><br><span class="line"> </span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">        serializer &#x3D; self.serializer_class(data&#x3D;request.data,</span><br><span class="line">                                           context&#x3D;&#123;&#39;request&#39;: request&#125;)</span><br><span class="line">        serializer.is_valid(raise_exception&#x3D;True)</span><br><span class="line">        user &#x3D; serializer.validated_data[&#39;user&#39;]</span><br><span class="line">        token, created &#x3D; Token.objects.get_or_create(user&#x3D;user)</span><br><span class="line">        return Response(&#123;</span><br><span class="line">            &#39;token&#39;: token.key,</span><br><span class="line">            &#39;user_id&#39;: user.pk,</span><br><span class="line">            &#39;email&#39;: user.email</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+<p>还有urls.py:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-auth&#x2F;&#39;, CustomAuthToken.as_view())</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>认证Token<br>当我们获取到Token后，就可以拿着这个Token来认证其他API了。对于客户端进行身份验证，令牌密钥应包含在 <code>Authorization</code> HTTP header 中。关键字应以字符串文字 “Token” 为前缀，用空格分隔两个字符串。例如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b</span><br></pre></td></tr></table></figure>
+注意： 如果你想在 header 中使用不同的关键字（例如Bearer），只需子类化<code>TokenAuthentication</code>并设置keyword类变量。<br>如果成功通过身份验证，<code>TokenAuthentication</code>将提供以下凭据。</li>
+</ul>
+<p>request.user是一个User实例，包含了用户名及相关信息。<br>request.auth是一个rest_framework.authtoken.models.Token实例。<br>未经身份验证的响应被拒绝将导致HTTP 401 Unauthorized的响应和相应的 WWW-Authenticate header。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WWW-Authenticate: Token</span><br></pre></td></tr></table></figure>
+<p>测试令牌认证的API，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X GET -H &#39;Authorization: Token 684b41712e8e38549504776613bd5612ba997616&#39; http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;virtual&#x2F;</span><br></pre></td></tr></table></figure>
+<p>注意： 如果您在生产中使用<code>TokenAuthentication</code>，则必须确保您的 API 只能通过https访问。</p>
+<h3 id="四-认证源码"><a href="#四-认证源码" class="headerlink" title="四. 认证源码"></a>四. 认证源码</h3><p>使用 TokenAuthentication 认证方式，当认证成功后，在 request 中将提供了 request.user 和 request.auth 实例。其中 request.user 实例中有用户信息，比如用户名及用户ID，而 request.auth 实例中有Token信息。那么DRF是如何把 Token 转换为用户信息呢？通过下面的源码部分就可以看到它们是如何转换的。</p>
+<p>基于 DRF 的请求处理，与常规的 url 配置不同，通常一个 Django 的 url 请求对应一个视图函数，在使用 DRF 时，我们要基于视图对象，然后调用视图对象的 as_view 函数，as_view 函数中会调用 rest_framework/views.py 中的 dispatch 函数，这个函数会根据 request 请求方法，去调用我们在 view 对象中定义的对应的方法，就像这样:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken import views</span><br><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-auth&#x2F;&#39;, views.obtain_auth_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>这里虽然直接调用 views.obtain_auth_token 方法，但进入到 views.obtain_auth_token 方法后还是 DRF 模式，源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obtain_auth_token &#x3D; ObtainAuthToken.as_view()</span><br></pre></td></tr></table></figure>
+<p>ObtainAuthToken 方法是继承 DRF 中的 APIView 的 View 类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class ObtainAuthToken(APIView):</span><br><span class="line">    throttle_classes &#x3D; ()</span><br><span class="line">    permission_classes &#x3D; ()</span><br><span class="line">    parser_classes &#x3D; (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)</span><br><span class="line">    renderer_classes &#x3D; (renderers.JSONRenderer,)</span><br><span class="line">    serializer_class &#x3D; AuthTokenSerializer</span><br><span class="line">    ....</span><br></pre></td></tr></table></figure>
+<p>如果你是用 POST 方法请求 ObtainAuthToken，那么 as_view() 函数会调用 dispatch 函数，dispatch 根据 request.METHOD，这里是 POST，去调用 ObtainAuthToken 类的 POST 方法，这就跟通常的 url-&gt;view 的流程一样了。</p>
+<p>这里需要注意的一点就是，DRF 中的 APIVIEW 是继承 Django View 的，重写了部分 as_view 方法，而调用 dispatch 函数是在 Django View 的 as_view 方法中做的事情，源码部分如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class APIView(View):</span><br><span class="line">    ....</span><br><span class="line">    @classmethod</span><br><span class="line">    def as_view(cls, **initkwargs):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Store the original class on the view function.</span><br><span class="line"> </span><br><span class="line">        This allows us to discover information about the view when we do URL</span><br><span class="line">        reverse lookups.  Used for breadcrumb generation.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if isinstance(getattr(cls, &#39;queryset&#39;, None), models.query.QuerySet):</span><br><span class="line">            def force_evaluation():</span><br><span class="line">                raise RuntimeError(</span><br><span class="line">                    &#39;Do not evaluate the &#96;.queryset&#96; attribute directly, &#39;</span><br><span class="line">                    &#39;as the result will be cached and reused between requests. &#39;</span><br><span class="line">                    &#39;Use &#96;.all()&#96; or call &#96;.get_queryset()&#96; instead.&#39;</span><br><span class="line">                )</span><br><span class="line">            cls.queryset._fetch_all &#x3D; force_evaluation</span><br><span class="line"> </span><br><span class="line">        view &#x3D; super(APIView, cls).as_view(**initkwargs)</span><br><span class="line">        view.cls &#x3D; cls</span><br><span class="line">        view.initkwargs &#x3D; initkwargs</span><br></pre></td></tr></table></figure>
+<p>但是用户认证是在执行请求 View 之前做的，所以其实就是在 dispatch 函数之中做的，具体见源码 rest-framework/views.py 中 APIView 类中的 dispatch 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">class APIView(View):</span><br><span class="line">    &#x2F;&#x2F; 从settings文件中获取认证类、限流类、权限类</span><br><span class="line">    authentication_classes &#x3D; api_settings.DEFAULT_AUTHENTICATION_CLASSES</span><br><span class="line">    throttle_classes &#x3D; api_settings.DEFAULT_THROTTLE_CLASSES</span><br><span class="line">    permission_classes &#x3D; api_settings.DEFAULT_PERMISSION_CLASSES</span><br><span class="line">    ....</span><br><span class="line">    </span><br><span class="line">    def dispatch(self, request, *args, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        &#96;.dispatch()&#96; is pretty much the same as Django&#39;s regular dispatch,</span><br><span class="line">        but with extra hooks for startup, finalize, and exception handling.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.args &#x3D; args</span><br><span class="line">        self.kwargs &#x3D; kwargs</span><br><span class="line">       </span><br><span class="line">        &#x2F;&#x2F; 封装request，对原始request对象增加一些功能，比如认证类，都是在initialize_request方法中完成</span><br><span class="line">        request &#x3D; self.initialize_request(request, *args, **kwargs)</span><br><span class="line">        self.request &#x3D; request</span><br><span class="line">        self.headers &#x3D; self.default_response_headers  # deprecate?</span><br><span class="line"> </span><br><span class="line">        try:</span><br><span class="line">            &#x2F;&#x2F; 调用self.initial进行用户认证</span><br><span class="line">            self.initial(request, *args, **kwargs)</span><br><span class="line"> </span><br><span class="line">            # Get the appropriate handler method</span><br><span class="line">            if request.method.lower() in self.http_method_names:</span><br><span class="line">                handler &#x3D; getattr(self, request.method.lower(),</span><br><span class="line">                                  self.http_method_not_allowed)</span><br><span class="line">            else:</span><br><span class="line">                handler &#x3D; self.http_method_not_allowed</span><br><span class="line"> </span><br><span class="line">            response &#x3D; handler(request, *args, **kwargs)</span><br><span class="line"> </span><br><span class="line">        except Exception as exc:</span><br><span class="line">            response &#x3D; self.handle_exception(exc)</span><br><span class="line"> </span><br><span class="line">        self.response &#x3D; self.finalize_response(request, response, *args, **kwargs)</span><br><span class="line">        return self.response</span><br></pre></td></tr></table></figure>
+<p>这里的 self.initialize_request 也可以关注一下，因为这里的 request 对象，后面也会有调用的地方。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class APIView(View):</span><br><span class="line">    ....</span><br><span class="line">    def initialize_request(self, request, *args, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Returns the initial request object.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        parser_context &#x3D; self.get_parser_context(request)</span><br><span class="line"> </span><br><span class="line">        return Request(</span><br><span class="line">            request,</span><br><span class="line">            parsers&#x3D;self.get_parsers(),</span><br><span class="line">            authenticators&#x3D;self.get_authenticators(),   &#x2F;&#x2F; 这里把认证类封装进行了request里面</span><br><span class="line">            negotiator&#x3D;self.get_content_negotiator(),</span><br><span class="line">            parser_context&#x3D;parser_context</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<p>其中 self.get_authenticators() 方法就是用来取 self.authentication_classes 变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class APIView(View):</span><br><span class="line">    ....</span><br><span class="line">    def get_authenticators(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Instantiates and returns the list of authenticators that this view can use.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        return [auth() for auth in self.authentication_classes]</span><br></pre></td></tr></table></figure>
+<p>关于 authentication_classes 变量，上面已经给出了，就在 APIView 里面 authentication_classes 字段。</p>
+<p>然后就到了认证，重点在于 self.initial(request, *args, **kwargs) 函数，对于这个函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class APIView(View):</span><br><span class="line">    ....</span><br><span class="line">    def initial(self, request, *args, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Runs anything that needs to occur prior to calling the method handler.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.format_kwarg &#x3D; self.get_format_suffix(**kwargs)</span><br><span class="line"> </span><br><span class="line">        # Perform content negotiation and store the accepted info on the request</span><br><span class="line">        neg &#x3D; self.perform_content_negotiation(request)</span><br><span class="line">        request.accepted_renderer, request.accepted_media_type &#x3D; neg</span><br><span class="line"> </span><br><span class="line">        # Determine the API version, if versioning is in use.</span><br><span class="line">        version, scheme &#x3D; self.determine_version(request, *args, **kwargs)</span><br><span class="line">        request.version, request.versioning_scheme &#x3D; version, scheme</span><br><span class="line"> </span><br><span class="line">        # Ensure that the incoming request is permitted</span><br><span class="line">        self.perform_authentication(request)   &#x2F;&#x2F; 用户认证</span><br><span class="line">        self.check_permissions(request)        &#x2F;&#x2F; 权限检查</span><br><span class="line">        self.check_throttles(request)          &#x2F;&#x2F; 限流检查</span><br></pre></td></tr></table></figure>
+<p>这里关注 self.perform_authentication(request) 验证某个用户，其实可以看到权限检查及限流也是在这里做的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class APIView(View):</span><br><span class="line">    ....</span><br><span class="line">    def perform_authentication(self, request):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Perform authentication on the incoming request.</span><br><span class="line"> </span><br><span class="line">        Note that if you override this and simply &#39;pass&#39;, then authentication</span><br><span class="line">        will instead be performed lazily, the first time either</span><br><span class="line">        &#96;request.user&#96; or &#96;request.auth&#96; is accessed.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        request.user</span><br></pre></td></tr></table></figure>
+<p>这里 request.user 其实是一个 @property 的函数，加 @property 表示调用 user 方法的时候不需要加括号“user()”，可以直接调用 request.user 。而这里的 request 对象就是上面 initialize_request 方法返回的，其中还返回了 DRF 定义的 request 对象，在 request 对象中有被 @property 装饰的 user 方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Request(object):</span><br><span class="line">    ....</span><br><span class="line">    @property</span><br><span class="line">    def user(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Returns the user associated with the current request, as authenticated</span><br><span class="line">        by the authentication classes provided to the request.</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if not hasattr(self, &#39;_user&#39;):</span><br><span class="line">            with wrap_attributeerrors():</span><br><span class="line">                self._authenticate()</span><br><span class="line">        return self._user</span><br></pre></td></tr></table></figure>
+<p>重点来了，到了真正认证的方法了，关注 <code>self._authenticate()</code>函数即可。此方法会循环尝试每个 DRF 认证方式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class Request(object):</span><br><span class="line">    ....</span><br><span class="line">    def _authenticate(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        尝试使用每个身份验证实例验证请求</span><br><span class="line">        self.authenticators &#x3D; [BasicAuthentication, SessionAuthentication, TokenAuthentication]</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        for authenticator in self.authenticators:</span><br><span class="line">            try:</span><br><span class="line">                user_auth_tuple &#x3D; authenticator.authenticate(self)</span><br><span class="line">            except exceptions.APIException:</span><br><span class="line">                &#x2F;&#x2F; 如果authenticate方法抛出异常，则执行self._not_authenticated方法，相当于匿名用户，没有通过认证</span><br><span class="line">                self._not_authenticated()</span><br><span class="line">                raise</span><br><span class="line"> </span><br><span class="line">            if user_auth_tuple is not None:</span><br><span class="line">                self._authenticator &#x3D; authenticator</span><br><span class="line">                self.user, self.auth &#x3D; user_auth_tuple</span><br><span class="line">                return</span><br><span class="line"> </span><br><span class="line">        &#x2F;&#x2F; 如果没有设置认证类的话，也相当于匿名用户，没有通过认证</span><br><span class="line">        self._not_authenticated()</span><br></pre></td></tr></table></figure>
+<p>那么 self.authenticators 从哪儿来的呢？就是上面展示的，在 APIVIEW 类中的 authentication_classes = api_settings.DEFAULT_AUTHENTICATION_CLASSES 得到的。我们上面在介绍 DRF 身份验证时也说了，可以把认证类定义在全局 settings 文件中，你还可以使用基于 APIView 类的视图，在每个视图或每个视图集的基础上设置身份验证方案。如下方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class ExampleView(APIView):</span><br><span class="line">    authentication_classes &#x3D; (SessionAuthentication, BasicAuthentication)</span><br><span class="line">    permission_classes &#x3D; (IsAuthenticated,)</span><br></pre></td></tr></table></figure>
+<p>当基于 APIView 类的视图定义验证或权限类时，相当于覆盖了原生 APIVIEW 中的相关变量，自然就使用覆盖后的变量了。authentication_classes 里面放的就是可以用来验证一个用户的类，他是一个元组，验证用户时，按照这个元组顺序，直到验证通过或者遍历整个元组还没有通过。同理 self.check_permissions(request) 是验证该用户是否具有API的使用权限。关于对view控制的其他类都在rest-framework/views.py的APIView类中定义了。</p>
+<p>由于我们这里只是拿 TokenAuthentication 认证说明，所以忽略 BasicAuthentication 和 SessionAuthentication 这两种认证，其原理与TokenAuthentication 一样。这样，就进入到了 TokenAuthentication 认证，其源码部分如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 获取header部分 Authorization 标识的信息</span><br><span class="line">def get_authorization_header(request):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Return request&#39;s &#39;Authorization:&#39; header, as a bytestring.</span><br><span class="line"> </span><br><span class="line">    Hide some test client ickyness where the header can be unicode.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    auth &#x3D; request.META.get(&#39;HTTP_AUTHORIZATION&#39;, b&#39;&#39;)</span><br><span class="line">    if isinstance(auth, text_type):</span><br><span class="line">        # Work around django test client oddness</span><br><span class="line">        auth &#x3D; auth.encode(HTTP_HEADER_ENCODING)</span><br><span class="line">    return auth</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 解析并认证 Token</span><br><span class="line">class TokenAuthentication(BaseAuthentication):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Simple token based authentication.</span><br><span class="line"> </span><br><span class="line">    Clients should authenticate by passing the token key in the &quot;Authorization&quot;</span><br><span class="line">    HTTP header, prepended with the string &quot;Token &quot;.  For example:</span><br><span class="line"> </span><br><span class="line">        Authorization: Token 401f7ac837da42b97f613d789819ff93537bee6a</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"> </span><br><span class="line">    keyword &#x3D; &#39;Token&#39;</span><br><span class="line">    model &#x3D; None</span><br><span class="line"> </span><br><span class="line">    def get_model(self):</span><br><span class="line">        if self.model is not None:</span><br><span class="line">            return self.model</span><br><span class="line">        from rest_framework.authtoken.models import Token</span><br><span class="line">        return Token</span><br><span class="line"> </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    A custom token model may be used, but must have the following properties.</span><br><span class="line"> </span><br><span class="line">    * key -- The string identifying the token</span><br><span class="line">    * user -- The user to which the token belongs</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"> </span><br><span class="line">    def authenticate(self, request):</span><br><span class="line">        &#x2F;&#x2F; 通过上面的get_authorization_header方法得到Token信息</span><br><span class="line">        &#x2F;&#x2F; auth &#x3D; [b&#39;Token&#39;, b&#39;684b41712e8e38549504776613bd5612ba997616&#39;]</span><br><span class="line">        auth &#x3D; get_authorization_header(request).split()</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F; 通过获取Token关键字，并与keyword变量比对，来判断是否是Token方式认证</span><br><span class="line">        if not auth or auth[0].lower() !&#x3D; self.keyword.lower().encode():</span><br><span class="line">            return None</span><br><span class="line"> </span><br><span class="line">        &#x2F;&#x2F; auth长度等于2时才是合法值，继续往下进行</span><br><span class="line">        if len(auth) &#x3D;&#x3D; 1:</span><br><span class="line">            msg &#x3D; _(&#39;Invalid token header. No credentials provided.&#39;)</span><br><span class="line">            raise exceptions.AuthenticationFailed(msg)</span><br><span class="line">        elif len(auth) &gt; 2:</span><br><span class="line">            msg &#x3D; _(&#39;Invalid token header. Token string should not contain spaces.&#39;)</span><br><span class="line">            raise exceptions.AuthenticationFailed(msg)</span><br><span class="line">     </span><br><span class="line">        &#x2F;&#x2F; 进行token解码，从bytes编码格式转为字符串</span><br><span class="line">        try:</span><br><span class="line">            token &#x3D; auth[1].decode()</span><br><span class="line">        except UnicodeError:</span><br><span class="line">            msg &#x3D; _(&#39;Invalid token header. Token string should not contain invalid characters.&#39;)</span><br><span class="line">            raise exceptions.AuthenticationFailed(msg)</span><br><span class="line"> </span><br><span class="line">        &#x2F;&#x2F; 把转换过的token传给认证凭证方法进行验证</span><br><span class="line">        return self.authenticate_credentials(token)</span><br><span class="line"> </span><br><span class="line">    &#x2F;&#x2F; 验证凭证方法进行接收token并进行验证</span><br><span class="line">    def authenticate_credentials(self, key):</span><br><span class="line">        &#x2F;&#x2F; 获取Token模型实例</span><br><span class="line">        model &#x3D; self.get_model()</span><br><span class="line">        try:</span><br><span class="line">            &#x2F;&#x2F; 使用select_related方法获取相应外键对应的对象（就是两表Join），然后进行Token过滤查询</span><br><span class="line">            token &#x3D; model.objects.select_related(&#39;user&#39;).get(key&#x3D;key)</span><br><span class="line">        except model.DoesNotExist:</span><br><span class="line">            raise exceptions.AuthenticationFailed(_(&#39;Invalid token.&#39;))</span><br><span class="line"> </span><br><span class="line">        &#x2F;&#x2F; 判断用户是否是登录成功</span><br><span class="line">        if not token.user.is_active:</span><br><span class="line">            raise exceptions.AuthenticationFailed(_(&#39;User inactive or deleted.&#39;))</span><br><span class="line"> </span><br><span class="line">        &#x2F;&#x2F; 返回user实例，及token实例</span><br><span class="line">        return (token.user, token)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>PS：DRF自带的TokenAuthentication认证方式也非常简单，同时弊端也很大，真正项目中用的较少。由于需要存储在数据库表中，它在分布式系统中用起来较为麻烦，并且每次都需要查询数据库，增加数据库压力；同时它不支持Token的过期设置，这是一个很大的问题。在实际前后端分离项目中使用JWT（Json Web Token）标准的认证方式较多，每个语言都有各自实现JWT的方式，Python也不例外。</p>
+</blockquote>
+<h3 id="五-JWT认证"><a href="#五-JWT认证" class="headerlink" title="五. JWT认证"></a>五. JWT认证</h3><p>了解完DRF自带的TokenAuthentication认证方式的弊端之后，再来看JWT（Json Web Token）认证方式。它们两个的原理是一样的，就是认证用户Token，然后取出对应的用户。但JWT解决了两个较大的问题。</p>
+<p>第一，是不需要把Token存储到数据库表中了，而是根据一定的算法来算出用户Token，然后每次用户来验证时再以同样的方式生成对应的Token进行校验。当然，实际JWT生成Token的方式还是较为复杂的，具体可以看JWT协议相关文章。</p>
+<p>第二，JWT对于生成的Token可以设置过期时间，从而在一定程度提高了Token的安全性。</p>
+<p>JWT的原理还是稍稍有点麻烦的，里面涉及了一些对称加密和非对称加密的算法。但是JWT使用起来确是非常简单，Python中有PyJWT库，而在DRF中也有对应的开源项目<a href="https://github.com/GetBlimp/django-rest-framework-jwt" target="_blank" rel="noopener">django-rest-framework-jwt</a></p>
+<ul>
+<li>安装<br>直接使用pip安装即可，目前支持Python、Django、DRF主流版本：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install djangorestframework-jwt</span><br></pre></td></tr></table></figure></li>
+<li>使用<br>在settings.py文件中，将JSONWebTokenAuthentication 添加到REST framework框架的DEFAULT_AUTHENTICATION_CLASSES<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_PERMISSION_CLASSES&#39;: (</span><br><span class="line">        &#39;rest_framework.permissions.IsAuthenticated&#39;,</span><br><span class="line">    ),</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;: (</span><br><span class="line">        &#39;rest_framework_jwt.authentication.JSONWebTokenAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.SessionAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.BasicAuthentication&#39;,</span><br><span class="line">    ),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+同样，你还可以使用基于APIView类的视图，在每个视图或每个视图集的基础上设置身份验证方案。与上面演示的 Token 认证一样，这里就不贴代码了，尽可能使用基于APIView类的视图认证方式。<br>但使用基于APIView类的视图认证方式时，不要忘记导入类。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_jwt.authentication import JSONWebTokenAuthentication</span><br></pre></td></tr></table></figure>
+在你的urls.py文件中添加以下URL路由，以便通过POST包含用户名和密码的令牌获取。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_jwt.views import obtain_jwt_token</span><br><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-auth&#x2F;&#39;, obtain_jwt_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+如果你使用用户名admin和密码admin123456创建了用户，则可以通过在终端中执行以下操作来测试JWT是否正常工作。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X POST -d &quot;username&#x3D;admin&amp;password&#x3D;admin123456&quot; http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;api-token-auth&#x2F;</span><br></pre></td></tr></table></figure>
+或者，你可以使用Django REST framework支持的所有内容类型来获取身份验证令牌。例如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X POST -H &quot;Content-Type: application&#x2F;json&quot; -d &#39;&#123;&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;admin123456&quot;&#125;&#39; http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;api-token-auth&#x2F;</span><br></pre></td></tr></table></figure>
+现在访问需要认证的API时，就必须要包含<code>Authorization: JWT &lt;your_token&gt;</code>头信息了：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -H &quot;Authorization: JWT &lt;your_token&gt;&quot; http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;virtual&#x2F;</span><br></pre></td></tr></table></figure></li>
+<li>刷新Token<br>如果JWT_ALLOW_REFRESH为True，可以“刷新”未过期的令牌以获得具有更新到期时间的全新令牌。像如下这样添加一个URL模式：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_jwt.views import refresh_jwt_token</span><br><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-refresh&#x2F;&#39;, refresh_jwt_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+使用方式就是将现有令牌传递到刷新API，如下所示: <code>{&quot;token&quot;: EXISTING_TOKEN}</code>。请注意，只有非过期的令牌才有效。另外，响应JSON看起来与正常获取令牌端点<code>{&quot;token&quot;: NEW_TOKEN}</code>相同。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X POST -H &quot;Content-Type: application&#x2F;json&quot; -d &#39;&#123;&quot;token&quot;:&quot;&lt;EXISTING_TOKEN&gt;&quot;&#125;&#39; http:&#x2F;&#x2F;localhost:8000&#x2F;api-token-refresh&#x2F;</span><br></pre></td></tr></table></figure>
+可以重复使用令牌刷新（token1 -&gt; token2 -&gt; token3），但此令牌链存储原始令牌（使用用户名/密码凭据获取）的时间。作为orig_iat，你只能将刷新令牌保留至JWT_REFRESH_EXPIRATION_DELTA。<br>刷新token以获得新的token的作用在于，持续保持活跃用户登录状态。比如通过用户密码获得的token有效时间为1小时，那么也就意味着1小时后此token失效，用户必须得重新登录，这对于活跃用户来说其实是多余的。如果这个用户在这1小时内都在浏览网站，我们不应该让用户重新登录，就是在token没有失效之前调用刷新接口为用户获得新的token。</li>
+<li>认证Token<br>在一些微服务架构中，身份验证由单个服务处理。此服务负责其他服务委派确认用户已登录此身份验证服务的责任。这通常意味着其他服务将从用户接收JWT传递给身份验证服务，并在将受保护资源返回给用户之前等待JWT有效的确认。添加以下URL模式：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_jwt.views import verify_jwt_token</span><br><span class="line">urlpatterns +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-verify&#x2F;&#39;, verify_jwt_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+将Token传递给验证API，如果令牌有效，则返回令牌，返回状态码为200。否则，它将返回400 Bad Request以及识别令牌无效的错误。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X POST -H &quot;Content-Type: application&#x2F;json&quot; -d &#39;&#123;&quot;token&quot;:&quot;&lt;EXISTING_TOKEN&gt;&quot;&#125;&#39; http:&#x2F;&#x2F;localhost:8000&#x2F;api-token-verify&#x2F;</span><br></pre></td></tr></table></figure></li>
+<li>手动创建Token<br>有时候你可能希望手动生成令牌，例如在创建帐户后立即将令牌返回给用户。或者，你需要返回的信息不止是Token，可能还有用户权限相关值。你可以这样做：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_jwt.settings import api_settings</span><br><span class="line"> </span><br><span class="line">jwt_payload_handler &#x3D; api_settings.JWT_PAYLOAD_HANDLER</span><br><span class="line">jwt_encode_handler &#x3D; api_settings.JWT_ENCODE_HANDLER</span><br><span class="line"> </span><br><span class="line">payload &#x3D; jwt_payload_handler(user)</span><br><span class="line">token &#x3D; jwt_encode_handler(payload)</span><br></pre></td></tr></table></figure></li>
+<li>其他设置<br>你可以覆盖一些其他设置，比如变更Token过期时间，以下是所有可用设置的默认值。在settings.py文件中设置。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">JWT_AUTH &#x3D; &#123;</span><br><span class="line">    &#39;JWT_ENCODE_HANDLER&#39;:</span><br><span class="line">    &#39;rest_framework_jwt.utils.jwt_encode_handler&#39;,</span><br><span class="line"> </span><br><span class="line">    &#39;JWT_DECODE_HANDLER&#39;:</span><br><span class="line">    &#39;rest_framework_jwt.utils.jwt_decode_handler&#39;,</span><br><span class="line"> </span><br><span class="line">    &#39;JWT_PAYLOAD_HANDLER&#39;:</span><br><span class="line">    &#39;rest_framework_jwt.utils.jwt_payload_handler&#39;,</span><br><span class="line"> </span><br><span class="line">    &#39;JWT_PAYLOAD_GET_USER_ID_HANDLER&#39;:</span><br><span class="line">    &#39;rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler&#39;,</span><br><span class="line"> </span><br><span class="line">    &#39;JWT_RESPONSE_PAYLOAD_HANDLER&#39;:</span><br><span class="line">    &#39;rest_framework_jwt.utils.jwt_response_payload_handler&#39;,</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F; 这是用于签署JWT的密钥，确保这是安全的，不共享不公开的</span><br><span class="line">    &#39;JWT_SECRET_KEY&#39;: settings.SECRET_KEY,</span><br><span class="line">    &#39;JWT_GET_USER_SECRET_KEY&#39;: None,</span><br><span class="line">    &#39;JWT_PUBLIC_KEY&#39;: None,</span><br><span class="line">    &#39;JWT_PRIVATE_KEY&#39;: None,</span><br><span class="line">    &#39;JWT_ALGORITHM&#39;: &#39;HS256&#39;,</span><br><span class="line">    &#x2F;&#x2F; 如果秘钥是错误的，它会引发一个jwt.DecodeError</span><br><span class="line">    &#39;JWT_VERIFY&#39;: True,</span><br><span class="line">    &#39;JWT_VERIFY_EXPIRATION&#39;: True,</span><br><span class="line">    &#39;JWT_LEEWAY&#39;: 0,</span><br><span class="line">    &#x2F;&#x2F; Token过期时间设置</span><br><span class="line">    &#39;JWT_EXPIRATION_DELTA&#39;: datetime.timedelta(seconds&#x3D;300),</span><br><span class="line">    &#39;JWT_AUDIENCE&#39;: None,</span><br><span class="line">    &#39;JWT_ISSUER&#39;: None,</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F; 是否开启允许Token刷新服务，及限制Token刷新间隔时间，从原始Token获取开始计算</span><br><span class="line">    &#39;JWT_ALLOW_REFRESH&#39;: False,</span><br><span class="line">    &#39;JWT_REFRESH_EXPIRATION_DELTA&#39;: datetime.timedelta(days&#x3D;7),</span><br><span class="line"> </span><br><span class="line">    &#x2F;&#x2F; 定义与令牌一起发送的Authorization标头值前缀</span><br><span class="line">    &#39;JWT_AUTH_HEADER_PREFIX&#39;: &#39;JWT&#39;,</span><br><span class="line">    &#39;JWT_AUTH_COOKIE&#39;: None,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+一般除了过期时间外，其他配置参数很少改变。具体参数意义当用到时可以查询官网。</li>
+</ul>
+<p>JWT唯一的一个不算缺点的缺点就是Token太长了，180位。</p>
+<p><a href="https://segmentfault.com/a/1190000013010835" target="_blank" rel="noopener">Token 认证的来龙去脉</a></p>
+<p><a href="http://www.hi-roy.com/2017/01/11/%E5%9F%BA%E4%BA%8Ecookie%E7%9A%84django-rest-jwt%E8%AE%A4%E8%AF%81/" target="_blank" rel="noopener">基于cookie的django-rest-jwt认证</a></p>
+<p><a href="https://q1mi.github.io/Django-REST-framework-documentation/api-guide/authentication_zh/" target="_blank" rel="noopener">TokenAuthentication</a></p>
+<h3 id="refs"><a href="#refs" class="headerlink" title="refs"></a>refs</h3><p><a href="http://www.ywnds.com/?p=14967" target="_blank" rel="noopener">原文地址</a></p>
+<h3 id="权限相关参考"><a href="#权限相关参考" class="headerlink" title="权限相关参考"></a>权限相关参考</h3><p><a href="https://segmentfault.com/a/1190000004401112" target="_blank" rel="noopener">Django REST framework的各种技巧【目录索引】 - 后端开发那点事儿 - SegmentFault 思否</a><br><a href="https://segmentfault.com/a/1190000004400312" target="_blank" rel="noopener">Django REST framework的各种技巧——3.权限 - 后端开发那点事儿 - SegmentFault 思否</a><br><a href="https://cloud.tencent.com/developer/article/1155184" target="_blank" rel="noopener">django权限管理(Permission)-内置权限实现</a><br><a href="https://juejin.im/post/5a991807518825558a060a77" target="_blank" rel="noopener">django viewset</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/">Django REST framework API认证(包含JWT认证) + 权限</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 13:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 13:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/" title="Django REST framework API认证(包含JWT认证) + 权限">https://shuke163.github.io/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/">Django REST framework API认证(包含JWT认证) + 权限</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 13:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 13:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/" title="Django REST framework API认证(包含JWT认证) + 权限">https://shuke163.github.io/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Django-REST-framework-API%E8%AE%A4%E8%AF%81-%E5%8C%85%E5%90%ABJWT%E8%AE%A4%E8%AF%81-%E6%9D%83%E9%99%90/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Django/" <i class="fa fa-tag"></i> Django</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/python%E7%9A%84logging%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0json%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA/" rel="next" title="python的logging模块实现json格式的日志输出">
+                <i class="fa fa-chevron-left"></i> python的logging模块实现json格式的日志输出
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/Django%E5%BA%8F%E5%88%97%E5%8C%96/" rel="prev" title="Django序列化">
+                Django序列化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Django-REST-framework-API认证-包含JWT认证-权限"><span class="nav-text">Django REST framework API认证(包含JWT认证) + 权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-背景"><span class="nav-text">一. 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-身份验证"><span class="nav-text">二. 身份验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-TokenAuthentication"><span class="nav-text">三.TokenAuthentication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-认证源码"><span class="nav-text">四. 认证源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-JWT认证"><span class="nav-text">五. JWT认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#refs"><span class="nav-text">refs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#权限相关参考"><span class="nav-text">权限相关参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

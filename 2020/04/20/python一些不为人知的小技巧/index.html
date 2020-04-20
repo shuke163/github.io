@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PYTHON," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="python一些不为人知的小技巧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python一些不为人知的小技巧">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="python一些不为人知的小技巧">
+<meta property="article:published_time" content="2020-04-20T07:45:45.000Z">
+<meta property="article:modified_time" content="2020-04-20T07:46:16.340Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="PYTHON">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/python一些不为人知的小技巧/"/>
+
+
+
+
+
+  <title>python一些不为人知的小技巧 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python一些不为人知的小技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T15:45:45+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">3.7k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">19(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PYTHON/" itemprop="url" rel="index">
+                    <span itemprop="name">PYTHON</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" class="leancloud_visitors" data-flag-title="python一些不为人知的小技巧">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  python一些不为人知的小技巧
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="python一些不为人知的小技巧"><a href="#python一些不为人知的小技巧" class="headerlink" title="python一些不为人知的小技巧"></a>python一些不为人知的小技巧</h2><h3 id="startswith-和endswith-参数可以是元组"><a href="#startswith-和endswith-参数可以是元组" class="headerlink" title="startswith()和endswith()参数可以是元组"></a>startswith()和endswith()参数可以是元组</h3><p>当检测字符串开头或结尾时，如果有多个检测值，可以用元组作为startswith()和endswith()参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line">if image.endswith(&#39;.jpg&#39;) or image.endswith(&#39;.png&#39;) or image.endswith(&#39;.gif&#39;):</span><br><span class="line">    pass</span><br><span class="line"># good</span><br><span class="line">if image.endswith((&#39;.jpg&#39;, &#39;.png&#39;, &#39;.gif&#39;)):</span><br><span class="line">    pass</span><br><span class="line"># bad</span><br><span class="line">if url.startswith(&#39;http:&#39;) or url.startswith(&#39;https:&#39;) or url.startswith(&#39;ftp:&#39;):</span><br><span class="line">    pass</span><br><span class="line"># good</span><br><span class="line">if url.startswith((&#39;http:&#39;, &#39;https:&#39;, &#39;ftp:&#39;)):</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
+
+<h3 id="enumerate-设置start参数做为索引起始值"><a href="#enumerate-设置start参数做为索引起始值" class="headerlink" title="enumerate()设置start参数做为索引起始值"></a>enumerate()设置start参数做为索引起始值</h3><p>当用enumerate()迭代同时要得到索引时，可以设置start参数作为索引起始值:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># bad</span><br><span class="line">for index, v in enumerate(data):</span><br><span class="line">    print(index+1, v)</span><br><span class="line"># good</span><br><span class="line">for index, v in enumerate(data, start&#x3D;1):</span><br><span class="line">    print(index, v)</span><br></pre></td></tr></table></figure>
+
+<h3 id="对切片命名"><a href="#对切片命名" class="headerlink" title="对切片命名"></a>对切片命名</h3><p>当代码中到处都是硬编码的切片索引时，我们的代码将变得无法阅读。可以对切片命名解决此问题:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">record &#x3D; &#39;....................100.................513.25......&#39;</span><br><span class="line"># bad</span><br><span class="line">cost &#x3D; int(record[20:23]) * float(record[40:46])</span><br><span class="line"># good</span><br><span class="line">SHARES &#x3D; slice(20, 23)</span><br><span class="line">PRICE &#x3D; slice(40, 46)</span><br><span class="line">cost &#x3D; int(record[SHARES]) * float(record[PRICE])</span><br></pre></td></tr></table></figure>
+<p>作为一条基本准则，代码中如果有很多硬编码的索引值，将导致可读性合可维护性都不佳。一般来说，内置的slice()函数会创建一个切片对象，可以用在任何允许进行切片操作的地方。例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; items &#x3D; [0, 1, 2, 3, 4, 5, 6]</span><br><span class="line">&gt;&gt;&gt; a &#x3D; slice(2, 4)</span><br><span class="line">&gt;&gt;&gt; items[2:4]</span><br><span class="line">[2, 3]</span><br><span class="line">&gt;&gt;&gt; items[a]</span><br><span class="line">[2, 3]</span><br><span class="line">&gt;&gt;&gt; items[a] &#x3D; [-2, -3]</span><br><span class="line">&gt;&gt;&gt; items</span><br><span class="line">[0, 1, -2, -3, 4, 5, 6]</span><br><span class="line">&gt;&gt;&gt; del items[a]</span><br><span class="line">&gt;&gt;&gt; items</span><br><span class="line">[0, 1, 4, 5, 6]</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="上下文管理器可以同时管理多个资源"><a href="#上下文管理器可以同时管理多个资源" class="headerlink" title="上下文管理器可以同时管理多个资源"></a>上下文管理器可以同时管理多个资源</h3><p>假设你要读取一个文件的内容，经过处理以后，写入到另一个文件。你能写出pythonic的代码，所以你使用了上下文管理器，满意地的写出了下面这样的代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">with open(&#39;input.txt&#39;, &#39;r&#39;) as source:</span><br><span class="line">    with open(&#39;output.txt&#39;, &#39;w&#39;) as target:</span><br><span class="line">        target.write(source.read())</span><br></pre></td></tr></table></figure>
+<p>你已经做的很好了，但是上下文管理器可以同时管理多个资源，上面这段代码还可以这样写:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">with open(&#39;input.txt&#39;, &#39;r&#39;) as source, open(&#39;output.txt&#39;, &#39;w&#39;) as target:</span><br><span class="line">    target.write(source.read())</span><br></pre></td></tr></table></figure>
+
+<h3 id="else子句"><a href="#else子句" class="headerlink" title="else子句"></a>else子句</h3><p>Python中的else子句不仅能在if语句中使用，还能在for、while、和try语句中使用。<br>在for循环或是while循环正常运行完毕时（而不是通过break语句或是return语句或是异常退出循环），才会运行else块。<br>举个例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for i in range(3):</span><br><span class="line">...     print(i)</span><br><span class="line">... else:</span><br><span class="line">...     print(&#39;Iterated over everything&#39;)</span><br><span class="line">... </span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">Iterated over everything</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>如上，for循环正常结束，所以运行了后面的else块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for i in range(3):</span><br><span class="line">...     if i &#x3D;&#x3D; 2:</span><br><span class="line">...         break</span><br><span class="line">...     print(i)</span><br><span class="line">... else:</span><br><span class="line">...     print(&#39;Iterated over everything&#39;)</span><br><span class="line">... </span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>由此可以看出，for循环如果没有正常运行完毕（如上面是break结束循环的），是不会运行后面的else块。<br>仅当try块中没有异常抛出时才运行else块。一开始，你可能觉得没必要在try/except块中使用else子句。<br>毕竟，在下述代码片段中，只有dangerous_call()不抛出异常，after_call()才会执行，对吧？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try：</span><br><span class="line">    dangerous_call()</span><br><span class="line">    after_call()</span><br><span class="line">except OSError:</span><br><span class="line">    log(&#39;OSError...&#39;)</span><br></pre></td></tr></table></figure>
+<p>然而，after_call()不应该放在try块中。为了清晰明确，try块中应该只包括抛出预期异常的语句。因此,下面这种写法更优雅:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    dangerous_call()</span><br><span class="line">except OSError:</span><br><span class="line">    log(&#39;OSError...&#39;)</span><br><span class="line">else:</span><br><span class="line">    after_call()</span><br></pre></td></tr></table></figure>
+<p>现在很明确，try块防守的是dangerous_call()可能出现的错误，而不是after_call()。而且很明显，只有try块不抛出异常，才会执行after_call()。但要注意一点，else子句抛出的异常不会由前面的except子句处理，也就是说此时after_call()如果抛出异常，将不会被捕获到。</p>
+<h3 id="脚本与命令行结合"><a href="#脚本与命令行结合" class="headerlink" title="脚本与命令行结合"></a>脚本与命令行结合</h3><p>可以使用下面方法运行一个Python脚本，在脚本运行结束后，直接进入Python命令行。这样做的好处是脚本的对象不会被清空，可以通过命令行直接调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ cat hello.py</span><br><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;2&#x2F;7</span><br><span class="line"></span><br><span class="line">info &#x3D; &#123;&#39;name&#39;: &#39;shuke&#39;,&#39;age&#39;: 18&#125;</span><br><span class="line">li &#x3D; [1,2,3,4,&#39;A&#39;]</span><br><span class="line">const &#x3D; 1000</span><br><span class="line"># 结合命令行</span><br><span class="line">$ python -i hello.py</span><br><span class="line">&gt;&gt;&gt; info</span><br><span class="line">&#123;&#39;name&#39;: &#39;shuke&#39;, &#39;age&#39;: 18&#125;</span><br><span class="line">&gt;&gt;&gt; li</span><br><span class="line">[1, 2, 3, 4, &#39;A&#39;]</span><br><span class="line">&gt;&gt;&gt; const</span><br><span class="line">1000</span><br><span class="line">&gt;&gt;&gt; exit()</span><br></pre></td></tr></table></figure>
+
+<h3 id="默认字典的简单树状表达"><a href="#默认字典的简单树状表达" class="headerlink" title="默认字典的简单树状表达"></a>默认字典的简单树状表达</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">import collections</span><br><span class="line"></span><br><span class="line">tree &#x3D; lambda: collections.defaultdict(tree)</span><br><span class="line">root &#x3D; tree()</span><br><span class="line">root[&#39;menu&#39;][&#39;id&#39;] &#x3D; &#39;file&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;value&#39;] &#x3D; &#39;File&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;menuitems&#39;][&#39;new&#39;][&#39;value&#39;] &#x3D; &#39;New&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;menuitems&#39;][&#39;new&#39;][&#39;onclick&#39;] &#x3D; &#39;new();&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;menuitems&#39;][&#39;open&#39;][&#39;value&#39;] &#x3D; &#39;Open&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;menuitems&#39;][&#39;open&#39;][&#39;onclick&#39;] &#x3D; &#39;open();&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;menuitems&#39;][&#39;close&#39;][&#39;value&#39;] &#x3D; &#39;Close&#39;</span><br><span class="line">root[&#39;menu&#39;][&#39;menuitems&#39;][&#39;close&#39;][&#39;onclick&#39;] &#x3D; &#39;close();&#39;</span><br><span class="line">print(json.dumps(root, sort_keys&#x3D;True, indent&#x3D;4, separators&#x3D;(&#39;,&#39;, &#39;: &#39;)))</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">output: </span><br><span class="line">&#123;</span><br><span class="line">    &quot;menu&quot;: &#123;</span><br><span class="line">        &quot;id&quot;: &quot;file&quot;,</span><br><span class="line">        &quot;menuitems&quot;: &#123;</span><br><span class="line">            &quot;close&quot;: &#123;</span><br><span class="line">                &quot;onclick&quot;: &quot;close();&quot;,</span><br><span class="line">                &quot;value&quot;: &quot;Close&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;new&quot;: &#123;</span><br><span class="line">                &quot;onclick&quot;: &quot;new();&quot;,</span><br><span class="line">                &quot;value&quot;: &quot;New&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;open&quot;: &#123;</span><br><span class="line">                &quot;onclick&quot;: &quot;open();&quot;,</span><br><span class="line">                &quot;value&quot;: &quot;Open&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;value&quot;: &quot;File&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="扩展拆箱-只兼容python3"><a href="#扩展拆箱-只兼容python3" class="headerlink" title="扩展拆箱(只兼容python3)"></a>扩展拆箱(只兼容python3)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a, *b, c &#x3D; [1, 2, 3, 4, 5]</span><br><span class="line">&gt;&gt;&gt; a</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; b</span><br><span class="line">[2, 3, 4]</span><br><span class="line">&gt;&gt;&gt; c</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<h3 id="列表切割赋值"><a href="#列表切割赋值" class="headerlink" title="列表切割赋值"></a>列表切割赋值</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a &#x3D; [1, 2, 3, 4, 5]</span><br><span class="line">&gt;&gt;&gt; a[2:3] &#x3D; [0, 0]</span><br><span class="line">&gt;&gt;&gt; a</span><br><span class="line">[1, 2, 0, 0, 4, 5]</span><br><span class="line">&gt;&gt;&gt; a[1:1] &#x3D; [8, 9]</span><br><span class="line">&gt;&gt;&gt; a</span><br><span class="line">[1, 8, 9, 2, 0, 0, 4, 5]</span><br><span class="line">&gt;&gt;&gt; a[1:-1] &#x3D; []</span><br><span class="line">&gt;&gt;&gt; a</span><br><span class="line">[1, 5]</span><br></pre></td></tr></table></figure>
+
+<h3 id="命名列表切割方式"><a href="#命名列表切割方式" class="headerlink" title="命名列表切割方式"></a>命名列表切割方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a &#x3D; [0, 1, 2, 3, 4, 5]</span><br><span class="line">&gt;&gt;&gt; LASTTHREE &#x3D; slice(-3, None)</span><br><span class="line">&gt;&gt;&gt; LASTTHREE</span><br><span class="line">slice(-3, None, None)</span><br><span class="line">&gt;&gt;&gt; a[LASTTHREE]</span><br><span class="line">[3, 4, 5]</span><br></pre></td></tr></table></figure>
+
+<h3 id="列表以及迭代器的压缩和解压缩"><a href="#列表以及迭代器的压缩和解压缩" class="headerlink" title="列表以及迭代器的压缩和解压缩"></a>列表以及迭代器的压缩和解压缩</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a &#x3D; [1, 2, 3]</span><br><span class="line">b &#x3D; [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span><br><span class="line"></span><br><span class="line">z &#x3D; zip(a, b)</span><br><span class="line"></span><br><span class="line">for i in zip(a, b):</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line">for item in zip(*z):</span><br><span class="line">    print(item)</span><br></pre></td></tr></table></figure>
+
+<h3 id="列表展开"><a href="#列表展开" class="headerlink" title="列表展开"></a>列表展开</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import itertools</span><br><span class="line">&gt;&gt;&gt; a &#x3D; [[1, 2], [3, 4], [5, 6]]</span><br><span class="line">&gt;&gt;&gt; list(itertools.chain.from_iterable(a))</span><br><span class="line">[1, 2, 3, 4, 5, 6]</span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; sum(a, [])</span><br><span class="line">[1, 2, 3, 4, 5, 6]</span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; [x for l in a for x in l]</span><br><span class="line">[1, 2, 3, 4, 5, 6]</span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; a &#x3D; [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]</span><br><span class="line">&gt;&gt;&gt; [x for l1 in a for l2 in l1 for x in l2]</span><br><span class="line">[1, 2, 3, 4, 5, 6, 7, 8]</span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; a &#x3D; [1, 2, [3, 4], [[5, 6], [7, 8]]]</span><br><span class="line">&gt;&gt;&gt; flatten &#x3D; lambda x: [y for l in x for y in flatten(l)] if type(x) is list else [x]</span><br><span class="line">&gt;&gt;&gt; flatten(a)</span><br><span class="line">[1, 2, 3, 4, 5, 6, 7, 8]</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; g &#x3D; (x ** 2 for x in range(5))</span><br><span class="line">&gt;&gt;&gt; next(g)</span><br><span class="line">0</span><br><span class="line">&gt;&gt;&gt; next(g)</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; next(g)</span><br><span class="line">4</span><br><span class="line">&gt;&gt;&gt; next(g)</span><br><span class="line">9</span><br><span class="line">&gt;&gt;&gt; next(g)</span><br><span class="line">16</span><br><span class="line">&gt;&gt;&gt; next(g)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">StopIteration</span><br><span class="line">&gt;&gt;&gt; sum(x ** 3 for x in range(10))</span><br><span class="line">2025</span><br><span class="line">&gt;&gt;&gt; sum(x ** 3 for x in range(10) if x % 3 &#x3D;&#x3D; 1)</span><br><span class="line">408</span><br><span class="line"># 迭代器中没有可迭代对象的时候会引发StopIteration错误</span><br></pre></td></tr></table></figure>
+
+<h3 id="字典setdefault"><a href="#字典setdefault" class="headerlink" title="字典setdefault"></a>字典setdefault</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; request &#x3D; &#123;&#125;</span><br><span class="line">&gt;&gt;&gt; request.setdefault(None,[]).append(123)</span><br><span class="line">&gt;&gt;&gt; print(request)</span><br><span class="line">&#123;None: [123]&#125;</span><br><span class="line">&gt;&gt;&gt; request.setdefault(None,[]).append(456)</span><br><span class="line">&gt;&gt;&gt; print(request)</span><br><span class="line">&#123;None: [123, 456]&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="字典推导"><a href="#字典推导" class="headerlink" title="字典推导"></a>字典推导</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; m &#x3D; &#123;x: x ** 2 for x in range(5)&#125;</span><br><span class="line">&gt;&gt;&gt; m</span><br><span class="line">&#123;0: 0, 1: 1, 2: 4, 3: 9, 4: 16&#125;</span><br><span class="line">&gt;&gt;&gt; m &#x3D; &#123;x: &#39;A&#39; + str(x) for x in range(10)&#125;</span><br><span class="line">&gt;&gt;&gt; m</span><br><span class="line">&#123;0: &#39;A0&#39;, 1: &#39;A1&#39;, 2: &#39;A2&#39;, 3: &#39;A3&#39;, 4: &#39;A4&#39;, 5: &#39;A5&#39;, 6: &#39;A6&#39;, 7: &#39;A7&#39;, 8: &#39;A8&#39;, 9: &#39;A9&#39;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="字典推导反转字典"><a href="#字典推导反转字典" class="headerlink" title="字典推导反转字典"></a>字典推导反转字典</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; m &#x3D; &#123;&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4&#125;</span><br><span class="line">&gt;&gt;&gt; m</span><br><span class="line">&#123;&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4&#125;</span><br><span class="line">&gt;&gt;&gt; &#123;v: k for k, v in m.items()&#125;</span><br><span class="line">&#123;1: &#39;a&#39;, 2: &#39;b&#39;, 3: &#39;c&#39;, 4: &#39;d&#39;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="命名元组"><a href="#命名元组" class="headerlink" title="命名元组"></a>命名元组</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Point &#x3D; collections.namedtuple(&#39;Point&#39;, [&#39;x&#39;, &#39;y&#39;])</span><br><span class="line">&gt;&gt;&gt; p &#x3D; Point(x&#x3D;1.0, y&#x3D;2.0)</span><br><span class="line">&gt;&gt;&gt; p</span><br><span class="line">Point(x&#x3D;1.0, y&#x3D;2.0)</span><br><span class="line">&gt;&gt;&gt; p.x</span><br><span class="line">1.0</span><br><span class="line">&gt;&gt;&gt; p.y</span><br><span class="line">2.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="继承命名元组"><a href="#继承命名元组" class="headerlink" title="继承命名元组"></a>继承命名元组</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import collections</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Point(collections.namedtuple(&#39;PointBase&#39;, [&#39;x&#39;, &#39;y&#39;])):</span><br><span class="line">    __slots__ &#x3D; ()</span><br><span class="line"></span><br><span class="line">    def __add__(self, other):</span><br><span class="line">        return Point(x&#x3D;self.x + other.x, y&#x3D;self.y + other.y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p &#x3D; Point(x&#x3D;1.0, y&#x3D;2.0)</span><br><span class="line">q &#x3D; Point(x&#x3D;2.0, y&#x3D;3.0)</span><br><span class="line">print(p + q)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">Point(x&#x3D;3.0, y&#x3D;5.0)</span><br><span class="line">&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="统计在可迭代器中最常出现的元素"><a href="#统计在可迭代器中最常出现的元素" class="headerlink" title="统计在可迭代器中最常出现的元素"></a>统计在可迭代器中最常出现的元素</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; A &#x3D; collections.Counter([1, 1, 2, 2, 3, 3, 3, 3, 4, 5, 6, 7])</span><br><span class="line">&gt;&gt;&gt; A</span><br><span class="line">Counter(&#123;3: 4, 1: 2, 2: 2, 4: 1, 5: 1, 6: 1, 7: 1&#125;)</span><br><span class="line">&gt;&gt;&gt; A.most_common(1)</span><br><span class="line">[(3, 4)]</span><br><span class="line">&gt;&gt;&gt; A.most_common(3)</span><br><span class="line">[(3, 4), (1, 2), (2, 2)]</span><br></pre></td></tr></table></figure>
+
+<h3 id="两端都可以操作的队列"><a href="#两端都可以操作的队列" class="headerlink" title="两端都可以操作的队列"></a>两端都可以操作的队列</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Q &#x3D; collections.deque()</span><br><span class="line">&gt;&gt;&gt; Q.append(1)</span><br><span class="line">&gt;&gt;&gt; Q.appendleft(2)</span><br><span class="line">&gt;&gt;&gt; Q.extend([3, 4])</span><br><span class="line">&gt;&gt;&gt; Q.extendleft([5, 6])</span><br><span class="line">&gt;&gt;&gt; Q</span><br><span class="line">deque([6, 5, 2, 1, 3, 4])</span><br><span class="line">&gt;&gt;&gt; Q.pop()</span><br><span class="line">4</span><br><span class="line">&gt;&gt;&gt; Q.popleft()</span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; Q</span><br><span class="line">deque([5, 2, 1, 3])</span><br><span class="line">&gt;&gt;&gt; Q.rotate(3)</span><br><span class="line">&gt;&gt;&gt; Q</span><br><span class="line">deque([2, 1, 3, 5])</span><br><span class="line">&gt;&gt;&gt; Q.rotate(-3)</span><br><span class="line">&gt;&gt;&gt; Q</span><br><span class="line">deque([5, 2, 1, 3])</span><br></pre></td></tr></table></figure>
+
+<h3 id="有最大长度的双端队列"><a href="#有最大长度的双端队列" class="headerlink" title="有最大长度的双端队列"></a>有最大长度的双端队列</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; last_three &#x3D; collections.deque(maxlen&#x3D;3)</span><br><span class="line">&gt;&gt;&gt; for i in range(10):</span><br><span class="line">...     last_three.append(i)</span><br><span class="line">...     print(&#39;,&#39;.join(str(x) for x in last_three))</span><br><span class="line">...</span><br><span class="line">0</span><br><span class="line">0,1</span><br><span class="line">0,1,2</span><br><span class="line">1,2,3</span><br><span class="line">2,3,4</span><br><span class="line">3,4,5</span><br><span class="line">4,5,6</span><br><span class="line">5,6,7</span><br><span class="line">6,7,8</span><br><span class="line">7,8,9</span><br></pre></td></tr></table></figure>
+
+<h3 id="最大和最小的几个列表元素"><a href="#最大和最小的几个列表元素" class="headerlink" title="最大和最小的几个列表元素"></a>最大和最小的几个列表元素</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import random</span><br><span class="line">&gt;&gt;&gt; import heapq</span><br><span class="line">&gt;&gt;&gt; a &#x3D; [random.randint(0, 100) for __ in range(100)]</span><br><span class="line">&gt;&gt;&gt;  heapq.nsmallest(5, a)</span><br><span class="line">  File &quot;&lt;stdin&gt;&quot;, line 1</span><br><span class="line">    heapq.nsmallest(5, a)</span><br><span class="line">    ^</span><br><span class="line">IndentationError: unexpected indent</span><br><span class="line">&gt;&gt;&gt; heapq.nsmallest(5, a)</span><br><span class="line">[0, 1, 3, 4, 4]</span><br><span class="line">&gt;&gt;&gt; heapq.nlargest(5, a)</span><br><span class="line">[100, 99, 98, 97, 96]</span><br></pre></td></tr></table></figure>
+
+<h3 id="两个列表的笛卡尔积"><a href="#两个列表的笛卡尔积" class="headerlink" title="两个列表的笛卡尔积"></a>两个列表的笛卡尔积</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import itertools</span><br><span class="line">&gt;&gt;&gt; for p in itertools.product([1, 2, 3], [4, 5]):</span><br><span class="line">...     print(p)</span><br><span class="line">...</span><br><span class="line">(1, 4)</span><br><span class="line">(1, 5)</span><br><span class="line">(2, 4)</span><br><span class="line">(2, 5)</span><br><span class="line">(3, 4)</span><br><span class="line">(3, 5)</span><br><span class="line">&gt;&gt;&gt; for p in itertools.product([0, 1], repeat&#x3D;4):</span><br><span class="line">...     print(&#39;&#39;.join(str(x) for x in p))</span><br><span class="line">...</span><br><span class="line">0000</span><br><span class="line">0001</span><br><span class="line">0010</span><br><span class="line">0011</span><br><span class="line">0100</span><br><span class="line">0101</span><br><span class="line">0110</span><br><span class="line">0111</span><br><span class="line">1000</span><br><span class="line">1001</span><br><span class="line">1010</span><br><span class="line">1011</span><br><span class="line">1100</span><br><span class="line">1101</span><br><span class="line">1110</span><br><span class="line">1111</span><br></pre></td></tr></table></figure>
+
+<h3 id="列表组合和列表元素替代组合"><a href="#列表组合和列表元素替代组合" class="headerlink" title="列表组合和列表元素替代组合"></a>列表组合和列表元素替代组合</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for c in itertools.combinations([1, 2, 3, 4, 5], 3):</span><br><span class="line">...     print(&#39;&#39;.join(str(x) for x in c))</span><br><span class="line">...</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">145</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">245</span><br><span class="line">345</span><br><span class="line">&gt;&gt;&gt; for c in itertools.combinations_with_replacement([1, 2, 3], 2):</span><br><span class="line">...     print(&#39;&#39;.join(str(x) for x in c))</span><br><span class="line">...</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<h3 id="列表元素排列组合"><a href="#列表元素排列组合" class="headerlink" title="列表元素排列组合"></a>列表元素排列组合</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for p in itertools.permutations([1, 2, 3, 4]):</span><br><span class="line">...      print(&#39;&#39;.join(str(x) for x in p))</span><br><span class="line">...</span><br><span class="line">1234</span><br><span class="line">1243</span><br><span class="line">1324</span><br><span class="line">1342</span><br><span class="line">1423</span><br><span class="line">1432</span><br><span class="line">2134</span><br><span class="line">2143</span><br><span class="line">2314</span><br><span class="line">2341</span><br><span class="line">2413</span><br><span class="line">2431</span><br><span class="line">3124</span><br><span class="line">3142</span><br><span class="line">3214</span><br><span class="line">3241</span><br><span class="line">3412</span><br><span class="line">3421</span><br><span class="line">4123</span><br><span class="line">4132</span><br><span class="line">4213</span><br><span class="line">4231</span><br><span class="line">4312</span><br><span class="line">4321</span><br></pre></td></tr></table></figure>
+
+<h3 id="可链接迭代器"><a href="#可链接迭代器" class="headerlink" title="可链接迭代器"></a>可链接迭代器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a &#x3D; [1, 2, 3, 4]</span><br><span class="line">&gt;&gt;&gt; for p in itertools.chain(itertools.combinations(a, 2), itertools.combinations(a, 3)):</span><br><span class="line">...     print(p)</span><br><span class="line">...</span><br><span class="line">(1, 2)</span><br><span class="line">(1, 3)</span><br><span class="line">(1, 4)</span><br><span class="line">(2, 3)</span><br><span class="line">(2, 4)</span><br><span class="line">(3, 4)</span><br><span class="line">(1, 2, 3)</span><br><span class="line">(1, 2, 4)</span><br><span class="line">(1, 3, 4)</span><br><span class="line">(2, 3, 4)</span><br><span class="line">&gt;&gt;&gt; for subset in itertools.chain.from_iterable(itertools.combinations(a, n) for n in range(len(a) + 1)):</span><br><span class="line">...      print(subset)</span><br><span class="line">...</span><br><span class="line">()</span><br><span class="line">(1,)</span><br><span class="line">(2,)</span><br><span class="line">(3,)</span><br><span class="line">(4,)</span><br><span class="line">(1, 2)</span><br><span class="line">(1, 3)</span><br><span class="line">(1, 4)</span><br><span class="line">(2, 3)</span><br><span class="line">(2, 4)</span><br><span class="line">(3, 4)</span><br><span class="line">(1, 2, 3)</span><br><span class="line">(1, 2, 4)</span><br><span class="line">(1, 3, 4)</span><br><span class="line">(2, 3, 4)</span><br><span class="line">(1, 2, 3, 4)</span><br></pre></td></tr></table></figure>
+
+<h3 id="根据文件指定列类聚"><a href="#根据文件指定列类聚" class="headerlink" title="根据文件指定列类聚"></a>根据文件指定列类聚</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import itertools</span><br><span class="line">&gt;&gt;&gt; with open(&#39;contactlenses.csv&#39;, &#39;r&#39;) as infile:</span><br><span class="line">...     data &#x3D; [line.strip().split(&#39;,&#39;) for line in infile]</span><br><span class="line">...</span><br><span class="line">&gt;&gt;&gt; data &#x3D; data[1:]</span><br><span class="line">&gt;&gt;&gt; def print_data(rows):</span><br><span class="line">...     print &#39;\n&#39;.join(&#39;\t&#39;.join(&#39;&#123;: &lt;16&#125;&#39;.format(s) for s in row) for row in rows)</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; print_data(data)</span><br><span class="line">young               myope                   no                      reduced                 none</span><br><span class="line">young               myope                   no                      normal                  soft</span><br><span class="line">young               myope                   yes                     reduced                 none</span><br><span class="line">young               myope                   yes                     normal                  hard</span><br><span class="line">young               hypermetrope            no                      reduced                 none</span><br><span class="line">young               hypermetrope            no                      normal                  soft</span><br><span class="line">young               hypermetrope            yes                     reduced                 none</span><br><span class="line">young               hypermetrope            yes                     normal                  hard</span><br><span class="line">pre-presbyopic      myope                   no                      reduced                 none</span><br><span class="line">pre-presbyopic      myope                   no                      normal                  soft</span><br><span class="line">pre-presbyopic      myope                   yes                     reduced                 none</span><br><span class="line">pre-presbyopic      myope                   yes                     normal                  hard</span><br><span class="line">pre-presbyopic      hypermetrope            no                      reduced                 none</span><br><span class="line">pre-presbyopic      hypermetrope            no                      normal                  soft</span><br><span class="line">pre-presbyopic      hypermetrope            yes                     reduced                 none</span><br><span class="line">pre-presbyopic      hypermetrope            yes                     normal                  none</span><br><span class="line">presbyopic          myope                   no                      reduced                 none</span><br><span class="line">presbyopic          myope                   no                      normal                  none</span><br><span class="line">presbyopic          myope                   yes                     reduced                 none</span><br><span class="line">presbyopic          myope                   yes                     normal                  hard</span><br><span class="line">presbyopic          hypermetrope            no                      reduced                 none</span><br><span class="line">presbyopic          hypermetrope            no                      normal                  soft</span><br><span class="line">presbyopic          hypermetrope            yes                     reduced                 none</span><br><span class="line">presbyopic          hypermetrope            yes                     normal                  none</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; data.sort(key&#x3D;lambda r: r[-1])</span><br><span class="line">&gt;&gt;&gt; for value, group in itertools.groupby(data, lambda r: r[-1]):</span><br><span class="line">...     print &#39;-----------&#39;</span><br><span class="line">...     print &#39;Group: &#39; + value</span><br><span class="line">...     print_data(group)</span><br><span class="line">...</span><br><span class="line">-----------</span><br><span class="line">Group: hard</span><br><span class="line">young               myope                   yes                     normal                  hard</span><br><span class="line">young               hypermetrope            yes                     normal                  hard</span><br><span class="line">pre-presbyopic      myope                   yes                     normal                  hard</span><br><span class="line">presbyopic          myope                   yes                     normal                  hard</span><br><span class="line">-----------</span><br><span class="line">Group: none</span><br><span class="line">young               myope                   no                      reduced                 none</span><br><span class="line">young               myope                   yes                     reduced                 none</span><br><span class="line">young               hypermetrope            no                      reduced                 none</span><br><span class="line">young               hypermetrope            yes                     reduced                 none</span><br><span class="line">pre-presbyopic      myope                   no                      reduced                 none</span><br><span class="line">pre-presbyopic      myope                   yes                     reduced                 none</span><br><span class="line">pre-presbyopic      hypermetrope            no                      reduced                 none</span><br><span class="line">pre-presbyopic      hypermetrope            yes                     reduced                 none</span><br><span class="line">pre-presbyopic      hypermetrope            yes                     normal                  none</span><br><span class="line">presbyopic          myope                   no                      reduced                 none</span><br><span class="line">presbyopic          myope                   no                      normal                  none</span><br><span class="line">presbyopic          myope                   yes                     reduced                 none</span><br><span class="line">presbyopic          hypermetrope            no                      reduced                 none</span><br><span class="line">presbyopic          hypermetrope            yes                     reduced                 none</span><br><span class="line">presbyopic          hypermetrope            yes                     normal                  none</span><br><span class="line">-----------</span><br><span class="line">Group: soft</span><br><span class="line">young               myope                   no                      normal                  soft</span><br><span class="line">young               hypermetrope            no                      normal                  soft</span><br><span class="line">pre-presbyopic      myope                   no                      normal                  soft</span><br><span class="line">pre-presbyopic      hypermetrope            no                      normal                  soft</span><br><span class="line">presbyopic          hypermetrope            no                      normal                  soft</span><br></pre></td></tr></table></figure>
+
+<h3 id="按单词反转字符串"><a href="#按单词反转字符串" class="headerlink" title="按单词反转字符串"></a>按单词反转字符串</h3><p>按单词反转字符串是一道很常见的面试题。在Python中实现起来非常简单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def reverse_string_by_word(s):</span><br><span class="line">    lst &#x3D; s.split()  # split by blank space by default</span><br><span class="line">    return &#39; &#39;.join(lst[::-1])</span><br><span class="line"></span><br><span class="line">s &#x3D; &#39;Power of Love&#39;</span><br><span class="line">print reverse_string_by_word(s)</span><br><span class="line"># Love of Power</span><br><span class="line"></span><br><span class="line">s &#x3D; &#39;Hello    World!&#39;</span><br><span class="line">print reverse_string_by_word(s)</span><br><span class="line"># World! Hello</span><br></pre></td></tr></table></figure>
+
+<p>上面的实现其实已经能满足大多数情况，但是并不完美。比如第二个字符串中的感叹号并没有被翻转，而且原字符串中的空格数量也没有保留。（在上面的例子里其实Hello和World之间不止一个空格）</p>
+<p>我们期望的结果应该是这样子的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print reverse_string_by_word(s)</span><br><span class="line"># Expected: !World  Hello</span><br></pre></td></tr></table></figure>
+<p>要改进上面的方案还不把问题复杂化，推荐使用re模块。你可以查阅re.split() 的官方文档。我们看一下具体例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import re</span><br><span class="line">&gt;&gt;&gt; s &#x3D; &#39;Hello  World!&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; re.split(r&#39;\s+&#39;, s)    # will discard blank spaces</span><br><span class="line">[&#39;Hello&#39;, &#39;World!&#39;]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; re.split(r&#39;(\s+)&#39;, s)  # will keep spaces as a group</span><br><span class="line">[&#39;Hello&#39;, &#39;  &#39;, &#39;World!&#39;]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s &#x3D; &#39;&lt; Welcome to EF.COM! &gt;&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; re.split(r&#39;\s+&#39;, s)  # split by spaces</span><br><span class="line">[&#39;&lt;&#39;, &#39;Welcome&#39;, &#39;to&#39;, &#39;EF.COM!&#39;, &#39;&gt;&#39;]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; re.split(r&#39;(\w+)&#39;, s)  # exactly split by word</span><br><span class="line">[&#39;&lt; &#39;, &#39;Welcome&#39;, &#39; &#39;, &#39;to&#39;, &#39; &#39;, &#39;EF&#39;, &#39;.&#39;, &#39;COM&#39;, &#39;! &gt;&#39;]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; re.split(r&#39;(\s+|\w+)&#39;, s)  # split by space and word</span><br><span class="line">[&#39;&lt;&#39;, &#39; &#39;, &#39;&#39;, &#39;Welcome&#39;, &#39;&#39;, &#39; &#39;, &#39;&#39;, &#39;to&#39;, &#39;&#39;, &#39; &#39;, &#39;&#39;, &#39;EF&#39;, &#39;.&#39;, &#39;COM&#39;, &#39;!&#39;, &#39; &#39;, &#39;&gt;&#39;]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;&#39;.join(re.split(r&#39;(\s+|\w+)&#39;, s)[::-1])</span><br><span class="line">&#39;&gt; !COM.EF to Welcome &lt;&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;&#39;.join(re.split(r&#39;(\s+)&#39;, s)[::-1])</span><br><span class="line">&#39;&gt; EF.COM! to Welcome &lt;&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;&#39;.join(re.split(r&#39;(\w+)&#39;, s)[::-1])</span><br><span class="line">&#39;! &gt;COM.EF to Welcome&lt; &#39;</span><br></pre></td></tr></table></figure>
+<p>如果你觉得用切片将序列倒序可读性不高，那么其实也可以这样写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;&#39;.join(reversed(re.split(r&#39;(\s+|\w+)&#39;, s)))</span><br><span class="line">&#39;&gt; !COM.EF to Welcome &lt;</span><br></pre></td></tr></table></figure>
+
+
+<p><a href="http://blog.jobbole.com/63320/" target="_blank" rel="noopener">30个有关Python的小技巧</a><br><a href="http://www.revotu.com/most-common-learn-python-questions.html" target="_blank" rel="noopener">Python学习之路上的几个经典问题|大师兄</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/">python一些不为人知的小技巧</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 15:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 15:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" title="python一些不为人知的小技巧">https://shuke163.github.io/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/">python一些不为人知的小技巧</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 15:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 15:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" title="python一些不为人知的小技巧">https://shuke163.github.io/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PYTHON/" <i class="fa fa-tag"></i> PYTHON</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/" rel="next" title="SqlAlchemy玩转MySQL">
+                <i class="fa fa-chevron-left"></i> SqlAlchemy玩转MySQL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/python%E6%93%8D%E4%BD%9CRedis/" rel="prev" title="python操作Redis">
+                python操作Redis <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#python一些不为人知的小技巧"><span class="nav-text">python一些不为人知的小技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#startswith-和endswith-参数可以是元组"><span class="nav-text">startswith()和endswith()参数可以是元组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#enumerate-设置start参数做为索引起始值"><span class="nav-text">enumerate()设置start参数做为索引起始值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对切片命名"><span class="nav-text">对切片命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上下文管理器可以同时管理多个资源"><span class="nav-text">上下文管理器可以同时管理多个资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#else子句"><span class="nav-text">else子句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本与命令行结合"><span class="nav-text">脚本与命令行结合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#默认字典的简单树状表达"><span class="nav-text">默认字典的简单树状表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展拆箱-只兼容python3"><span class="nav-text">扩展拆箱(只兼容python3)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表切割赋值"><span class="nav-text">列表切割赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命名列表切割方式"><span class="nav-text">命名列表切割方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表以及迭代器的压缩和解压缩"><span class="nav-text">列表以及迭代器的压缩和解压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表展开"><span class="nav-text">列表展开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成器表达式"><span class="nav-text">生成器表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典setdefault"><span class="nav-text">字典setdefault</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典推导"><span class="nav-text">字典推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典推导反转字典"><span class="nav-text">字典推导反转字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命名元组"><span class="nav-text">命名元组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承命名元组"><span class="nav-text">继承命名元组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计在可迭代器中最常出现的元素"><span class="nav-text">统计在可迭代器中最常出现的元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两端都可以操作的队列"><span class="nav-text">两端都可以操作的队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有最大长度的双端队列"><span class="nav-text">有最大长度的双端队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最大和最小的几个列表元素"><span class="nav-text">最大和最小的几个列表元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两个列表的笛卡尔积"><span class="nav-text">两个列表的笛卡尔积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表组合和列表元素替代组合"><span class="nav-text">列表组合和列表元素替代组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表元素排列组合"><span class="nav-text">列表元素排列组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可链接迭代器"><span class="nav-text">可链接迭代器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根据文件指定列类聚"><span class="nav-text">根据文件指定列类聚</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按单词反转字符串"><span class="nav-text">按单词反转字符串</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

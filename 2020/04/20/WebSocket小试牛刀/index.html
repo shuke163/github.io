@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PYTHON," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="WebSocket小试牛刀">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebSocket小试牛刀">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="WebSocket小试牛刀">
+<meta property="article:published_time" content="2020-04-20T06:38:07.000Z">
+<meta property="article:modified_time" content="2020-04-20T06:38:34.112Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="PYTHON">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/WebSocket小试牛刀/"/>
+
+
+
+
+
+  <title>WebSocket小试牛刀 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">WebSocket小试牛刀</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T14:38:07+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">4.2k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">21(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PYTHON/" itemprop="url" rel="index">
+                    <span itemprop="name">PYTHON</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/" class="leancloud_visitors" data-flag-title="WebSocket小试牛刀">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  WebSocket小试牛刀
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="WebSocket小试牛刀"><a href="#WebSocket小试牛刀" class="headerlink" title="WebSocket小试牛刀"></a>WebSocket小试牛刀</h2><h2 id="一-为什么需要WebSocket"><a href="#一-为什么需要WebSocket" class="headerlink" title="一. 为什么需要WebSocket?"></a>一. 为什么需要WebSocket?</h2><h3 id="1-1-初次接触-WebSocket-的人，都会问同样的问题：我们已经有了-HTTP-协议，为什么还需要另一个协议？"><a href="#1-1-初次接触-WebSocket-的人，都会问同样的问题：我们已经有了-HTTP-协议，为什么还需要另一个协议？" class="headerlink" title="1.1 初次接触 WebSocket 的人，都会问同样的问题：我们已经有了 HTTP 协议，为什么还需要另一个协议？"></a>1.1 初次接触 WebSocket 的人，都会问同样的问题：我们已经有了 HTTP 协议，为什么还需要另一个协议？</h3><p>WebSocket是HTML5出的东西（协议），也就是说HTTP协议没有变化，或者说没关系，但HTTP是不支持持久连接的（长连接，循环连接的不算）首先HTTP有1.1和1.0之说，也就是所谓的keep-alive，把多个HTTP请求合并为一个，但是Websocket其实是一个新协议，跟HTTP协议基本没有关系，只是为了兼容现有浏览器的握手规范而已，也就是说它是HTTP协议上的一种补充.<br>答案其实很简单，因为 HTTP 协议有一个缺陷：通信只能由客户端发起,特别是短链接,无状态,请求在获取相应信息之后立刻断开连接.</p>
+<h3 id="1-2-那么-WebSocet到底是什么呢-它能带来什么好处？"><a href="#1-2-那么-WebSocet到底是什么呢-它能带来什么好处？" class="headerlink" title="1.2 那么,WebSocet到底是什么呢?它能带来什么好处？"></a>1.2 那么,WebSocet到底是什么呢?它能带来什么好处？</h3><p>Websocket是什么样的协议，具体有什么优点首先，Websocket是一个持久化的协议，相对于HTTP这种非持久的协议来说。<br>简单的举个例子吧，用目前应用比较广泛的PHP生命周期来解释。</p>
+<ul>
+<li>HTTP的生命周期通过Request来界定，也就是一个Request 一个Response，那么在HTTP1.0中，这次HTTP请求就结束了。</li>
+<li>在HTTP1.1中进行了改进，使得有一个keep-alive，也就是说，在一个HTTP连接中，可以发送多个Request，接收多个Response。但是请记住 Request = Response,在HTTP中永远是这样，也就是说一个request只能有一个response。而且这个response也是被动的，不能主动发起。</li>
+</ul>
+<h4 id="1-3-教练，你BB了这么多，跟Websocket有什么关系呢？"><a href="#1-3-教练，你BB了这么多，跟Websocket有什么关系呢？" class="headerlink" title="1.3 教练，你BB了这么多，跟Websocket有什么关系呢？"></a>1.3 教练，你BB了这么多，跟Websocket有什么关系呢？</h4><p>好吧，我正准备说Websocket呢。。首先Websocket是基于HTTP协议的，或者说借用了HTTP的协议来完成一部分握手。在握手阶段是一样的,以下涉及专业技术内容，不想看的可以跳过.<br>首先我们来看个典型的Websocket握手</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;chat HTTP&#x2F;1.1</span><br><span class="line">Host: server.example.com</span><br><span class="line">Upgrade: websocket</span><br><span class="line">Connection: Upgrade</span><br><span class="line">Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw&#x3D;&#x3D;</span><br><span class="line">Sec-WebSocket-Protocol: chat, superchat</span><br><span class="line">Sec-WebSocket-Version: 13</span><br><span class="line">Origin: http:&#x2F;&#x2F;example.com</span><br></pre></td></tr></table></figure>
+<p>熟悉HTTP的童鞋可能发现了，这段类似HTTP协议的握手请求中，多了几个东西。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Upgrade: websocket</span><br><span class="line">Connection: Upgrade</span><br></pre></td></tr></table></figure>
+<p>这个就是Websocket的核心了，告诉Apache、Nginx等服务器：注意啦，窝发起的是Websocket协议，快点帮我找到对应的助理处理~不是那个老土的HTTP:)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw&#x3D;&#x3D;</span><br><span class="line">Sec-WebSocket-Protocol: chat, superchat</span><br><span class="line">Sec-WebSocket-Version: 13</span><br></pre></td></tr></table></figure>
+<p>首先，Sec-WebSocket-Key 是一个Base64 encode的值，这个是浏览器随机生成的，告诉服务器：泥煤，不要忽悠窝，我要验证尼是不是真的是Websocket助理。然后，Sec_WebSocket-Protocol 是一个用户定义的字符串，用来区分同URL下，不同的服务所需要的协议。简单理解：今晚我要服务A，别搞错啦<del>最后，Sec-WebSocket-Version 是告诉服务器所使用的Websocket Draft（协议版本），在最初的时候，Websocket协议还在 Draft 阶段，各种奇奇怪怪的协议都有，而且还有很多期奇奇怪怪不同的东西，什么Firefox和Chrome用的不是一个版本之类的，当初Websocket协议太多可是一个大难题。。不过现在还好，已经定下来啦</del>大家都使用的一个东西~ 脱水：服务员，我要的是13岁的噢→_→<br>然后服务器会返回下列东西，表示已经接受到请求， 成功建立Websocket啦！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 101 Switching Protocols</span><br><span class="line">Upgrade: websocket</span><br><span class="line">Connection: Upgrade</span><br><span class="line">Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk&#x3D;</span><br><span class="line">Sec-WebSocket-Protocol: chat</span><br></pre></td></tr></table></figure>
+<p>这里开始就是HTTP最后负责的区域了，告诉客户，我已经成功切换协议啦~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Upgrade: websocket</span><br><span class="line">Connection: Upgrade</span><br></pre></td></tr></table></figure>
+<p>依然是固定的，告诉客户端即将升级的是Websocket协议，而不是mozillasocket，lurnarsocket或者shitsocket。然后，Sec-WebSocket-Accept 这个则是经过服务器确认，并且加密过后的 Sec-WebSocket-Key。服务器：好啦好啦，知道啦，给你看我的ID CARD来证明行了吧。。后面的，Sec-WebSocket-Protocol 则是表示最终使用的协议。至此，HTTP已经完成它所有工作了，接下来就是完全按照Websocket协议进行了。<br>⚠️ : WebSocket两个重要的流程: 1. 握手; 2. 加密;</p>
+<h2 id="二-剖析WebSocket请求流程"><a href="#二-剖析WebSocket请求流程" class="headerlink" title="二. 剖析WebSocket请求流程"></a>二. 剖析WebSocket请求流程</h2><p>下面讲使用Python编写Socket服务端，一步一步分析请求过程!!!</p>
+<h3 id="2-1-服务端"><a href="#2-1-服务端" class="headerlink" title="2.1 服务端"></a>2.1 服务端</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line">sock &#x3D; socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span><br><span class="line">sock.bind((&#39;127.0.0.1&#39;, 8002))</span><br><span class="line">sock.listen(5)</span><br><span class="line"># 等待用户连接</span><br><span class="line">conn, address &#x3D; sock.accept()</span><br></pre></td></tr></table></figure>
+<p>启动Socket服务器后，等待用户【连接】，然后进行收发数据。</p>
+<h3 id="2-2-客户端连接"><a href="#2-2-客户端连接" class="headerlink" title="2.2 客户端连接"></a>2.2 客户端连接</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang&#x3D;&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;WebSocket协议学习&lt;&#x2F;h1&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span><br><span class="line">        &#x2F;&#x2F; 向 127.0.0.1:8002 发送一个WebSocket请求</span><br><span class="line">        var socket &#x3D; new WebSocket(&quot;ws:&#x2F;&#x2F;127.0.0.1:8002&quot;);</span><br><span class="line">        socket.onmessage &#x3D; function (event) &#123;</span><br><span class="line">        &#x2F;* 服务器端向客户端发送数据时，自动执行(回掉函数) *&#x2F;</span><br><span class="line">        var response &#x3D; event.data;</span><br><span class="line">        console.log(response);</span><br><span class="line">    &#125;;</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>当客户端向服务端发送连接请求时，不仅连接还会发送[握手]信息，并等待服务端响应，至此连接才创建成功！</p>
+<h3 id="2-3-建立连接"><a href="#2-3-建立连接" class="headerlink" title="2.3 建立连接"></a>2.3 建立连接</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line"> </span><br><span class="line">sock &#x3D; socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span><br><span class="line">sock.bind((&#39;127.0.0.1&#39;, 8002))</span><br><span class="line">sock.listen(5)</span><br><span class="line"># 获取客户端socket对象</span><br><span class="line">conn, address &#x3D; sock.accept()</span><br><span class="line"># 获取客户端的【握手】信息</span><br><span class="line">data &#x3D; conn.recv(1024)</span><br><span class="line">...</span><br><span class="line">conn.send(&#39;响应【握手】信息&#39;)</span><br></pre></td></tr></table></figure>
+<p>请求和响应的【握手】信息需要遵循规则:</p>
+<ol>
+<li>从请求【握手】信息中提取 Sec-WebSocket-Key</li>
+<li>利用magic_string 和 Sec-WebSocket-Key 进行hmac1加密，再进行base64加密</li>
+<li>将加密结果响应给客户端<br>⚠️ ：magic string为：258EAFA5-E914-47DA-95CA-C5AB0DC85B11<br>请求【握手】信息格式为:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;chatsocket HTTP&#x2F;1.1</span><br><span class="line">Host: 127.0.0.1:8002</span><br><span class="line">Connection: Upgrade</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Upgrade: websocket</span><br><span class="line">Origin: http:&#x2F;&#x2F;localhost:63342</span><br><span class="line">Sec-WebSocket-Version: 13</span><br><span class="line">Sec-WebSocket-Key: mnwFxiOlctXFN&#x2F;DeMt1Amg&#x3D;&#x3D;</span><br><span class="line">Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-提取Sec-WebSocket-Key值并加密："><a href="#2-4-提取Sec-WebSocket-Key值并加密：" class="headerlink" title="2.4 提取Sec-WebSocket-Key值并加密："></a>2.4 提取Sec-WebSocket-Key值并加密：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line">import base64</span><br><span class="line">import hashlib</span><br><span class="line"> </span><br><span class="line">def get_headers(data):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    将请求头格式化成字典</span><br><span class="line">    :param data:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    header_dict &#x3D; &#123;&#125;</span><br><span class="line">    data &#x3D; str(data, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line"> </span><br><span class="line">    for i in data.split(&#39;\r\n&#39;):</span><br><span class="line">        print(i)</span><br><span class="line">    header, body &#x3D; data.split(&#39;\r\n\r\n&#39;, 1)</span><br><span class="line">    header_list &#x3D; header.split(&#39;\r\n&#39;)</span><br><span class="line">    for i in range(0, len(header_list)):</span><br><span class="line">        if i &#x3D;&#x3D; 0:</span><br><span class="line">            if len(header_list[i].split(&#39; &#39;)) &#x3D;&#x3D; 3:</span><br><span class="line">                header_dict[&#39;method&#39;], header_dict[&#39;url&#39;], header_dict[&#39;protocol&#39;] &#x3D; header_list[i].split(&#39; &#39;)</span><br><span class="line">        else:</span><br><span class="line">            k, v &#x3D; header_list[i].split(&#39;:&#39;, 1)</span><br><span class="line">            header_dict[k] &#x3D; v.strip()</span><br><span class="line">    return header_dict</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">sock &#x3D; socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span><br><span class="line">sock.bind((&#39;127.0.0.1&#39;, 8002))</span><br><span class="line">sock.listen(5)</span><br><span class="line"> </span><br><span class="line">conn, address &#x3D; sock.accept()</span><br><span class="line">data &#x3D; conn.recv(1024)</span><br><span class="line">headers &#x3D; get_headers(data) # 提取请求头信息</span><br><span class="line"># 对请求头中的sec-websocket-key进行加密</span><br><span class="line">response_tpl &#x3D; &quot;HTTP&#x2F;1.1 101 Switching Protocols\r\n&quot; \</span><br><span class="line">      &quot;Upgrade:websocket\r\n&quot; \</span><br><span class="line">      &quot;Connection: Upgrade\r\n&quot; \</span><br><span class="line">      &quot;Sec-WebSocket-Accept: %s\r\n&quot; \</span><br><span class="line">      &quot;WebSocket-Location: ws:&#x2F;&#x2F;%s%s\r\n\r\n&quot;</span><br><span class="line">magic_string &#x3D; &#39;258EAFA5-E914-47DA-95CA-C5AB0DC85B11&#39;</span><br><span class="line">value &#x3D; headers[&#39;Sec-WebSocket-Key&#39;] + magic_string</span><br><span class="line">ac &#x3D; base64.b64encode(hashlib.sha1(value.encode(&#39;utf-8&#39;)).digest())</span><br><span class="line">response_str &#x3D; response_tpl % (ac.decode(&#39;utf-8&#39;), headers[&#39;Host&#39;], headers[&#39;url&#39;])</span><br><span class="line"># 响应【握手】信息</span><br><span class="line">conn.send(bytes(response_str, encoding&#x3D;&#39;utf-8&#39;))</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="三-客户端和服务端收发数据"><a href="#三-客户端和服务端收发数据" class="headerlink" title="三. 客户端和服务端收发数据"></a>三. 客户端和服务端收发数据</h2><p>客户端和服务端传输数据时，需要对数据进行【封包】和【解包】。客户端的JavaScript类库已经封装【封包】和【解包】过程，但Socket服务端需要手动实现。</p>
+<h3 id="3-1-第一步：获取客户端发送的数据【解包】"><a href="#3-1-第一步：获取客户端发送的数据【解包】" class="headerlink" title="3.1 第一步：获取客户端发送的数据【解包】"></a>3.1 第一步：获取客户端发送的数据【解包】</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 基于python实现的解包</span><br><span class="line"></span><br><span class="line">info &#x3D; conn.recv(8096)</span><br><span class="line">payload_len &#x3D; info[1] &amp; 127</span><br><span class="line">if payload_len &#x3D;&#x3D; 126:</span><br><span class="line">    extend_payload_len &#x3D; info[2:4]</span><br><span class="line">    mask &#x3D; info[4:8]</span><br><span class="line">    decoded &#x3D; info[8:]</span><br><span class="line">elif payload_len &#x3D;&#x3D; 127:</span><br><span class="line">    extend_payload_len &#x3D; info[2:10]</span><br><span class="line">    mask &#x3D; info[10:14]</span><br><span class="line">    decoded &#x3D; info[14:]</span><br><span class="line">else:</span><br><span class="line">    extend_payload_len &#x3D; None</span><br><span class="line">    mask &#x3D; info[2:6]</span><br><span class="line">    decoded &#x3D; info[6:]</span><br><span class="line"></span><br><span class="line">bytes_list &#x3D; bytearray()</span><br><span class="line">for i in range(len(decoded)):</span><br><span class="line">    chunk &#x3D; decoded[i] ^ mask[i % 4]</span><br><span class="line">    bytes_list.append(chunk)</span><br><span class="line">body &#x3D; str(bytes_list, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line">print(body)</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-解包详细过程"><a href="#3-2-解包详细过程" class="headerlink" title="3.2 解包详细过程:"></a>3.2 解包详细过程:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">0                   1                   2                   3</span><br><span class="line"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</span><br><span class="line">+-+-+-+-+-------+-+-------------+-------------------------------+</span><br><span class="line">|F|R|R|R| opcode|M| Payload len |    Extended payload length    |</span><br><span class="line">|I|S|S|S|  (4)  |A|     (7)     |             (16&#x2F;64)           |</span><br><span class="line">|N|V|V|V|       |S|             |   (if payload len&#x3D;&#x3D;126&#x2F;127)   |</span><br><span class="line">| |1|2|3|       |K|             |                               |</span><br><span class="line">+-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +</span><br><span class="line">|     Extended payload length continued, if payload len &#x3D;&#x3D; 127  |</span><br><span class="line">+ - - - - - - - - - - - - - - - +-------------------------------+</span><br><span class="line">|                               |Masking-key, if MASK set to 1  |</span><br><span class="line">+-------------------------------+-------------------------------+</span><br><span class="line">| Masking-key (continued)       |          Payload Data         |</span><br><span class="line">+-------------------------------- - - - - - - - - - - - - - - - +</span><br><span class="line">:                     Payload Data continued ...                :</span><br><span class="line">+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +</span><br><span class="line">|                     Payload Data continued ...                |</span><br><span class="line">+---------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-1-官方解释"><a href="#3-2-1-官方解释" class="headerlink" title="3.2.1 官方解释"></a>3.2.1 官方解释</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">The MASK bit simply tells whether the message is encoded. Messages from the client must be masked, so your server should expect this to be 1. (In fact, section 5.1 of the spec says that your server must disconnect from a client if that client sends an unmasked message.) When sending a frame back to the client, do not mask it and do not set the mask bit. We&#39;ll explain masking later. Note: You have to mask messages even when using a secure socket.RSV1-3 can be ignored, they are for extensions.</span><br><span class="line"></span><br><span class="line">The opcode field defines how to interpret the payload data: 0x0 for continuation, 0x1 for text (which is always encoded in UTF-8), 0x2 for binary, and other so-called &quot;control codes&quot; that will be discussed later. In this version of WebSockets, 0x3 to 0x7 and 0xB to 0xF have no meaning.</span><br><span class="line"></span><br><span class="line">The FIN bit tells whether this is the last message in a series. If it&#39;s 0, then the server will keep listening for more parts of the message; otherwise, the server should consider the message delivered. More on this later.</span><br><span class="line"></span><br><span class="line">Decoding Payload Length</span><br><span class="line"></span><br><span class="line">To read the payload data, you must know when to stop reading. That&#39;s why the payload length is important to know. Unfortunately, this is somewhat complicated. To read it, follow these steps:</span><br><span class="line"></span><br><span class="line">Read bits 9-15 (inclusive) and interpret that as an unsigned integer. If it&#39;s 125 or less, then that&#39;s the length; you&#39;re done. If it&#39;s 126, go to step 2. If it&#39;s 127, go to step 3.</span><br><span class="line">Read the next 16 bits and interpret those as an unsigned integer. You&#39;re done.</span><br><span class="line">Read the next 64 bits and interpret those as an unsigned integer (The most significant bit MUST be 0). You&#39;re done.</span><br><span class="line">Reading and Unmasking the Data</span><br><span class="line"></span><br><span class="line">If the MASK bit was set (and it should be, for client-to-server messages), read the next 4 octets (32 bits); this is the masking key. Once the payload length and masking key is decoded, you can go ahead and read that number of bytes from the socket. Let&#39;s call the data ENCODED, and the key MASK. To get DECODED, loop through the octets (bytes a.k.a. characters for text data) of ENCODED and XOR the octet with the (i modulo 4)th octet of MASK. In pseudo-code (that happens to be valid JavaScript):</span><br><span class="line"></span><br><span class="line">var DECODED &#x3D; &quot;&quot;;</span><br><span class="line">for (var i &#x3D; 0; i &lt; ENCODED.length; i++) &#123;</span><br><span class="line">    DECODED[i] &#x3D; ENCODED[i] ^ MASK[i % 4];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Now you can figure out what DECODED means depending on your application.</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-向客户端发送数据【封包】"><a href="#3-3-向客户端发送数据【封包】" class="headerlink" title="3.3 向客户端发送数据【封包】"></a>3.3 向客户端发送数据【封包】</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">def send_msg(conn, msg_bytes):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    WebSocket服务端向客户端发送消息</span><br><span class="line">    :param conn: 客户端连接到服务器端的socket对象,即： conn,address &#x3D; socket.accept()</span><br><span class="line">    :param msg_bytes: 向客户端发送的字节</span><br><span class="line">    :return: </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    import struct</span><br><span class="line"></span><br><span class="line">    token &#x3D; b&quot;\x81&quot;</span><br><span class="line">    length &#x3D; len(msg_bytes)</span><br><span class="line">    if length &lt; 126:</span><br><span class="line">        token +&#x3D; struct.pack(&quot;B&quot;, length)</span><br><span class="line">    elif length &lt;&#x3D; 0xFFFF:</span><br><span class="line">        token +&#x3D; struct.pack(&quot;!BH&quot;, 126, length)</span><br><span class="line">    else:</span><br><span class="line">        token +&#x3D; struct.pack(&quot;!BQ&quot;, 127, length)</span><br><span class="line"></span><br><span class="line">    msg &#x3D; token + msg_bytes</span><br><span class="line">    conn.send(msg)</span><br><span class="line">    return True</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-基于python实现简单示例"><a href="#四-基于python实现简单示例" class="headerlink" title="四. 基于python实现简单示例"></a>四. 基于python实现简单示例</h2><h3 id="4-1-基于Python-socket实现的WebSocket服务端"><a href="#4-1-基于Python-socket实现的WebSocket服务端" class="headerlink" title="4.1 基于Python socket实现的WebSocket服务端"></a>4.1 基于Python socket实现的WebSocket服务端</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;5&#x2F;12</span><br><span class="line"></span><br><span class="line">import socket</span><br><span class="line">import hashlib</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line">def get_headers(data):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    将请求头格式化成字典</span><br><span class="line">    :param data:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    header_dict &#x3D; &#123;&#125;</span><br><span class="line">    data &#x3D; str(data, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line"></span><br><span class="line">    header, body &#x3D; data.split(&#39;\r\n\r\n&#39;, 1)</span><br><span class="line">    header_list &#x3D; header.split(&#39;\r\n&#39;)</span><br><span class="line">    for i in range(0, len(header_list)):</span><br><span class="line">        if i &#x3D;&#x3D; 0:</span><br><span class="line">            if len(header_list[i].split(&#39; &#39;)) &#x3D;&#x3D; 3:</span><br><span class="line">                header_dict[&#39;method&#39;], header_dict[&#39;url&#39;], header_dict[&#39;protocol&#39;] &#x3D; header_list[i].split(&#39; &#39;)</span><br><span class="line">        else:</span><br><span class="line">            k, v &#x3D; header_list[i].split(&#39;:&#39;, 1)</span><br><span class="line">            header_dict[k] &#x3D; v.strip()</span><br><span class="line">    return header_dict</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def send_msg(conn, msg_bytes):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    WebSocket服务端向客户端发送消息</span><br><span class="line">    :param conn: 客户端连接到服务器端的socket对象,即： conn,address &#x3D; socket.accept()</span><br><span class="line">    :param msg_bytes: 向客户端发送的字节</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    import struct</span><br><span class="line"></span><br><span class="line">    token &#x3D; b&quot;\x81&quot;</span><br><span class="line">    length &#x3D; len(msg_bytes)</span><br><span class="line">    if length &lt; 126:</span><br><span class="line">        token +&#x3D; struct.pack(&quot;B&quot;, length)</span><br><span class="line">    elif length &lt;&#x3D; 0xFFFF:</span><br><span class="line">        token +&#x3D; struct.pack(&quot;!BH&quot;, 126, length)</span><br><span class="line">    else:</span><br><span class="line">        token +&#x3D; struct.pack(&quot;!BQ&quot;, 127, length)</span><br><span class="line"></span><br><span class="line">    msg &#x3D; token + msg_bytes</span><br><span class="line">    conn.send(msg)</span><br><span class="line">    return True</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sock &#x3D; socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span><br><span class="line">sock.bind((&#39;127.0.0.1&#39;, 8002))</span><br><span class="line">sock.listen(5)</span><br><span class="line"></span><br><span class="line"># 等待用户连接</span><br><span class="line">conn, address &#x3D; sock.accept()</span><br><span class="line"></span><br><span class="line"># WebSocket发来的连接</span><br><span class="line"># 1. 获取握手数据</span><br><span class="line">data &#x3D; conn.recv(1024)</span><br><span class="line">headers &#x3D; get_headers(data)</span><br><span class="line"></span><br><span class="line"># 2. 对握手信息进行加密：</span><br><span class="line">magic_string &#x3D; &#39;258EAFA5-E914-47DA-95CA-C5AB0DC85B11&#39;</span><br><span class="line">value &#x3D; headers[&#39;Sec-WebSocket-Key&#39;] + magic_string</span><br><span class="line">ac &#x3D; base64.b64encode(hashlib.sha1(value.encode(&#39;utf-8&#39;)).digest())</span><br><span class="line"></span><br><span class="line"># 3. 返回握手信息</span><br><span class="line">response_tpl &#x3D; &quot;HTTP&#x2F;1.1 101 Switching Protocols\r\n&quot; \</span><br><span class="line">               &quot;Upgrade:websocket\r\n&quot; \</span><br><span class="line">               &quot;Connection: Upgrade\r\n&quot; \</span><br><span class="line">               &quot;Sec-WebSocket-Accept: %s\r\n&quot; \</span><br><span class="line">               &quot;WebSocket-Location: ws:&#x2F;&#x2F;127.0.0.1:8002\r\n\r\n&quot;</span><br><span class="line"></span><br><span class="line">response_str &#x3D; response_tpl % (ac.decode(&#39;utf-8&#39;),)</span><br><span class="line"></span><br><span class="line">conn.sendall(bytes(response_str, encoding&#x3D;&#39;utf-8&#39;))</span><br><span class="line"></span><br><span class="line"># 之后，才能进行收发数据。</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    # 对数据进行解密</span><br><span class="line">    # send_msg(conn, bytes(&#39;alex&#39;, encoding&#x3D;&#39;utf-8&#39;))</span><br><span class="line">    # send_msg(conn, bytes(&#39;SB&#39;, encoding&#x3D;&#39;utf-8&#39;))</span><br><span class="line">    # info &#x3D; conn.recv(8096)</span><br><span class="line">    # print(info)</span><br><span class="line"></span><br><span class="line">    info &#x3D; conn.recv(8096)</span><br><span class="line">    payload_len &#x3D; info[1] &amp; 127</span><br><span class="line">    if payload_len &#x3D;&#x3D; 126:</span><br><span class="line">        extend_payload_len &#x3D; info[2:4]</span><br><span class="line">        mask &#x3D; info[4:8]</span><br><span class="line">        decoded &#x3D; info[8:]</span><br><span class="line">    elif payload_len &#x3D;&#x3D; 127:</span><br><span class="line">        extend_payload_len &#x3D; info[2:10]</span><br><span class="line">        mask &#x3D; info[10:14]</span><br><span class="line">        decoded &#x3D; info[14:]</span><br><span class="line">    else:</span><br><span class="line">        extend_payload_len &#x3D; None</span><br><span class="line">        mask &#x3D; info[2:6]</span><br><span class="line">        decoded &#x3D; info[6:]</span><br><span class="line"></span><br><span class="line">    bytes_list &#x3D; bytearray()</span><br><span class="line">    for i in range(len(decoded)):</span><br><span class="line">        chunk &#x3D; decoded[i] ^ mask[i % 4]</span><br><span class="line">        bytes_list.append(chunk)</span><br><span class="line">    msg &#x3D; str(bytes_list, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line"></span><br><span class="line">    rep &#x3D; msg + &#39; hello&#39;</span><br><span class="line">    send_msg(conn, bytes(rep, encoding&#x3D;&#39;utf-8&#39;))</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-利用JavaScript类库实现客户端"><a href="#4-2-利用JavaScript类库实现客户端" class="headerlink" title="4.2 利用JavaScript类库实现客户端"></a>4.2 利用JavaScript类库实现客户端</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head lang&#x3D;&quot;en&quot;&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;text&quot; id&#x3D;&quot;txt&quot;&#x2F;&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;button&quot; id&#x3D;&quot;btn&quot; value&#x3D;&quot;提交&quot; onclick&#x3D;&quot;sendMsg();&quot;&#x2F;&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;button&quot; id&#x3D;&quot;close&quot; value&#x3D;&quot;关闭连接&quot; onclick&#x3D;&quot;closeConn();&quot;&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;content&quot;&gt;&lt;&#x2F;div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span><br><span class="line">    var socket &#x3D; new WebSocket(&quot;ws:&#x2F;&#x2F;127.0.0.1:8003&#x2F;chatsocket&quot;);</span><br><span class="line"> </span><br><span class="line">    socket.onopen &#x3D; function () &#123;</span><br><span class="line">        &#x2F;* 与服务器端连接成功后，自动执行 *&#x2F;</span><br><span class="line"> </span><br><span class="line">        var newTag &#x3D; document.createElement(&#39;div&#39;);</span><br><span class="line">        newTag.innerHTML &#x3D; &quot;【连接成功】&quot;;</span><br><span class="line">        document.getElementById(&#39;content&#39;).appendChild(newTag);</span><br><span class="line">    &#125;;</span><br><span class="line"> </span><br><span class="line">    socket.onmessage &#x3D; function (event) &#123;</span><br><span class="line">        &#x2F;* 服务器端向客户端发送数据时，自动执行 *&#x2F;</span><br><span class="line">        var response &#x3D; event.data;</span><br><span class="line">        var newTag &#x3D; document.createElement(&#39;div&#39;);</span><br><span class="line">        newTag.innerHTML &#x3D; response;</span><br><span class="line">        document.getElementById(&#39;content&#39;).appendChild(newTag);</span><br><span class="line">    &#125;;</span><br><span class="line"> </span><br><span class="line">    socket.onclose &#x3D; function (event) &#123;</span><br><span class="line">        &#x2F;* 服务器端主动断开连接时，自动执行 *&#x2F;</span><br><span class="line">        var newTag &#x3D; document.createElement(&#39;div&#39;);</span><br><span class="line">        newTag.innerHTML &#x3D; &quot;【关闭连接】&quot;;</span><br><span class="line">        document.getElementById(&#39;content&#39;).appendChild(newTag);</span><br><span class="line">    &#125;;</span><br><span class="line"> </span><br><span class="line">    function sendMsg() &#123;</span><br><span class="line">        var txt &#x3D; document.getElementById(&#39;txt&#39;);</span><br><span class="line">        socket.send(txt.value);</span><br><span class="line">        txt.value &#x3D; &quot;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    function closeConn() &#123;</span><br><span class="line">        socket.close();</span><br><span class="line">        var newTag &#x3D; document.createElement(&#39;div&#39;);</span><br><span class="line">        newTag.innerHTML &#x3D; &quot;【关闭连接】&quot;;</span><br><span class="line">        document.getElementById(&#39;content&#39;).appendChild(newTag);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>此时,我们在浏览器的Console控制台利用Socket对象发送消息,将会收到返回信息</p>
+<h2 id="五-基于Tornado框架实现Web聊天室"><a href="#五-基于Tornado框架实现Web聊天室" class="headerlink" title="五. 基于Tornado框架实现Web聊天室"></a>五. 基于Tornado框架实现Web聊天室</h2><p>Tornado是一个支持WebSocket的优秀框架，其内部原理正如1~5步骤描述，当然Tornado内部封装功能更加完整。<br>以下是基于Tornado实现的聊天室示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"># cat app.py</span><br><span class="line"></span><br><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">import uuid</span><br><span class="line">import json</span><br><span class="line">import tornado.ioloop</span><br><span class="line">import tornado.web</span><br><span class="line">import tornado.websocket</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class IndexHandler(tornado.web.RequestHandler):</span><br><span class="line">    def get(self):</span><br><span class="line">        self.render(&#39;index.html&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ChatHandler(tornado.websocket.WebSocketHandler):</span><br><span class="line">    # 用户存储当前聊天室用户</span><br><span class="line">    waiters &#x3D; set()</span><br><span class="line">    # 用于存储历时消息</span><br><span class="line">    messages &#x3D; []</span><br><span class="line"></span><br><span class="line">    def open(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        客户端连接成功时，自动执行</span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        ChatHandler.waiters.add(self)</span><br><span class="line">        uid &#x3D; str(uuid.uuid4())</span><br><span class="line">        self.write_message(uid)</span><br><span class="line"></span><br><span class="line">        for msg in ChatHandler.messages:</span><br><span class="line">            content &#x3D; self.render_string(&#39;message.html&#39;, **msg)</span><br><span class="line">            self.write_message(content)</span><br><span class="line"></span><br><span class="line">    def on_message(self, message):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        客户端连发送消息时，自动执行</span><br><span class="line">        :param message: </span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        msg &#x3D; json.loads(message)</span><br><span class="line">        ChatHandler.messages.append(message)</span><br><span class="line"></span><br><span class="line">        for client in ChatHandler.waiters:</span><br><span class="line">            content &#x3D; client.render_string(&#39;message.html&#39;, **msg)</span><br><span class="line">            client.write_message(content)</span><br><span class="line"></span><br><span class="line">    def on_close(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        客户端关闭连接时，，自动执行</span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        ChatHandler.waiters.remove(self)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def run():</span><br><span class="line">    settings &#x3D; &#123;</span><br><span class="line">        &#39;template_path&#39;: &#39;templates&#39;,</span><br><span class="line">        &#39;static_path&#39;: &#39;static&#39;,</span><br><span class="line">    &#125;</span><br><span class="line">    application &#x3D; tornado.web.Application([</span><br><span class="line">        (r&quot;&#x2F;&quot;, IndexHandler),</span><br><span class="line">        (r&quot;&#x2F;chat&quot;, ChatHandler),</span><br><span class="line">    ], **settings)</span><br><span class="line">    application.listen(8888)</span><br><span class="line">    tornado.ioloop.IOLoop.instance().start()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">    run()</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line">客户端</span><br></pre></td></tr></table></figure>
+<h1 id="cat-index-html"><a href="#cat-index-html" class="headerlink" title="cat index.html"></a>cat index.html</h1><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Python聊天室</title>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml">
+</head>
+<body>
+    <div>
+        <input type="text" id="txt"/>
+        <input type="button" id="btn" value="提交" onclick="sendMsg();"/>
+        <input type="button" id="close" value="关闭连接" onclick="closeConn();"/>
+    </div>
+    <div id="container" style="border: 1px solid #dddddd;margin: 20px;min-height: 500px;">
+
+<pre><code>&lt;/div&gt;
+
+&lt;script src=&quot;/static/jquery-2.1.4.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    $(function () {
+        wsUpdater.start();
+    });
+
+    var wsUpdater = {
+        socket: null,
+        uid: null,
+        start: function() {
+            var url = &quot;ws://127.0.0.1:8888/chat&quot;;
+            wsUpdater.socket = new WebSocket(url);
+            wsUpdater.socket.onmessage = function(event) {
+                console.log(event);
+                if(wsUpdater.uid){
+                    wsUpdater.showMessage(event.data);
+                }else{
+                    wsUpdater.uid = event.data;
+                }
+            }
+        },
+        showMessage: function(content) {
+            $(&apos;#container&apos;).append(content);
+        }
+    };
+
+    function sendMsg() {
+        var msg = {
+            uid: wsUpdater.uid,
+            message: $(&quot;#txt&quot;).val()
+        };
+        wsUpdater.socket.send(JSON.stringify(msg));
+    }</code></pre><p></script></p>
+</body>
+</html>
+```
+
+<p><a href="https://files.cnblogs.com/files/aslongas/2.WebSocket%E7%A4%BA%E4%BE%8B%EF%BC%9AFlask.rar" target="_blank" rel="noopener">Flask-WebSocket投票示例</a></p>
+<p><a href="http://www.cnblogs.com/wupeiqi/p/6558766.html" target="_blank" rel="noopener">原文参考</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/">WebSocket小试牛刀</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/" title="WebSocket小试牛刀">https://shuke163.github.io/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/">WebSocket小试牛刀</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/" title="WebSocket小试牛刀">https://shuke163.github.io/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PYTHON/" <i class="fa fa-tag"></i> PYTHON</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/" rel="next" title="Django基于RBAC的权限组件">
+                <i class="fa fa-chevron-left"></i> Django基于RBAC的权限组件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/" rel="prev" title="Web框架本质">
+                Web框架本质 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket小试牛刀"><span class="nav-text">WebSocket小试牛刀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-为什么需要WebSocket"><span class="nav-text">一. 为什么需要WebSocket?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-初次接触-WebSocket-的人，都会问同样的问题：我们已经有了-HTTP-协议，为什么还需要另一个协议？"><span class="nav-text">1.1 初次接触 WebSocket 的人，都会问同样的问题：我们已经有了 HTTP 协议，为什么还需要另一个协议？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-那么-WebSocet到底是什么呢-它能带来什么好处？"><span class="nav-text">1.2 那么,WebSocet到底是什么呢?它能带来什么好处？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-教练，你BB了这么多，跟Websocket有什么关系呢？"><span class="nav-text">1.3 教练，你BB了这么多，跟Websocket有什么关系呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-剖析WebSocket请求流程"><span class="nav-text">二. 剖析WebSocket请求流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-服务端"><span class="nav-text">2.1 服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-客户端连接"><span class="nav-text">2.2 客户端连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-建立连接"><span class="nav-text">2.3 建立连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-提取Sec-WebSocket-Key值并加密："><span class="nav-text">2.4 提取Sec-WebSocket-Key值并加密：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-客户端和服务端收发数据"><span class="nav-text">三. 客户端和服务端收发数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-第一步：获取客户端发送的数据【解包】"><span class="nav-text">3.1 第一步：获取客户端发送的数据【解包】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-解包详细过程"><span class="nav-text">3.2 解包详细过程:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-官方解释"><span class="nav-text">3.2.1 官方解释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-向客户端发送数据【封包】"><span class="nav-text">3.3 向客户端发送数据【封包】</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-基于python实现简单示例"><span class="nav-text">四. 基于python实现简单示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-基于Python-socket实现的WebSocket服务端"><span class="nav-text">4.1 基于Python socket实现的WebSocket服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-利用JavaScript类库实现客户端"><span class="nav-text">4.2 利用JavaScript类库实现客户端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-基于Tornado框架实现Web聊天室"><span class="nav-text">五. 基于Tornado框架实现Web聊天室</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cat-index-html"><span class="nav-text">cat index.html</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

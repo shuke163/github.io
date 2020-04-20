@@ -81,14 +81,14 @@
 
 
 
-<meta name="description" content="Flask知识点总结">
+<meta name="description" content="Web框架本质">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flask知识点总结">
-<meta property="og:url" content="https://shuke163.github.io/2020/04/20/index/index.html">
+<meta property="og:title" content="Web框架本质">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/index.html">
 <meta property="og:site_name" content="shuke&#39;s Blog">
-<meta property="og:description" content="Flask知识点总结">
-<meta property="article:published_time" content="2020-04-19T16:07:54.000Z">
-<meta property="article:modified_time" content="2020-04-20T06:24:16.285Z">
+<meta property="og:description" content="Web框架本质">
+<meta property="article:published_time" content="2020-04-20T06:38:46.000Z">
+<meta property="article:modified_time" content="2020-04-20T06:39:05.526Z">
 <meta property="article:author" content="shuke">
 <meta property="article:tag" content="PYTHON">
 <meta name="twitter:card" content="summary">
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/index/"/>
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Web框架本质/"/>
 
 
 
 
 
-  <title>Flask知识点总结 | shuke's Blog</title>
+  <title>Web框架本质 | shuke's Blog</title>
   
 
 
@@ -398,7 +398,7 @@ $(function() {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/index/">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="shuke">
@@ -415,7 +415,7 @@ $(function() {
 
         
         
-          <h1 class="post-title" itemprop="name headline">Flask知识点总结</h1>
+          <h1 class="post-title" itemprop="name headline">Web框架本质</h1>
         
 
         <div class="post-meta">
@@ -427,7 +427,7 @@ $(function() {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T00:07:54+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T14:38:46+08:00">
                 2020-04-20
               </time>
             
@@ -446,7 +446,7 @@ $(function() {
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">字数统计:</span>
-            <span class="post-count">3.8k(字)</span>
+            <span class="post-count">1.6k(字)</span>
             </span>
 
             <span class="post-time">
@@ -455,7 +455,7 @@ $(function() {
             <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">阅读时长≈</span>
-            <span class="post-count">15(分)</span>
+            <span class="post-count">7(分)</span>
             </span>
 
               <span class="post-meta-item-icon">
@@ -485,8 +485,8 @@ $(function() {
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/04/20/index/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/index/" itemprop="commentCount"></span>
+                <a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -494,7 +494,7 @@ $(function() {
 
           
           
-             <span id="/2020/04/20/index/" class="leancloud_visitors" data-flag-title="Flask知识点总结">
+             <span id="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/" class="leancloud_visitors" data-flag-title="Web框架本质">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -511,7 +511,7 @@ $(function() {
 
           
               <div class="post-description">
-                  Flask知识点总结
+                  Web框架本质
               </div>
           
 
@@ -528,101 +528,37 @@ $(function() {
       
 
       
-        <blockquote class="blockquote-center">优秀的人，不是不合群，而是他们合群的人里面没有你</blockquote>
+        <h2 id="Web框架本质"><a href="#Web框架本质" class="headerlink" title="Web框架本质"></a>Web框架本质</h2><p>众所周知，对于所有的Web应用，本质上其实就是一个socket服务端，用户的浏览器其实就是一个socket客户端。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;4&#x2F;22</span><br><span class="line"></span><br><span class="line">import socket</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def handle_request(client):</span><br><span class="line">    # 获取客户端发送的数据</span><br><span class="line">    buf &#x3D; client.recv(1024)</span><br><span class="line">    # 回复客户端的请求</span><br><span class="line">    client.send(b&quot;HTTP&#x2F;1.1 200 OK\r\n\r\n&quot;)</span><br><span class="line">    client.send(b&quot;Hello, shuke&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    # 创建socket对象</span><br><span class="line">    sock &#x3D; socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    sock.bind((&#39;localhost&#39;, 9000))</span><br><span class="line">    sock.listen(5)</span><br><span class="line"></span><br><span class="line">    while True:</span><br><span class="line">        # 监听socket，等待请求的到来</span><br><span class="line">        connection, address &#x3D; sock.accept()</span><br><span class="line">        handle_request(connection)</span><br><span class="line">        # 关闭连接</span><br><span class="line">        connection.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    main()</span><br><span class="line"></span><br><span class="line"># 验证</span><br><span class="line">$ curl http:&#x2F;&#x2F;localhost:9000</span><br><span class="line">Hello, shuke</span><br></pre></td></tr></table></figure>
+<p>上述通过socket来实现了其本质，而对于真实开发中的python web程序来说，一般会分为两部分：服务器程序和应用程序。服务器程序负责对socket服务器进行封装，并在请求到来时，对请求的各种数据进行整理。应用程序则负责具体的逻辑处理。为了方便应用程序的开发，就出现了众多的Web框架，例如：Django、Flask、web.py 等。不同的框架有不同的开发方式，但是无论如何，开发出的应用程序都要和服务器程序配合，才能为用户提供服务。这样，服务器程序就需要为不同的框架提供不同的支持。这样混乱的局面无论对于服务器还是框架，都是不好的。对服务器来说，需要支持各种不同框架，对框架来说，只有支持它的服务器才能被开发出的应用使用。这时候，标准化就变得尤为重要。我们可以设立一个标准，只要服务器程序支持这个标准，框架也支持这个标准，那么他们就可以配合使用。一旦标准确定，双方各自实现。这样，服务器可以支持更多支持标准的框架，框架也可以使用更多支持标准的服务器。</p>
+<p>WSGI（Web Server Gateway Interface）是一种规范，它定义了使用python编写的web app与web server之间接口格式，实现web app与web server间的解耦。</p>
+<p>python标准库提供的独立WSGI服务器称为wsgiref</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from wsgiref.simple_server import make_server</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def RunServer(environ, start_response):</span><br><span class="line">    start_response(&#39;200 OK&#39;, [(&#39;Content-Type&#39;, &#39;text&#x2F;html&#39;)])</span><br><span class="line">    return [bytes(&#39;&lt;h1&gt;Hello, web!&lt;&#x2F;h1&gt;&#39;, encoding&#x3D;&#39;utf-8&#39;), ]</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    httpd &#x3D; make_server(&#39;&#39;, 8000, RunServer)</span><br><span class="line">    print(&quot;Serving HTTP on port 8000...&quot;)</span><br><span class="line">    httpd.serve_forever()</span><br></pre></td></tr></table></figure>
+<h2 id="自定义框架"><a href="#自定义框架" class="headerlink" title="自定义框架"></a>自定义框架</h2><p>一. 框架<br>通过python标准库提供的wsgiref模块开发一个自己的Web框架</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line">#coding:utf-8</span><br><span class="line">from wsgiref.simple_server import make_server</span><br><span class="line"> </span><br><span class="line">def index():</span><br><span class="line">    return &#39;index&#39;</span><br><span class="line"> </span><br><span class="line">def login():</span><br><span class="line">    return &#39;login&#39;</span><br><span class="line"> </span><br><span class="line">def routers():</span><br><span class="line">     </span><br><span class="line">    urlpatterns &#x3D; (</span><br><span class="line">        (&#39;&#x2F;index&#x2F;&#39;,index),</span><br><span class="line">        (&#39;&#x2F;login&#x2F;&#39;,login),</span><br><span class="line">    )</span><br><span class="line">     </span><br><span class="line">    return urlpatterns</span><br><span class="line"> </span><br><span class="line">def RunServer(environ, start_response):</span><br><span class="line">    start_response(&#39;200 OK&#39;, [(&#39;Content-Type&#39;, &#39;text&#x2F;html&#39;)])</span><br><span class="line">    url &#x3D; environ[&#39;PATH_INFO&#39;]</span><br><span class="line">    urlpatterns &#x3D; routers()</span><br><span class="line">    func &#x3D; None</span><br><span class="line">    for item in urlpatterns:</span><br><span class="line">        if item[0] &#x3D;&#x3D; url:</span><br><span class="line">            func &#x3D; item[1]</span><br><span class="line">            break</span><br><span class="line">    if func:</span><br><span class="line">        return func()</span><br><span class="line">    else:</span><br><span class="line">        return &#39;404 not found&#39;</span><br><span class="line">     </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    httpd &#x3D; make_server(&#39;&#39;, 8000, RunServer)</span><br><span class="line">    print &quot;Serving HTTP on port 8000...&quot;</span><br><span class="line">    httpd.serve_forever()</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line">2、模板引擎</span><br><span class="line"></span><br><span class="line">在上一步骤中，对于所有的login、index均返回给用户浏览器一个简单的字符串，在现实的Web请求中一般会返回一个复杂的符合HTML规则的字符串，所以我们一般将要返回给用户的HTML写在指定文件中，然后再返回,如：</span><br></pre></td></tr></table></figure>
+<h1 id="cat-index-html"><a href="#cat-index-html" class="headerlink" title="cat index.html"></a>cat index.html</h1><!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>Index</h1>
+
+</body>
+</html>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;</span><br><span class="line"># cat login.html</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head lang&#x3D;&quot;en&quot;&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;form&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;text&quot; &#x2F;&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;text&quot; &#x2F;&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;submit&quot; &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;form&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"> </span><br><span class="line">from wsgiref.simple_server import make_server</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def index():</span><br><span class="line">    # return &#39;index&#39;</span><br><span class="line">    f &#x3D; open(&#39;index.html&#39;)</span><br><span class="line">    data &#x3D; f.read()</span><br><span class="line">    return data</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def login():</span><br><span class="line">    # return &#39;login&#39;</span><br><span class="line">    f &#x3D; open(&#39;login.html&#39;)</span><br><span class="line">    data &#x3D; f.read()</span><br><span class="line">    return data</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def routers():</span><br><span class="line"> </span><br><span class="line">    urlpatterns &#x3D; (</span><br><span class="line">        (&#39;&#x2F;index&#x2F;&#39;, index),</span><br><span class="line">        (&#39;&#x2F;login&#x2F;&#39;, login),</span><br><span class="line">    )</span><br><span class="line"> </span><br><span class="line">    return urlpatterns</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def run_server(environ, start_response):</span><br><span class="line">    start_response(&#39;200 OK&#39;, [(&#39;Content-Type&#39;, &#39;text&#x2F;html&#39;)])</span><br><span class="line">    url &#x3D; environ[&#39;PATH_INFO&#39;]</span><br><span class="line">    urlpatterns &#x3D; routers()</span><br><span class="line">    func &#x3D; None</span><br><span class="line">    for item in urlpatterns:</span><br><span class="line">        if item[0] &#x3D;&#x3D; url:</span><br><span class="line">            func &#x3D; item[1]</span><br><span class="line">            break</span><br><span class="line">    if func:</span><br><span class="line">        return func()</span><br><span class="line">    else:</span><br><span class="line">        return &#39;404 not found&#39;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    httpd &#x3D; make_server(&#39;&#39;, 8000, run_server)</span><br><span class="line">    print &quot;Serving HTTP on port 8000...&quot;</span><br><span class="line">    httpd.serve_forever()</span><br></pre></td></tr></table></figure>
+对于上述代码，虽然可以返回给用户HTML的内容以现实复杂的页面，但是还是存在问题：如何给用户返回动态内容？
+- 自定义一套特殊的语法，进行替换
+- 使用开源工具jinja2，遵循其指定语法
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># cat index.html</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head lang&#x3D;&quot;en&quot;&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;&#123;&#123;name&#125;&#125;&lt;&#x2F;h1&gt;</span><br><span class="line"></span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">        &#123;% for item in user_list %&#125;</span><br><span class="line">        &lt;li&gt;&#123;&#123;item&#125;&#125;&lt;&#x2F;li&gt;</span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line">    &lt;&#x2F;ul&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"> </span><br><span class="line">from wsgiref.simple_server import make_server</span><br><span class="line">from jinja2 import Template</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def index():</span><br><span class="line">    # return &#39;index&#39;</span><br><span class="line"> </span><br><span class="line">    # template &#x3D; Template(&#39;Hello &#123;&#123; name &#125;&#125;!&#39;)</span><br><span class="line">    # result &#x3D; template.render(name&#x3D;&#39;John Doe&#39;)</span><br><span class="line"> </span><br><span class="line">    f &#x3D; open(&#39;index.html&#39;)</span><br><span class="line">    result &#x3D; f.read()</span><br><span class="line">    template &#x3D; Template(result)</span><br><span class="line">    data &#x3D; template.render(name&#x3D;&#39;John Doe&#39;, user_list&#x3D;[&#39;alex&#39;, &#39;eric&#39;])</span><br><span class="line">    return data.encode(&#39;utf-8&#39;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def login():</span><br><span class="line">    # return &#39;login&#39;</span><br><span class="line">    f &#x3D; open(&#39;login.html&#39;)</span><br><span class="line">    data &#x3D; f.read()</span><br><span class="line">    return data</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def routers():</span><br><span class="line"> </span><br><span class="line">    urlpatterns &#x3D; (</span><br><span class="line">        (&#39;&#x2F;index&#x2F;&#39;, index),</span><br><span class="line">        (&#39;&#x2F;login&#x2F;&#39;, login),</span><br><span class="line">    )</span><br><span class="line"> </span><br><span class="line">    return urlpatterns</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def run_server(environ, start_response):</span><br><span class="line">    start_response(&#39;200 OK&#39;, [(&#39;Content-Type&#39;, &#39;text&#x2F;html&#39;)])</span><br><span class="line">    url &#x3D; environ[&#39;PATH_INFO&#39;]</span><br><span class="line">    urlpatterns &#x3D; routers()</span><br><span class="line">    func &#x3D; None</span><br><span class="line">    for item in urlpatterns:</span><br><span class="line">        if item[0] &#x3D;&#x3D; url:</span><br><span class="line">            func &#x3D; item[1]</span><br><span class="line">            break</span><br><span class="line">    if func:</span><br><span class="line">        return func()</span><br><span class="line">    else:</span><br><span class="line">        return &#39;404 not found&#39;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    httpd &#x3D; make_server(&#39;&#39;, 8000, run_server)</span><br><span class="line">    print &quot;Serving HTTP on port 8000...&quot;</span><br><span class="line">    httpd.serve_forever()</span><br></pre></td></tr></table></figure>
+遵循jinja2的语法规则，其内部会对指定的语法进行相应的替换，从而达到动态的返回内容;
+对于模板引擎的本质，参考: [白话tornado源码之褪去模板外衣的前戏](http://www.cnblogs.com/wupeiqi/p/4592637.html)
 
 
-<h2 id="Python-中更优雅的日志记录方案"><a href="#Python-中更优雅的日志记录方案" class="headerlink" title="Python 中更优雅的日志记录方案"></a>Python 中更优雅的日志记录方案</h2><p>在 Python 中，一般情况下我们可能直接用自带的 logging 模块来记录日志，包括我之前的时候也是一样。在使用时我们需要配置一些 Handler、Formatter 来进行一些处理，比如把日志输出到不同的位置，或者设置一个不同的输出格式，或者设置日志分块和备份。但其实个人感觉 logging 用起来其实并不是那么好用，其实主要还是配置较为繁琐.</p>
-<h2 id="常见使用"><a href="#常见使用" class="headerlink" title="常见使用"></a>常见使用</h2><p>首先看看 logging 常见的解决方案吧，我一般会配置输出到文件、控制台和 Elasticsearch。输出到控制台就仅仅是方便直接查看的；输出到文件是方便直接存储，保留所有历史记录的备份；输出到 Elasticsearch，直接将 Elasticsearch 作为存储和分析的中心，使用 Kibana 可以非常方便地分析和查看运行情况。<br>所以在这里我基本会对 logging 做如下的封装写法:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">mport logging</span><br><span class="line">import sys</span><br><span class="line">from os import makedirs</span><br><span class="line">from os.path import dirname, exists</span><br><span class="line"></span><br><span class="line">from cmreslogging.handlers import CMRESHandler</span><br><span class="line"></span><br><span class="line">loggers &#x3D; &#123;&#125;</span><br><span class="line"></span><br><span class="line">LOG_ENABLED &#x3D; True  # 是否开启日志</span><br><span class="line">LOG_TO_CONSOLE &#x3D; True  # 是否输出到控制台</span><br><span class="line">LOG_TO_FILE &#x3D; True  # 是否输出到文件</span><br><span class="line">LOG_TO_ES &#x3D; True  # 是否输出到 Elasticsearch</span><br><span class="line"></span><br><span class="line">LOG_PATH &#x3D; &#39;.&#x2F;runtime.log&#39;  # 日志文件路径</span><br><span class="line">LOG_LEVEL &#x3D; &#39;DEBUG&#39;  # 日志级别</span><br><span class="line">LOG_FORMAT &#x3D; &#39;%(levelname)s - %(asctime)s - process: %(process)d - %(filename)s - %(name)s - %(lineno)d - %(module)s - %(message)s&#39;  # 每条日志输出格式</span><br><span class="line">ELASTIC_SEARCH_HOST &#x3D; &#39;eshost&#39;  # Elasticsearch Host</span><br><span class="line">ELASTIC_SEARCH_PORT &#x3D; 9200  # Elasticsearch Port</span><br><span class="line">ELASTIC_SEARCH_INDEX &#x3D; &#39;runtime&#39;  # Elasticsearch Index Name</span><br><span class="line">APP_ENVIRONMENT &#x3D; &#39;dev&#39;  # 运行环境，如测试环境还是生产环境</span><br><span class="line"></span><br><span class="line">def get_logger(name&#x3D;None):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    get logger by name</span><br><span class="line">    :param name: name of logger</span><br><span class="line">    :return: logger</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    global loggers</span><br><span class="line"></span><br><span class="line">    if not name: name &#x3D; __name__</span><br><span class="line"></span><br><span class="line">    if loggers.get(name):</span><br><span class="line">        return loggers.get(name)</span><br><span class="line"></span><br><span class="line">    logger &#x3D; logging.getLogger(name)</span><br><span class="line">    logger.setLevel(LOG_LEVEL)</span><br><span class="line"></span><br><span class="line">    # 输出到控制台</span><br><span class="line">    if LOG_ENABLED and LOG_TO_CONSOLE:</span><br><span class="line">        stream_handler &#x3D; logging.StreamHandler(sys.stdout)</span><br><span class="line">        stream_handler.setLevel(level&#x3D;LOG_LEVEL)</span><br><span class="line">        formatter &#x3D; logging.Formatter(LOG_FORMAT)</span><br><span class="line">        stream_handler.setFormatter(formatter)</span><br><span class="line">        logger.addHandler(stream_handler)</span><br><span class="line"></span><br><span class="line">    # 输出到文件</span><br><span class="line">    if LOG_ENABLED and LOG_TO_FILE:</span><br><span class="line">        # 如果路径不存在，创建日志文件文件夹</span><br><span class="line">        log_dir &#x3D; dirname(log_path)</span><br><span class="line">        if not exists(log_dir): makedirs(log_dir)</span><br><span class="line">        # 添加 FileHandler</span><br><span class="line">        file_handler &#x3D; logging.FileHandler(log_path, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line">        file_handler.setLevel(level&#x3D;LOG_LEVEL)</span><br><span class="line">        formatter &#x3D; logging.Formatter(LOG_FORMAT)</span><br><span class="line">        file_handler.setFormatter(formatter)</span><br><span class="line">        logger.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">    # 输出到 Elasticsearch</span><br><span class="line">    if LOG_ENABLED and LOG_TO_ES:</span><br><span class="line">        # 添加 CMRESHandler</span><br><span class="line">        es_handler &#x3D; CMRESHandler(hosts&#x3D;[&#123;&#39;host&#39;: ELASTIC_SEARCH_HOST, &#39;port&#39;: ELASTIC_SEARCH_PORT&#125;],</span><br><span class="line">                                  # 可以配置对应的认证权限</span><br><span class="line">                                  auth_type&#x3D;CMRESHandler.AuthType.NO_AUTH,  </span><br><span class="line">                                  es_index_name&#x3D;ELASTIC_SEARCH_INDEX,</span><br><span class="line">                                  # 一个月分一个 Index</span><br><span class="line">                                  index_name_frequency&#x3D;CMRESHandler.IndexNameFrequency.MONTHLY,</span><br><span class="line">                                  # 额外增加环境标识</span><br><span class="line">                                  es_additional_fields&#x3D;&#123;&#39;environment&#39;: APP_ENVIRONMENT&#125;  </span><br><span class="line">                                  )</span><br><span class="line">        es_handler.setLevel(level&#x3D;LOG_LEVEL)</span><br><span class="line">        formatter &#x3D; logging.Formatter(LOG_FORMAT)</span><br><span class="line">        es_handler.setFormatter(formatter)</span><br><span class="line">        logger.addHandler(es_handler)</span><br><span class="line"></span><br><span class="line">    # 保存到全局 loggers</span><br><span class="line">    loggers[name] &#x3D; logger</span><br><span class="line">    return logger</span><br></pre></td></tr></table></figure>
-<p>定义完了怎么使用呢？只需要使用定义的方法获取一个 logger，然后 log 对应的内容即可:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">logger &#x3D; get_logger()</span><br><span class="line">logger.debug(&#39;this is a message&#39;)</span><br></pre></td></tr></table></figure>
-<p>运行结果如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEBUG - 2019-10-11 22:27:35,923 - process: 99490 - logger.py - __main__ - 81 - logger - this is a message</span><br></pre></td></tr></table></figure>
-<p>我们看看这个定义的基本实现吧。首先这里一些常量是用来定义 <code>logging</code> 模块的一些基本属性的，比如 LOG_ENABLED 代表是否开启日志功能，<code>LOG_TO_E</code>S 代表是否将日志输出到 Elasticsearch，另外还有很多其他的日志基本配置，如 <code>LOG_FORMAT</code> 配置了日志每个条目输出的基本格式，另外还有一些连接的必要信息。这些变量可以和运行时的命令行或环境变量对接起来，可以方便地实现一些开关和配置的更换。</p>
-<p>然后定义了这么一个 <code>get_logger</code> 方法，接收一个参数 name。首先该方法拿到 name 之后，会到全局的 loggers 变量里面查找，loggers 变量是一个全局字典，如果有已经声明过的 logger，直接将其获取返回即可，不用再将其二次初始化。如果 loggers 里面没有找到 name 对应的 logger，那就进行创建即可。创建 logger 之后，可以为其添加各种对应的 Handler，如输出到控制台就用 StreamHandler，输出到文件就用 FileHandler 或 RotatingFileHandler，输出到 Elasticsearch 就用 CMRESHandler，分别配置好对应的信息即可。</p>
-<p>最后呢，将新建的 logger 保存到全局的 loggers 里面并返回即可，这样如果有同名的 logger 便可以直接查找 loggers 直接返回了。<br>在这里依赖了额外的输出到 Elasticsearch 的包，叫做 CMRESHandler，它可以支持将日志输出到 Elasticsearch 里面，如果要使用的话可以安装一下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install CMRESHandler</span><br></pre></td></tr></table></figure>
-<p>其 GitHub 地址是：<code>https://github.com/cmanaha/python-elasticsearch-logger</code>，具体的使用方式可以看看它的官方说明，如配置认证信息，配置 Index 分隔信息等等。<br>好，上面就是我之前常用的 logging 配置，通过如上的配置，我就可以实现将 logging 输出到三个位置，并可以实现对应的效果。比如输出到 Elasticsearch 之后，我就可以非常方便地使用 Kibana 来查看当前运行情况，ERROR Log 的比例等等.<br>也可以在它的基础上做更进一步的统计分析.</p>
-<h2 id="loguru"><a href="#loguru" class="headerlink" title="loguru"></a>loguru</h2><p>上面的实现方式已经是一个较为可行的配置方案了。然而，我还是会感觉到有些 Handler 配起来麻烦，尤其是新建一个项目的很多时候懒得去写一些配置。即使是不用上文的配置，用最基本的几行 logging 配置，像如下的通用配置:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import logging</span><br><span class="line">logging.basicConfig(level &#x3D; logging.INFO,format &#x3D; &#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)</span><br><span class="line">logger &#x3D; logging.getLogger(__name__)</span><br></pre></td></tr></table></figure>
-<p>我也懒得去写，感觉并不是一个优雅的实现方式。<br>有需求就有动力啊，这不，就有人实现了这么一个库，叫做 loguru，可以将 log 的配置和使用更加简单和方便。<br>下面我们来看看它到底是怎么用的吧.</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>首先，这个库的安装方式很简单，就用基本的 pip 安装即可，Python 3 版本的安装如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install loguru</span><br></pre></td></tr></table></figure>
-<p>安装完毕之后，我们就可以在项目里使用这个 loguru 库了.</p>
-<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><p>那么这个库怎么来用呢？我们先用一个实例感受下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from loguru import logger</span><br><span class="line"></span><br><span class="line">logger.debug(&#39;this is a debug message&#39;)</span><br></pre></td></tr></table></figure>
-<p>看到了吧，不需要配置什么东西，直接引入一个 logger，然后调用其 debug 方法即可。</p>
-<p>在 loguru 里面有且仅有一个主要对象，那就是 logger，loguru 里面有且仅有一个 logger，而且它已经被提前配置了一些基础信息，比如比较友好的格式化、文本颜色信息等等。</p>
-<p>上面的代码运行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019-10-13 22:46:12.367 | DEBUG    | __main__:&lt;module&gt;:4 - this is a debug message</span><br></pre></td></tr></table></figure>
-<p>可以看到其默认的输出格式是上面的内容，有时间、级别、模块名、行号以及日志信息，不需要手动创建 logger，直接使用即可，另外其输出还是彩色的，看起来会更加友好。</p>
-<p>以上的日志信息是直接输出到控制台的，并没有输出到其他的地方，如果想要输出到其他的位置，比如存为文件，我们只需要使用一行代码声明即可。</p>
-<p>例如将结果同时输出到一个 runtime.log 文件里面，可以这么写:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from loguru import logger</span><br><span class="line"></span><br><span class="line">logger.add(&#39;runtime.log&#39;)</span><br><span class="line">logger.debug(&#39;this is a debug&#39;)</span><br></pre></td></tr></table></figure>
-<p>很简单吧，我们也不需要再声明一个 FileHandler 了，就一行 add 语句搞定，运行之后会发现目录下 runtime.log 里面同样出现了刚刚控制台输出的 DEBUG 信息。</p>
-<p>上面就是一些基本的使用，但这还远远不够，下面我们来详细了解下它的一些功能模块.</p>
-<h2 id="详细使用"><a href="#详细使用" class="headerlink" title="详细使用"></a>详细使用</h2><p>既然是日志，那么最常见的就是输出到文件了。loguru 对输出到文件的配置有非常强大的支持，比如支持输出到多个文件，分级别分别输出，过大创建新文件，过久自动删除等等。</p>
-<p>下面我们分别看看这些怎样来实现，这里基本上就是 add 方法的使用介绍。因为这个 add 方法就相当于给 logger 添加了一个 Handler，它给我们暴露了许多参数来实现 Handler 的配置，下面我们来详细介绍下。<br>首先看看它的方法定义吧:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def add(</span><br><span class="line">        self,</span><br><span class="line">        sink,</span><br><span class="line">        *,</span><br><span class="line">        level&#x3D;_defaults.LOGURU_LEVEL,</span><br><span class="line">        format&#x3D;_defaults.LOGURU_FORMAT,</span><br><span class="line">        filter&#x3D;_defaults.LOGURU_FILTER,</span><br><span class="line">        colorize&#x3D;_defaults.LOGURU_COLORIZE,</span><br><span class="line">        serialize&#x3D;_defaults.LOGURU_SERIALIZE,</span><br><span class="line">        backtrace&#x3D;_defaults.LOGURU_BACKTRACE,</span><br><span class="line">        diagnose&#x3D;_defaults.LOGURU_DIAGNOSE,</span><br><span class="line">        enqueue&#x3D;_defaults.LOGURU_ENQUEUE,</span><br><span class="line">        catch&#x3D;_defaults.LOGURU_CATCH,</span><br><span class="line">        **kwargs</span><br><span class="line">    ):</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
-<p>看看它的源代码，它支持这么多的参数，如 level、format、filter、color 等等。</p>
-<blockquote>
-<p>sink<br>另外我们还注意到它有个非常重要的参数 sink，我们看看官方文档：<code>https://loguru.readthedocs.io/en/stable/api/logger.html#sink</code>，可以了解到通过 sink 我们可以传入多种不同的数据结构，汇总如下:</p>
-</blockquote>
-<ul>
-<li>sink 可以传入一个 file 对象，例如 sys.stderr 或者 open(‘file.log’, ‘w’) 都可以。</li>
-<li>sink 可以直接传入一个 str 字符串或者 pathlib.Path 对象，其实就是代表文件路径的，如果识别到是这种类型，它会自动创建对应路径的日志文件并将日志输出进去。</li>
-<li>sink 可以是一个方法，可以自行定义输出实现。</li>
-<li>sink 可以是一个 logging 模块的 Handler，比如 FileHandler、StreamHandler 等等，或者上文中我们提到的 CMRESHandler 照样也是可以的，这样就可以实现自定义 Handler 的配置。</li>
-<li>sink 还可以是一个自定义的类，具体的实现规范可以参见官方文档.<br>所以说，刚才我们所演示的输出到文件，仅仅给它传了一个 str 字符串路径，他就给我们创建了一个日志文件，就是这个原理。</li>
-</ul>
-<blockquote>
-<blockquote>
-<p>format, filter, level<br>下面我们再了解下它的其他参数，例如 format、filter、level 等等。<br>其实它们的概念和格式和 logging 模块都是基本一样的了，例如这里使用 format、filter、level 来规定输出的格式:</p>
-</blockquote>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.add(&#39;runtime.log&#39;, format&#x3D;&quot;&#123;time&#125; &#123;level&#125; &#123;message&#125;&quot;, filter&#x3D;&quot;my_module&quot;, level&#x3D;&quot;INFO&quot;)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>删除sink<br>另外添加 sink 之后我们也可以对其进行删除，相当于重新刷新并写入新的内容。<br>删除的时候根据刚刚 add 方法返回的 id 进行删除即可，看下面的例子:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from loguru import logger</span><br><span class="line"></span><br><span class="line">trace &#x3D; logger.add(&#39;runtime.log&#39;)</span><br><span class="line">logger.debug(&#39;this is a debug message&#39;)</span><br><span class="line">logger.remove(trace)</span><br><span class="line">logger.debug(&#39;this is another debug message&#39;)</span><br></pre></td></tr></table></figure>
-<p>看这里，我们首先 add 了一个 sink，然后获取它的返回值，赋值为 trace。随后输出了一条日志，然后将 trace 变量传给 remove 方法，再次输出一条日志，看看结果是怎样的。<br>控制台输出如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">019-10-13 23:18:26.469 | DEBUG    | __main__:&lt;module&gt;:4 - this is a debug message</span><br><span class="line">2019-10-13 23:18:26.469 | DEBUG    | __main__:&lt;module&gt;:6 - this is another debug message</span><br></pre></td></tr></table></figure>
-<p>日志文件 runtime.log 内容如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019-10-13 23:18:26.469 | DEBUG    | __main__:&lt;module&gt;:4 - this is a debug message</span><br></pre></td></tr></table></figure>
-<p>可以发现，在调用 remove 方法之后，确实将历史 log 删除了。<br>这样我们就可以实现日志的刷新重新写入操作。</p>
-<blockquote>
-<p>rotation 配置<br>用了 loguru 我们还可以非常方便地使用 rotation 配置，比如我们想一天输出一个日志文件，或者文件太大了自动分隔日志文件，我们可以直接使用 add 方法的 rotation 参数进行配置。<br>我们看看下面的例子：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.add(&#39;runtime_&#123;time&#125;.log&#39;, rotation&#x3D;&quot;500 MB&quot;)</span><br></pre></td></tr></table></figure>
-<p>通过这样的配置我们就可以实现每 500MB 存储一个文件，每个 log 文件过大就会新创建一个 log 文件。我们在配置 log 名字时加上了一个 time 占位符，这样在生成时可以自动将时间替换进去，生成一个文件名包含时间的 log 文件。<br>另外我们也可以使用 rotation 参数实现定时创建 log 文件，例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.add(&#39;runtime_&#123;time&#125;.log&#39;, rotation&#x3D;&#39;00:00&#39;)</span><br></pre></td></tr></table></figure>
-<p>这样就可以实现每天 0 点新创建一个 log 文件输出了。<br>另外我们也可以配置 log 文件的循环时间，比如每隔一周创建一个 log 文件，写法如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.add(&#39;runtime_&#123;time&#125;.log&#39;, rotation&#x3D;&#39;1 week&#39;)</span><br></pre></td></tr></table></figure>
-<p>这样我们就可以实现一周创建一个 log 文件了。</p>
-<blockquote>
-<p>retention 配置<br>很多情况下，一些非常久远的 log 对我们来说并没有什么用处了，它白白占据了一些存储空间，不清除掉就会非常浪费。retention 这个参数可以配置日志的最长保留时间。<br>比如我们想要设置日志文件最长保留 10 天，可以这么来配置:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.add(&#39;runtime.log&#39;, retention&#x3D;&#39;10 days&#39;)</span><br></pre></td></tr></table></figure>
-<p>这样 log 文件里面就会保留最新 10 天的 log，妈妈再也不用担心 log 沉积的问题啦。</p>
-<blockquote>
-<p>compression 配置<br>loguru 还可以配置文件的压缩格式，比如使用 zip 文件格式保存，示例如下:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.add(&#39;runtime.log&#39;, compression&#x3D;&#39;zip&#39;)</span><br></pre></td></tr></table></figure>
-<p>这样可以更加节省存储空间。</p>
-<blockquote>
-<p>字符串格式化<br>loguru 在输出 log 的时候还提供了非常友好的字符串格式化功能，像这样:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.info(&#39;If you are using Python &#123;&#125;, prefer &#123;feature&#125; of course!&#39;, 3.6, feature&#x3D;&#39;f-strings&#39;)</span><br></pre></td></tr></table></figure>
-<p>这样在添加参数就非常方便了。</p>
-<blockquote>
-<p>Traceback 记录<br>在很多情况下，如果遇到运行错误，而我们在打印输出 log 的时候万一不小心没有配置好 Traceback 的输出，很有可能我们就没法追踪错误所在了。<br>但用了 loguru 之后，我们用它提供的装饰器就可以直接进行 Traceback 的记录，类似这样的配置即可:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@logger.catch</span><br><span class="line">def my_function(x, y, z):</span><br><span class="line">    # An error? It&#39;s caught anyway!</span><br><span class="line">    return 1 &#x2F; (x + y + z)</span><br></pre></td></tr></table></figure>
-<p>我们做个测试，我们在调用时三个参数都传入 0，直接引发除以 0 的错误，看看会出现什么情况:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_function(0, 0, 0)</span><br></pre></td></tr></table></figure>
-<p>运行完毕之后，可以发现 log 里面就出现了 Traceback 信息，而且给我们输出了当时的变量值，真的是不能再赞了！结果如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; File &quot;run.py&quot;, line 15, in &lt;module&gt;</span><br><span class="line">    my_function(0, 0, 0)</span><br><span class="line">    └ &lt;function my_function at 0x1171dd510&gt;</span><br><span class="line"></span><br><span class="line">  File &quot;&#x2F;private&#x2F;var&#x2F;py&#x2F;logurutest&#x2F;demo5.py&quot;, line 13, in my_function</span><br><span class="line">    return 1 &#x2F; (x + y + z)</span><br><span class="line">                │   │   └ 0</span><br><span class="line">                │   └ 0</span><br><span class="line">                └ 0</span><br><span class="line"></span><br><span class="line">ZeroDivisionError: division by zero</span><br></pre></td></tr></table></figure>
-<p>因此，用 loguru 可以非常方便地实现日志追踪，debug 效率可能要高上十倍了？<br>另外 loguru 还有很多很多强大的功能，这里就不再一一展开讲解了，更多的内容大家可以看看 loguru 的官方文档详细了解一下：<code>https://loguru.readthedocs.io/en/stable/index.html</code><br>看完之后，是时候把自己的 logging 模块替换成 loguru 啦！</p>
+<p><a href="http://www.cnblogs.com/wupeiqi/articles/5237672.html" target="_blank" rel="noopener">原文</a></p>
 
       
     </div>
@@ -632,6 +568,37 @@ $(function() {
     <div>
       
         
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/">Web框架本质</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/" title="Web框架本质">https://shuke163.github.io/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
       
 
     </div>
@@ -647,6 +614,37 @@ $(function() {
     <div>
       
         
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/">Web框架本质</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/" title="Web框架本质">https://shuke163.github.io/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
       
     </div>
     
@@ -672,14 +670,18 @@ $(function() {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/" rel="next" title="WebSocket小试牛刀">
+                <i class="fa fa-chevron-left"></i> WebSocket小试牛刀
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/04/20/index/" rel="prev" title="让人想骂街的 Python 炫技操作：条件语句的七种写法">
-                让人想骂街的 Python 炫技操作：条件语句的七种写法 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/" rel="prev" title="Flask之路(一)">
+                Flask之路(一) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -850,7 +852,7 @@ $(function() {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-中更优雅的日志记录方案"><span class="nav-text">Python 中更优雅的日志记录方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见使用"><span class="nav-text">常见使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loguru"><span class="nav-text">loguru</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本使用"><span class="nav-text">基本使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详细使用"><span class="nav-text">详细使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web框架本质"><span class="nav-text">Web框架本质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义框架"><span class="nav-text">自定义框架</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cat-index-html"><span class="nav-text">cat index.html</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-text">Index</span></a></div>
             
 
           </div>

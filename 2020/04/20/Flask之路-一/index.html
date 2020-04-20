@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PYTHON,Flask," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Flask之路(一)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flask之路(一)">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Flask之路(一)">
+<meta property="article:published_time" content="2020-04-20T06:39:18.000Z">
+<meta property="article:modified_time" content="2020-04-20T06:42:55.673Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="PYTHON">
+<meta property="article:tag" content="Flask">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Flask之路-一/"/>
+
+
+
+
+
+  <title>Flask之路(一) | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flask之路(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T14:39:18+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">4.4k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">23(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flask/" itemprop="url" rel="index">
+                    <span itemprop="name">Flask</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flask/PYTHON/" itemprop="url" rel="index">
+                    <span itemprop="name">PYTHON</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/" class="leancloud_visitors" data-flag-title="Flask之路(一)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Flask之路(一)
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Flask之路-一"><a href="#Flask之路-一" class="headerlink" title="Flask之路(一)"></a>Flask之路(一)</h2><h3 id="一-简介"><a href="#一-简介" class="headerlink" title="一. 简介"></a>一. 简介</h3><p>Flask是一个基于Python开发并且依赖jinja2模板和Werkzeug WSGI服务的一个微型框架，对于Werkzeug本质是Socket服务端，其用于接收http请求并对请求进行预处理，然后触发Flask框架，开发人员基于Flask框架提供的功能对请求进行相应的处理，并返回给用户，如果要返回给用户复杂的内容时，需要借助jinja2模板来实现对模板的处理，即：将模板和数据进行渲染，将渲染后的字符串返回给用户浏览器。</p>
+<p>“微”(micro) 并不表示你需要把整个 Web 应用塞进单个 Python 文件（虽然确实可以 ），也不意味着 Flask 在功能上有所欠缺。微框架中的“微”意味着 Flask 旨在保持核心简单而易于扩展。Flask 不会替你做出太多决策——比如使用何种数据库。而那些 Flask 所选择的——比如使用何种模板引擎——则很容易替换。除此之外的一切都由可由你掌握。如此，Flask 可以与您珠联璧合。</p>
+<p>默认情况下，Flask 不包含数据库抽象层、表单验证，或是其它任何已有多种库可以胜任的功能。然而，Flask 支持用扩展来给应用添加这些功能，如同是 Flask 本身实现的一样。众多的扩展提供了数据库集成、表单验证、上传处理、各种各样的开放认证技术等功能。Flask 也许是“微小”的，但它已准备好在需求繁杂的生产环境中投入使用。</p>
+<h4 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install flask</span><br></pre></td></tr></table></figure>
+<h4 id="2-WSGI实现原理"><a href="#2-WSGI实现原理" class="headerlink" title="2. WSGI实现原理"></a>2. WSGI实现原理</h4><p>Flask依赖werkzeug模块实现了WSGi协议,监听socket的请求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from werkzeug.wrappers import Request, Response</span><br><span class="line"></span><br><span class="line">@Request.application</span><br><span class="line">def hello(request):</span><br><span class="line">    return Response(&#39;Hello World!&#39;)</span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    from werkzeug.serving import run_simple</span><br><span class="line">    run_simple(&#39;localhost&#39;, 4000, hello)</span><br><span class="line"></span><br><span class="line">werkzeug</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-基本使用"><a href="#3-基本使用" class="headerlink" title="3. 基本使用"></a>3. 基本使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line">@app.route(&#39;&#x2F;&#39;)</span><br><span class="line">def hello_world():</span><br><span class="line">    return &#39;Hello World!&#39;</span><br><span class="line">    </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    app.run()</span><br><span class="line"></span><br><span class="line">$ curl http:&#x2F;&#x2F;127.0.0.1:5000&#x2F;</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="二-路由系统源码分析"><a href="#二-路由系统源码分析" class="headerlink" title="二. 路由系统源码分析"></a>二. 路由系统源码分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line"></span><br><span class="line">def index():</span><br><span class="line">    return &#39;Hello World!!&#39;</span><br><span class="line"></span><br><span class="line"># app对象的run方法中,self.add_url_rule(rule, endpoint, f, **options)</span><br><span class="line"># 此处的rule是请求的uri路径，endpoint类似于Django中路由系统的name参数，用于反向生成URL,参数f为触发执行的函数fun,此处也可以是class对象，会触发对象的__call__方法</span><br><span class="line">app.add_url_rule(&#39;&#x2F;index&#39;, &#39;index&#39;, index)</span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    # 1. 请求进来首先会触发run_simple函数运行,同时执行app.__call__方法</span><br><span class="line">    # 封装请求</span><br><span class="line">    # 路由匹配</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+
+<h3 id="三-Flask的装饰器"><a href="#三-Flask的装饰器" class="headerlink" title="三. Flask的装饰器"></a>三. Flask的装饰器</h3><h4 id="3-1-装饰器"><a href="#3-1-装饰器" class="headerlink" title="3.1 装饰器"></a>3.1 装饰器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;4&#x2F;15</span><br><span class="line"></span><br><span class="line"># 1. 无参装饰器</span><br><span class="line">def wapper(f):</span><br><span class="line">    def inner(*args, **kwargs):</span><br><span class="line">        return f(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line"># 1. 立即执行wapper函数,并且将被装饰的函数当作参数传递</span><br><span class="line"># 2. 此时的func&#x3D;inner</span><br><span class="line">@wapper</span><br><span class="line">def func(arg):</span><br><span class="line">    print(arg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func(123)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&gt;&gt;&gt; 123</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 2. 带参数的装饰器,此处为3层的函数嵌套</span><br><span class="line">def outer(num):</span><br><span class="line">    def wapper(f):</span><br><span class="line">        def inner(*args, **kwargs):</span><br><span class="line">            return f(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">        return inner</span><br><span class="line"></span><br><span class="line">    print(num)</span><br><span class="line">    return wapper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 首先执行wapper(666)，获得返回值;@wapper;此时@wapper,再执行wapper(func)函数,获得返回值inner，此时:func&#x3D;inner函数</span><br><span class="line">@outer(666)</span><br><span class="line">def func(arg):</span><br><span class="line">    print(arg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func(&#39;Hello&#39;)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">666</span><br><span class="line">Hello</span><br><span class="line">&#39;&#39;&#39;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-Flask中的路由装饰器"><a href="#3-2-Flask中的路由装饰器" class="headerlink" title="3.2 Flask中的路由装饰器"></a>3.2 Flask中的路由装饰器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;&#39;)   #app.router函数装返回decorator对象:形入@decorator</span><br><span class="line">def hello_world():</span><br><span class="line">    return &#39;Hello World!&#39;</span><br></pre></td></tr></table></figure>
+<p>⚠️  Flask中路由系统使用的就是带参数的装饰器形式,本质是封装成rule对象,添加到app.url_map属性中</p>
+<h4 id="3-3-Flask中认证的装饰器用法"><a href="#3-3-Flask中认证的装饰器用法" class="headerlink" title="3.3 Flask中认证的装饰器用法"></a>3.3 Flask中认证的装饰器用法</h4><p>a. functools 模块使用示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import functools</span><br><span class="line">def wapper(func):</span><br><span class="line">    @functools.wraps(func)</span><br><span class="line">    def inner(*args,**kwargs):</span><br><span class="line">        return func(*args,**kwargs)</span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line">@wapper</span><br><span class="line">def index():</span><br><span class="line">    print(&#39;函数内容&#39;)</span><br><span class="line"></span><br><span class="line">@wapper</span><br><span class="line">def order():</span><br><span class="line">    print(&#39;函数内容&#39;)</span><br><span class="line"></span><br><span class="line">print(index.__name__)</span><br><span class="line">print(order.__name__)</span><br></pre></td></tr></table></figure>
+<p>b. Flask中应用示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">import functools</span><br><span class="line">from flask import Flask,render_template,request,redirect,session</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__,template_folder&#x3D;&quot;templates&quot;)</span><br><span class="line">app.secret_key &#x3D; &#39;as923lrjks9d8fwlkxlduf&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def auth(func):</span><br><span class="line">    @functools.wraps(func)</span><br><span class="line">    def inner(*args,**kwargs):</span><br><span class="line">        user_info &#x3D; session.get(&#39;user_info&#39;)</span><br><span class="line">        if not user_info:</span><br><span class="line">            return redirect(&#39;&#x2F;login&#39;)</span><br><span class="line">        return func(*args,**kwargs)</span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;order: inner函数, name: order</span><br><span class="line">    &#x2F;index: inner函数, name: index</span><br><span class="line">&#125;</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;order&#39;,methods&#x3D;[&#39;GET&#39;])</span><br><span class="line">@auth</span><br><span class="line">def order():</span><br><span class="line">    user_info &#x3D; session.get(&#39;user_info&#39;)</span><br><span class="line">    if not user_info:</span><br><span class="line">        return redirect(&#39;&#x2F;login&#39;)</span><br><span class="line"></span><br><span class="line">    return render_template(&#39;index.html&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;index&#39;,methods&#x3D;[&#39;GET&#39;])</span><br><span class="line">@auth</span><br><span class="line">def index():</span><br><span class="line">    return render_template(&#39;index.html&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;login&#39;,methods&#x3D;[&#39;GET&#39;,&#39;POST&#39;])</span><br><span class="line">def login():</span><br><span class="line">    if request.method &#x3D;&#x3D; &quot;GET&quot;:</span><br><span class="line">        return render_template(&#39;login.html&#39;)</span><br><span class="line">    else:</span><br><span class="line">        user &#x3D; request.form.get(&#39;user&#39;)</span><br><span class="line">        pwd &#x3D; request.form.get(&#39;pwd&#39;)</span><br><span class="line">        if user &#x3D;&#x3D; &#39;shuke&#39; and pwd &#x3D;&#x3D; &#39;123&#39;:</span><br><span class="line">            session[&#39;user_info&#39;] &#x3D; user</span><br><span class="line">            return redirect(&#39;&#x2F;index&#39;)</span><br><span class="line">        # return render_template(&#39;login.html&#39;,msg &#x3D; &quot;用户名或密码错误&quot;,error &#x3D; &quot;请注册&quot;)</span><br><span class="line">        return render_template(&#39;login.html&#39;,**&#123;&#39;msg&#39;:&#39;用户名或密码错误&#39;&#125;)</span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;logout&#39;,methods&#x3D;[&#39;GET&#39;])</span><br><span class="line">def logout():</span><br><span class="line">    del session[&#39;user_info&#39;]</span><br><span class="line">    return redirect(&#39;&#x2F;login&#39;)</span><br><span class="line">    </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+<p>⚠️  此处,使用auth装饰器的时候多个函数会对应到同一个同一个装饰器函数inner对象,Flask启动会报错;<br>此时可以使用endpoint参数解决此问题,Flask内部默认使用函数的<strong>name</strong>获取的函数名作为endpoint参数;<br>或者利用functools模块保留被装饰函数的元信息;<br>在实际应用中建议使用类似于Django的中间件方式更优雅的方式解决;</p>
+<h3 id="四-配置文件"><a href="#四-配置文件" class="headerlink" title="四. 配置文件"></a>四. 配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">flask中的配置文件是一个flask.config.Config对象（继承字典）,默认配置为：</span><br><span class="line">    &#123;</span><br><span class="line">        &#39;DEBUG&#39;:                                get_debug_flag(default&#x3D;False),  是否开启Debug模式</span><br><span class="line">        &#39;TESTING&#39;:                              False,                          是否开启测试模式</span><br><span class="line">        &#39;PROPAGATE_EXCEPTIONS&#39;:                 None,                          </span><br><span class="line">        &#39;PRESERVE_CONTEXT_ON_EXCEPTION&#39;:        None,</span><br><span class="line">        &#39;SECRET_KEY&#39;:                           None,</span><br><span class="line">        &#39;PERMANENT_SESSION_LIFETIME&#39;:           timedelta(days&#x3D;31),</span><br><span class="line">        &#39;USE_X_SENDFILE&#39;:                       False,</span><br><span class="line">        &#39;LOGGER_NAME&#39;:                          None,</span><br><span class="line">        &#39;LOGGER_HANDLER_POLICY&#39;:               &#39;always&#39;,</span><br><span class="line">        &#39;SERVER_NAME&#39;:                          None,</span><br><span class="line">        &#39;APPLICATION_ROOT&#39;:                     None,</span><br><span class="line">        &#39;SESSION_COOKIE_NAME&#39;:                  &#39;session&#39;,</span><br><span class="line">        &#39;SESSION_COOKIE_DOMAIN&#39;:                None,</span><br><span class="line">        &#39;SESSION_COOKIE_PATH&#39;:                  None,</span><br><span class="line">        &#39;SESSION_COOKIE_HTTPONLY&#39;:              True,</span><br><span class="line">        &#39;SESSION_COOKIE_SECURE&#39;:                False,</span><br><span class="line">        &#39;SESSION_REFRESH_EACH_REQUEST&#39;:         True,</span><br><span class="line">        &#39;MAX_CONTENT_LENGTH&#39;:                   None,</span><br><span class="line">        &#39;SEND_FILE_MAX_AGE_DEFAULT&#39;:            timedelta(hours&#x3D;12),</span><br><span class="line">        &#39;TRAP_BAD_REQUEST_ERRORS&#39;:              False,</span><br><span class="line">        &#39;TRAP_HTTP_EXCEPTIONS&#39;:                 False,</span><br><span class="line">        &#39;EXPLAIN_TEMPLATE_LOADING&#39;:             False,</span><br><span class="line">        &#39;PREFERRED_URL_SCHEME&#39;:                 &#39;http&#39;,</span><br><span class="line">        &#39;JSON_AS_ASCII&#39;:                        True,</span><br><span class="line">        &#39;JSON_SORT_KEYS&#39;:                       True,</span><br><span class="line">        &#39;JSONIFY_PRETTYPRINT_REGULAR&#39;:          True,</span><br><span class="line">        &#39;JSONIFY_MIMETYPE&#39;:                     &#39;application&#x2F;json&#39;,</span><br><span class="line">        &#39;TEMPLATES_AUTO_RELOAD&#39;:                None,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>方式一：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    app.config[&#39;DEBUG&#39;] &#x3D; True</span><br><span class="line"> </span><br><span class="line">    PS： 由于Config对象本质上是字典，所以还可以使用app.config.update(...)</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line">方式二：</span><br></pre></td></tr></table></figure>
+<pre><code>app.config.from_pyfile(&quot;python文件名称&quot;)
+    如：
+        settings.py
+            DEBUG = True
+        app.config.from_pyfile(&quot;settings.py&quot;)
+
+app.config.from_envvar(&quot;环境变量名称&quot;)
+    环境变量的值为python文件名称名称，内部调用from_pyfile方法
+
+app.config.from_json(&quot;json文件名称&quot;)
+    JSON文件名称，必须是json格式，因为内部会执行json.loads
+
+app.config.from_mapping({&apos;DEBUG&apos;:True})
+    字典格式
+
+app.config.from_object(&quot;python类或类的路径&quot;)
+
+    app.config.from_object(&apos;pro_flask.settings.TestingConfig&apos;)
+
+    settings.py 内容
+
+        class Config(object):
+            DEBUG = False
+            TESTING = False
+            DATABASE_URI = &apos;sqlite://:memory:&apos;
+
+        class ProductionConfig(Config):
+            DATABASE_URI = &apos;mysql://user@localhost/foo&apos;
+
+        class DevelopmentConfig(Config):
+            DEBUG = True
+
+        class TestingConfig(Config):
+            TESTING = True</code></pre><p>PS: 从sys.path中已经存在的路径下开始查找</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PS: settings.py文件默认路径要放在程序root_path目录，如果instance_relative_config为True，则就是instance_path目录</span><br><span class="line"></span><br><span class="line">### 五. 路由系统</span><br><span class="line">#### 5.1 路由基本使用</span><br><span class="line">- @app.route(&#39;&#x2F;user&#x2F;&lt;username&gt;&#39;)</span><br><span class="line">- @app.route(&#39;&#x2F;post&#x2F;&lt;int:post_id&gt;&#39;)</span><br><span class="line">- @app.route(&#39;&#x2F;post&#x2F;&lt;float:post_id&gt;&#39;)</span><br><span class="line">- @app.route(&#39;&#x2F;post&#x2F;&lt;path:path&gt;&#39;)</span><br><span class="line">- @app.route(&#39;&#x2F;login&#39;, methods&#x3D;[&#39;GET&#39;, &#39;POST&#39;])</span><br><span class="line"></span><br><span class="line">常用路由系统有以上五种，所有的路由系统都是基于以下对应关系来处理:</span><br></pre></td></tr></table></figure>
+<p>DEFAULT_CONVERTERS = {<br>    ‘default’:          UnicodeConverter,<br>    ‘string’:           UnicodeConverter,<br>    ‘any’:              AnyConverter,<br>    ‘path’:             PathConverter,<br>    ‘int’:              IntegerConverter,<br>    ‘float’:            FloatConverter,<br>    ‘uuid’:             UUIDConverter,<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### 5.2 注册路由原理</span><br></pre></td></tr></table></figure>
+<p>def auth(func):<br>            def inner(<em>args, *</em>kwargs):<br>                print(‘before’)<br>                result = func(<em>args, *</em>kwargs)<br>                print(‘after’)<br>                return result</p>
+<pre><code>return inner
+
+@app.route(&apos;/index.html&apos;,methods=[&apos;GET&apos;,&apos;POST&apos;],endpoint=&apos;index&apos;)
+@auth
+def index():
+    return &apos;Index&apos;
+或
+def index():
+    return &quot;Index&quot;
+
+self.add_url_rule(rule=&apos;/index.html&apos;, endpoint=&quot;index&quot;, view_func=index, methods=[&quot;GET&quot;,&quot;POST&quot;])
+or
+app.add_url_rule(rule=&apos;/index.html&apos;, endpoint=&quot;index&quot;, view_func=index, methods=[&quot;GET&quot;,&quot;POST&quot;])
+app.view_functions[&apos;index&apos;] = index
+或
+def auth(func):
+    def inner(*args, **kwargs):
+        print(&apos;before&apos;)
+        result = func(*args, **kwargs)
+        print(&apos;after&apos;)
+        return result
+
+return inner
+
+class IndexView(views.View):
+    methods = [&apos;GET&apos;]
+    decorators = [auth, ]
+
+    def dispatch_request(self):
+        print(&apos;Index&apos;)
+        return &apos;Index!&apos;
+
+app.add_url_rule(&apos;/index&apos;, view_func=IndexView.as_view(name=&apos;index&apos;))  # name=endpoint
+或
+class IndexView(views.MethodView):
+    methods = [&apos;GET&apos;]
+    decorators = [auth, ]
+
+    def get(self):
+        return &apos;Index.GET&apos;
+
+    def post(self):
+        return &apos;Index.POST&apos;
+
+app.add_url_rule(&apos;/index&apos;, view_func=IndexView.as_view(name=&apos;index&apos;))  # name=endpoint
+
+@app.route和app.add_url_rule参数：
+    rule,                       URL规则
+    view_func,                  视图函数名称
+    defaults=None,              默认值,当URL中无参数，函数需要参数时，使用defaults={&apos;k&apos;:&apos;v&apos;}为函数提供参数
+    endpoint=None,              名称，用于反向生成URL，即： url_for(&apos;名称&apos;)
+    methods=None,               允许的请求方式，如：[&quot;GET&quot;,&quot;POST&quot;]
+
+
+    strict_slashes=None,        对URL最后的 / 符号是否严格要求，
+                                如：
+                                    @app.route(&apos;/index&apos;,strict_slashes=False)，
+                                        访问 http://www.xx.com/index/ 或 http://www.xx.com/index均可
+                                    @app.route(&apos;/index&apos;,strict_slashes=True)
+                                        仅访问 http://www.xx.com/index 
+    redirect_to=None,           重定向到指定地址
+                                如：
+                                    @app.route(&apos;/index/&lt;int:nid&gt;&apos;, redirect_to=&apos;/home/&lt;nid&gt;&apos;)
+                                    或
+                                    def func(adapter, nid):
+                                        return &quot;/home/888&quot;
+                                    @app.route(&apos;/index/&lt;int:nid&gt;&apos;, redirect_to=func)
+    subdomain=None,             子域名访问
+                                        from flask import Flask, views, url_for
+
+                                        app = Flask(import_name=__name__)
+                                        app.config[&apos;SERVER_NAME&apos;] = &apos;wupeiqi.com:5000&apos;
+
+
+                                        @app.route(&quot;/&quot;, subdomain=&quot;admin&quot;)
+                                        def static_index():
+                                            &quot;&quot;&quot;Flask supports static subdomains
+                                            This is available at static.your-domain.tld&quot;&quot;&quot;
+                                            return &quot;static.your-domain.tld&quot;
+
+                                        @app.route(&quot;/dynamic&quot;, subdomain=&quot;&lt;username&gt;&quot;)
+                                        def username_index(username):
+                                            &quot;&quot;&quot;Dynamic subdomains are also supported
+                                            Try going to user1.your-domain.tld/dynamic&quot;&quot;&quot;
+                                            return username + &quot;.your-domain.tld&quot;
+
+                                        if __name__ == &apos;__main__&apos;:
+                                            app.run()</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### 5.3 自定义正则路由匹配</span><br></pre></td></tr></table></figure>
+<p>from flask import Flask, views, url_for<br>            from werkzeug.routing import BaseConverter</p>
+<pre><code>app = Flask(import_name=__name__)
+
+
+class RegexConverter(BaseConverter):
+    &quot;&quot;&quot;
+    自定义URL匹配正则表达式
+    &quot;&quot;&quot;
+    def __init__(self, map, regex):
+        super(RegexConverter, self).__init__(map)
+        self.regex = regex
+
+    def to_python(self, value):
+        &quot;&quot;&quot;
+        路由匹配时，匹配成功后传递给视图函数中参数的值
+        :param value: 
+        :return: 
+        &quot;&quot;&quot;
+        return int(value)
+
+    def to_url(self, value):
+        &quot;&quot;&quot;
+        使用url_for反向生成URL时，传递的参数经过该方法处理，返回的值用于生成URL中的参数
+        :param value: 
+        :return: 
+        &quot;&quot;&quot;
+        val = super(RegexConverter, self).to_url(value)
+        return val
+
+# 添加到flask中
+app.url_map.converters[&apos;regex&apos;] = RegexConverter
+
+
+@app.route(&apos;/index/&lt;regex(&quot;\d+&quot;):nid&gt;&apos;)
+def index(nid):
+    print(url_for(&apos;index&apos;, nid=&apos;888&apos;))
+    return &apos;Index&apos;
+
+if __name__ == &apos;__main__&apos;:
+    app.run()</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">### 五. </span><br><span class="line">1. 模板的使用</span><br><span class="line">Flask使用的是Jinja2模板，所以其语法和Django无差别</span><br><span class="line">2. 自定义模板方法</span><br><span class="line">Flask中自定义模板方法的方式和Bottle相似，创建一个函数并通过参数的形式传入render_template，如：</span><br></pre></td></tr></table></figure>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>自定义函数</h1>
+    
+
+</body>
+</html>
+
+<p>html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;</span><br><span class="line"># cat run.py</span><br><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">from flask import Flask,render_template</span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def wupeiqi():</span><br><span class="line">    return &#39;&lt;h1&gt;Wupeiqi&lt;&#x2F;h1&gt;&#39;</span><br><span class="line"> </span><br><span class="line">@app.route(&#39;&#x2F;login&#39;, methods&#x3D;[&#39;GET&#39;, &#39;POST&#39;])</span><br><span class="line">def login():</span><br><span class="line">    return render_template(&#39;login.html&#39;, ww&#x3D;wupeiqi)</span><br><span class="line"> </span><br><span class="line">app.run()</span><br></pre></td></tr></table></figure>
+<p>example.html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang&#x3D;&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#123;% macro input(name, type&#x3D;&#39;text&#39;, value&#x3D;&#39;&#39;) %&#125;</span><br><span class="line">        &lt;input type&#x3D;&quot;&#123;&#123; type &#125;&#125;&quot; name&#x3D;&quot;&#123;&#123; name &#125;&#125;&quot; value&#x3D;&quot;&#123;&#123; value &#125;&#125;&quot;&gt;</span><br><span class="line">    &#123;% endmacro %&#125;</span><br><span class="line"></span><br><span class="line">    &#123;&#123; input(&#39;n1&#39;) &#125;&#125;</span><br><span class="line"></span><br><span class="line">    &#123;% include &#39;tp.html&#39; %&#125;</span><br><span class="line"></span><br><span class="line">    &lt;h1&gt;asdf&#123;&#123; v.k1&#125;&#125;&lt;&#x2F;h1&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>注⚠️：Markup等价django的mark_safe</p>
+<h3 id="六-请求和响应"><a href="#六-请求和响应" class="headerlink" title="六. 请求和响应"></a>六. 请求和响应</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line">    from flask import request</span><br><span class="line">    from flask import render_template</span><br><span class="line">    from flask import redirect</span><br><span class="line">    from flask import make_response</span><br><span class="line"></span><br><span class="line">    app &#x3D; Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @app.route(&#39;&#x2F;login.html&#39;, methods&#x3D;[&#39;GET&#39;, &quot;POST&quot;])</span><br><span class="line">    def login():</span><br><span class="line"></span><br><span class="line">        # 请求相关信息</span><br><span class="line">        # request.method</span><br><span class="line">        # request.args</span><br><span class="line">        # request.form</span><br><span class="line">        # request.values</span><br><span class="line">        # request.cookies</span><br><span class="line">        # request.headers</span><br><span class="line">        # request.path</span><br><span class="line">        # request.full_path</span><br><span class="line">        # request.script_root</span><br><span class="line">        # request.url</span><br><span class="line">        # request.base_url</span><br><span class="line">        # request.url_root</span><br><span class="line">        # request.host_url</span><br><span class="line">        # request.host</span><br><span class="line">        # request.files</span><br><span class="line">        # obj &#x3D; request.files[&#39;the_file_name&#39;]</span><br><span class="line">        # obj.save(&#39;&#x2F;var&#x2F;www&#x2F;uploads&#x2F;&#39; + secure_filename(f.filename))</span><br><span class="line"></span><br><span class="line">        # 响应相关信息</span><br><span class="line">        # return &quot;字符串&quot;</span><br><span class="line">        # return render_template(&#39;html模板路径&#39;,**&#123;&#125;)</span><br><span class="line">        # return redirect(&#39;&#x2F;index.html&#39;)</span><br><span class="line"></span><br><span class="line">        # response &#x3D; make_response(render_template(&#39;index.html&#39;))</span><br><span class="line">        # response是flask.wrappers.Response类型</span><br><span class="line">        # response.delete_cookie(&#39;key&#39;)</span><br><span class="line">        # response.set_cookie(&#39;key&#39;, &#39;value&#39;)</span><br><span class="line">        # response.headers[&#39;X-Something&#39;] &#x3D; &#39;A value&#39;</span><br><span class="line">        # return response</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        return &quot;内容&quot;</span><br><span class="line"></span><br><span class="line">    if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">        app.run()</span><br></pre></td></tr></table></figure>
+<h3 id="七-Session"><a href="#七-Session" class="headerlink" title="七. Session"></a>七. Session</h3><p>除请求对象之外，还有一个 session 对象。它允许你在不同请求间存储特定用户的信息。它是在 Cookies 的基础上实现的，并且对 Cookies 进行密钥签名要使用会话，你需要设置一个密钥。<br>设置：session[‘username’] ＝ ‘xxx’<br>删除：session.pop(‘username’, None)</p>
+<ol>
+<li>基本使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask, session, redirect, url_for, escape, request</span><br><span class="line"> </span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line"> </span><br><span class="line">@app.route(&#39;&#x2F;&#39;)</span><br><span class="line">def index():</span><br><span class="line">    if &#39;username&#39; in session:</span><br><span class="line">        return &#39;Logged in as %s&#39; % escape(session[&#39;username&#39;])</span><br><span class="line">    return &#39;You are not logged in&#39;</span><br><span class="line"> </span><br><span class="line">@app.route(&#39;&#x2F;login&#39;, methods&#x3D;[&#39;GET&#39;, &#39;POST&#39;])</span><br><span class="line">def login():</span><br><span class="line">    if request.method &#x3D;&#x3D; &#39;POST&#39;:</span><br><span class="line">        session[&#39;username&#39;] &#x3D; request.form[&#39;username&#39;]</span><br><span class="line">        return redirect(url_for(&#39;index&#39;))</span><br><span class="line">    return &#39;&#39;&#39;</span><br><span class="line">        &lt;form action&#x3D;&quot;&quot; method&#x3D;&quot;post&quot;&gt;</span><br><span class="line">            &lt;p&gt;&lt;input type&#x3D;text name&#x3D;username&gt;</span><br><span class="line">            &lt;p&gt;&lt;input type&#x3D;submit value&#x3D;Login&gt;</span><br><span class="line">        &lt;&#x2F;form&gt;</span><br><span class="line">    &#39;&#39;&#39;</span><br><span class="line"> </span><br><span class="line">@app.route(&#39;&#x2F;logout&#39;)</span><br><span class="line">def logout():</span><br><span class="line">    # remove the username from the session if it&#39;s there</span><br><span class="line">    session.pop(&#39;username&#39;, None)</span><br><span class="line">    return redirect(url_for(&#39;index&#39;))</span><br><span class="line"> </span><br><span class="line"># set the secret key.  keep this really secret:</span><br><span class="line">app.secret_key &#x3D; &#39;A0Zr98j&#x2F;3yX R~XHH!jmN]LWX&#x2F;,?RT&#39;</span><br></pre></td></tr></table></figure></li>
+<li>自定义Session<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line">pip3 install Flask-Session</span><br><span class="line">        </span><br><span class="line">        run.py</span><br><span class="line">            from flask import Flask</span><br><span class="line">            from flask import session</span><br><span class="line">            from pro_flask.utils.session import MySessionInterface</span><br><span class="line">            app &#x3D; Flask(__name__)</span><br><span class="line"></span><br><span class="line">            app.secret_key &#x3D; &#39;A0Zr98j&#x2F;3yX R~XHH!jmN]LWX&#x2F;,?RT&#39;</span><br><span class="line">            app.session_interface &#x3D; MySessionInterface()</span><br><span class="line"></span><br><span class="line">            @app.route(&#39;&#x2F;login.html&#39;, methods&#x3D;[&#39;GET&#39;, &quot;POST&quot;])</span><br><span class="line">            def login():</span><br><span class="line">                print(session)</span><br><span class="line">                session[&#39;user1&#39;] &#x3D; &#39;alex&#39;</span><br><span class="line">                session[&#39;user2&#39;] &#x3D; &#39;alex&#39;</span><br><span class="line">                del session[&#39;user2&#39;]</span><br><span class="line"></span><br><span class="line">                return &quot;内容&quot;</span><br><span class="line"></span><br><span class="line">            if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">                app.run()</span><br><span class="line"></span><br><span class="line">        session.py</span><br><span class="line">            #!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line">            # -*- coding:utf-8 -*-</span><br><span class="line">            import uuid</span><br><span class="line">            import json</span><br><span class="line">            from flask.sessions import SessionInterface</span><br><span class="line">            from flask.sessions import SessionMixin</span><br><span class="line">            from itsdangerous import Signer, BadSignature, want_bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            class MySession(dict, SessionMixin):</span><br><span class="line">                def __init__(self, initial&#x3D;None, sid&#x3D;None):</span><br><span class="line">                    self.sid &#x3D; sid</span><br><span class="line">                    self.initial &#x3D; initial</span><br><span class="line">                    super(MySession, self).__init__(initial or ())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                def __setitem__(self, key, value):</span><br><span class="line">                    super(MySession, self).__setitem__(key, value)</span><br><span class="line"></span><br><span class="line">                def __getitem__(self, item):</span><br><span class="line">                    return super(MySession, self).__getitem__(item)</span><br><span class="line"></span><br><span class="line">                def __delitem__(self, key):</span><br><span class="line">                    super(MySession, self).__delitem__(key)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            class MySessionInterface(SessionInterface):</span><br><span class="line">                session_class &#x3D; MySession</span><br><span class="line">                container &#x3D; &#123;&#125;</span><br><span class="line"></span><br><span class="line">                def __init__(self):</span><br><span class="line">                    import redis</span><br><span class="line">                    self.redis &#x3D; redis.Redis()</span><br><span class="line"></span><br><span class="line">                def _generate_sid(self):</span><br><span class="line">                    return str(uuid.uuid4())</span><br><span class="line"></span><br><span class="line">                def _get_signer(self, app):</span><br><span class="line">                    if not app.secret_key:</span><br><span class="line">                        return None</span><br><span class="line">                    return Signer(app.secret_key, salt&#x3D;&#39;flask-session&#39;,</span><br><span class="line">                                  key_derivation&#x3D;&#39;hmac&#39;)</span><br><span class="line"></span><br><span class="line">                def open_session(self, app, request):</span><br><span class="line">                    &quot;&quot;&quot;</span><br><span class="line">                    程序刚启动时执行，需要返回一个session对象</span><br><span class="line">                    &quot;&quot;&quot;</span><br><span class="line">                    sid &#x3D; request.cookies.get(app.session_cookie_name)</span><br><span class="line">                    if not sid:</span><br><span class="line">                        sid &#x3D; self._generate_sid()</span><br><span class="line">                        return self.session_class(sid&#x3D;sid)</span><br><span class="line"></span><br><span class="line">                    signer &#x3D; self._get_signer(app)</span><br><span class="line">                    try:</span><br><span class="line">                        sid_as_bytes &#x3D; signer.unsign(sid)</span><br><span class="line">                        sid &#x3D; sid_as_bytes.decode()</span><br><span class="line">                    except BadSignature:</span><br><span class="line">                        sid &#x3D; self._generate_sid()</span><br><span class="line">                        return self.session_class(sid&#x3D;sid)</span><br><span class="line"></span><br><span class="line">                    # session保存在redis中</span><br><span class="line">                    # val &#x3D; self.redis.get(sid)</span><br><span class="line">                    # session保存在内存中</span><br><span class="line">                    val &#x3D; self.container.get(sid)</span><br><span class="line"></span><br><span class="line">                    if val is not None:</span><br><span class="line">                        try:</span><br><span class="line">                            data &#x3D; json.loads(val)</span><br><span class="line">                            return self.session_class(data, sid&#x3D;sid)</span><br><span class="line">                        except:</span><br><span class="line">                            return self.session_class(sid&#x3D;sid)</span><br><span class="line">                    return self.session_class(sid&#x3D;sid)</span><br><span class="line"></span><br><span class="line">                def save_session(self, app, session, response):</span><br><span class="line">                    &quot;&quot;&quot;</span><br><span class="line">                    程序结束前执行，可以保存session中所有的值</span><br><span class="line">                    如：</span><br><span class="line">                        保存到resit</span><br><span class="line">                        写入到用户cookie</span><br><span class="line">                    &quot;&quot;&quot;</span><br><span class="line">                    domain &#x3D; self.get_cookie_domain(app)</span><br><span class="line">                    path &#x3D; self.get_cookie_path(app)</span><br><span class="line">                    httponly &#x3D; self.get_cookie_httponly(app)</span><br><span class="line">                    secure &#x3D; self.get_cookie_secure(app)</span><br><span class="line">                    expires &#x3D; self.get_expiration_time(app, session)</span><br><span class="line"></span><br><span class="line">                    val &#x3D; json.dumps(dict(session))</span><br><span class="line"></span><br><span class="line">                    # session保存在redis中</span><br><span class="line">                    # self.redis.setex(name&#x3D;session.sid, value&#x3D;val, time&#x3D;app.permanent_session_lifetime)</span><br><span class="line">                    # session保存在内存中</span><br><span class="line">                    self.container.setdefault(session.sid, val)</span><br><span class="line"></span><br><span class="line">                    session_id &#x3D; self._get_signer(app).sign(want_bytes(session.sid))</span><br><span class="line"></span><br><span class="line">                    response.set_cookie(app.session_cookie_name, session_id,</span><br><span class="line">                                        expires&#x3D;expires, httponly&#x3D;httponly,</span><br><span class="line">                                        domain&#x3D;domain, path&#x3D;path, secure&#x3D;secure)</span><br></pre></td></tr></table></figure></li>
+<li>第三方Session<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">pip3 install redis</span><br><span class="line">pip3 install flask-session</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">from flask import Flask, session, redirect</span><br><span class="line">from flask.ext.session import Session</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line">app.debug &#x3D; True</span><br><span class="line">app.secret_key &#x3D; &#39;asdfasdfasd&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app.config[&#39;SESSION_TYPE&#39;] &#x3D; &#39;redis&#39;</span><br><span class="line">from redis import Redis</span><br><span class="line">app.config[&#39;SESSION_REDIS&#39;] &#x3D; Redis(host&#x3D;&#39;192.168.0.94&#39;,port&#x3D;&#39;6379&#39;)</span><br><span class="line">Session(app)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;login&#39;)</span><br><span class="line">def login():</span><br><span class="line">    session[&#39;username&#39;] &#x3D; &#39;alex&#39;</span><br><span class="line">    return redirect(&#39;&#x2F;index&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;index&#39;)</span><br><span class="line">def index():</span><br><span class="line">    name &#x3D; session[&#39;username&#39;]</span><br><span class="line">    return name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+<h3 id="八-蓝图-Blueprint"><a href="#八-蓝图-Blueprint" class="headerlink" title="八. 蓝图(Blueprint)"></a>八. 蓝图(Blueprint)</h3>蓝图用于为应用提供目录划分：</li>
+</ol>
+<ul>
+<li>小型应用程序：示例</li>
+<li>大型应用程序：示例</li>
+<li>其他：<ul>
+<li>蓝图URL前缀：xxx = Blueprint(‘account’, <strong>name</strong>,url_prefix=’/xxx’)</li>
+<li>蓝图子域名：xxx = Blueprint(‘account’, <strong>name</strong>,subdomain=’admin’)</li>
+<li>前提需要给配置SERVER_NAME： app.config[‘SERVER_NAME’] = ‘<a href="http://www.shuke.com:5000&#39;">www.shuke.com:5000&#39;</a><br>访问时：<a href="http://www.shuke.com:5000/login.html" target="_blank" rel="noopener">www.shuke.com:5000/login.html</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="九-闪现-message"><a href="#九-闪现-message" class="headerlink" title="九. 闪现(message)"></a>九. 闪现(message)</h3><p>message是一个基于Session实现的用于保存数据的集合，其特点是：使用一次就删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask, flash, redirect, render_template, request, get_flashed_messages</span><br><span class="line"></span><br><span class="line">        app &#x3D; Flask(__name__)</span><br><span class="line">        app.secret_key &#x3D; &#39;some_secret&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        @app.route(&#39;&#x2F;&#39;)</span><br><span class="line">        def index1():</span><br><span class="line">            messages &#x3D; get_flashed_messages()</span><br><span class="line">            print(messages)</span><br><span class="line">            return &quot;Index1&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        @app.route(&#39;&#x2F;set&#39;)</span><br><span class="line">        def index2():</span><br><span class="line">            v &#x3D; request.args.get(&#39;p&#39;)</span><br><span class="line">            flash(v)</span><br><span class="line">            return &#39;ok&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">            app.run()</span><br></pre></td></tr></table></figure>
+
+<h3 id="十-中间件"><a href="#十-中间件" class="headerlink" title="十. 中间件"></a>十. 中间件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask, flash, redirect, render_template, request</span><br><span class="line"> </span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line">app.secret_key &#x3D; &#39;some_secret&#39;</span><br><span class="line"> </span><br><span class="line">@app.route(&#39;&#x2F;&#39;)</span><br><span class="line">def index1():</span><br><span class="line">    return render_template(&#39;index.html&#39;)</span><br><span class="line"> </span><br><span class="line">@app.route(&#39;&#x2F;set&#39;)</span><br><span class="line">def index2():</span><br><span class="line">    v &#x3D; request.args.get(&#39;p&#39;)</span><br><span class="line">    flash(v)</span><br><span class="line">    return &#39;ok&#39;</span><br><span class="line"> </span><br><span class="line">class MiddleWare:</span><br><span class="line">    def __init__(self,wsgi_app):</span><br><span class="line">        self.wsgi_app &#x3D; wsgi_app</span><br><span class="line"> </span><br><span class="line">    def __call__(self, *args, **kwargs):</span><br><span class="line"> </span><br><span class="line">        return self.wsgi_app(*args, **kwargs)</span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">    app.wsgi_app &#x3D; MiddleWare(app.wsgi_app)</span><br><span class="line">    app.run(port&#x3D;9999)</span><br></pre></td></tr></table></figure>
+
+<h3 id="十一-请求扩展"><a href="#十一-请求扩展" class="headerlink" title="十一. 请求扩展"></a>十一. 请求扩展</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">from flask import Flask, Request, render_template</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__, template_folder&#x3D;&#39;templates&#39;)</span><br><span class="line">app.debug &#x3D; True</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.before_first_request</span><br><span class="line">def before_first_request1():</span><br><span class="line">    print(&#39;before_first_request1&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.before_first_request</span><br><span class="line">def before_first_request2():</span><br><span class="line">    print(&#39;before_first_request2&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.before_request</span><br><span class="line">def before_request1():</span><br><span class="line">    Request.nnn &#x3D; 123</span><br><span class="line">    print(&#39;before_request1&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.before_request</span><br><span class="line">def before_request2():</span><br><span class="line">    print(&#39;before_request2&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.after_request</span><br><span class="line">def after_request1(response):</span><br><span class="line">    print(&#39;before_request1&#39;, response)</span><br><span class="line">    return response</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.after_request</span><br><span class="line">def after_request2(response):</span><br><span class="line">    print(&#39;before_request2&#39;, response)</span><br><span class="line">    return response</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.errorhandler(404)</span><br><span class="line">def page_not_found(error):</span><br><span class="line">    return &#39;This page does not exist&#39;, 404</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.template_global()</span><br><span class="line">def sb(a1, a2):</span><br><span class="line">    return a1 + a2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.template_filter()</span><br><span class="line">def db(a1, a2, a3):</span><br><span class="line">    return a1 + a2 + a3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;&#39;)</span><br><span class="line">def hello_world():</span><br><span class="line">    return render_template(&#39;hello.html&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+
+<h3 id="十二-Flask插件"><a href="#十二-Flask插件" class="headerlink" title="十二. Flask插件"></a>十二. Flask插件</h3><ul>
+<li>WTForms    </li>
+<li>SQLAchemy</li>
+</ul>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="http://www.cnblogs.com/wupeiqi/articles/7552008.html" target="_blank" rel="noopener">Flask-武沛齐-博客园</a><br><a href="http://docs.jinkan.org/docs/flask/" target="_blank" rel="noopener">欢迎使用 Flask — Flask 0.10.1 文档</a><br><a href="http://flask.pocoo.org/docs/0.12/" target="_blank" rel="noopener">Welcome to Flask — Flask Documentation  (0.12)</a><br><a href="https://wizardforcel.gitbooks.io/explore-flask/content/index.html" target="_blank" rel="noopener">Flask 之旅</a> </p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/">Flask之路(一)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/" title="Flask之路(一)">https://shuke163.github.io/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/">Flask之路(一)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/" title="Flask之路(一)">https://shuke163.github.io/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E4%B8%80/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PYTHON/" <i class="fa fa-tag"></i> PYTHON</a>
+          
+            <a href="/tags/Flask/" <i class="fa fa-tag"></i> Flask</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/Web%E6%A1%86%E6%9E%B6%E6%9C%AC%E8%B4%A8/" rel="next" title="Web框架本质">
+                <i class="fa fa-chevron-left"></i> Web框架本质
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/Flask%E4%B9%8B%E8%B7%AF-%E5%89%8D%E6%88%8F/" rel="prev" title="Flask之路-前戏">
+                Flask之路-前戏 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flask之路-一"><span class="nav-text">Flask之路(一)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-简介"><span class="nav-text">一. 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-安装"><span class="nav-text">1. 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-WSGI实现原理"><span class="nav-text">2. WSGI实现原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-基本使用"><span class="nav-text">3. 基本使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-路由系统源码分析"><span class="nav-text">二. 路由系统源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-Flask的装饰器"><span class="nav-text">三. Flask的装饰器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-装饰器"><span class="nav-text">3.1 装饰器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Flask中的路由装饰器"><span class="nav-text">3.2 Flask中的路由装饰器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-Flask中认证的装饰器用法"><span class="nav-text">3.3 Flask中认证的装饰器用法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-配置文件"><span class="nav-text">四. 配置文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-text">自定义函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#六-请求和响应"><span class="nav-text">六. 请求和响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七-Session"><span class="nav-text">七. Session</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八-蓝图-Blueprint"><span class="nav-text">八. 蓝图(Blueprint)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九-闪现-message"><span class="nav-text">九. 闪现(message)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十-中间件"><span class="nav-text">十. 中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十一-请求扩展"><span class="nav-text">十一. 请求扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十二-Flask插件"><span class="nav-text">十二. Flask插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

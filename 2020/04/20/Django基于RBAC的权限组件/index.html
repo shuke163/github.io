@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Django," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Django基于RBAC的权限组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django基于RBAC的权限组件">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Django基于RBAC的权限组件">
+<meta property="article:published_time" content="2020-04-20T06:11:34.000Z">
+<meta property="article:modified_time" content="2020-04-20T06:21:46.078Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="Django">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Django基于RBAC的权限组件/"/>
+
+
+
+
+
+  <title>Django基于RBAC的权限组件 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Django基于RBAC的权限组件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T14:11:34+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">5.3k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">24(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/" class="leancloud_visitors" data-flag-title="Django基于RBAC的权限组件">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Django基于RBAC的权限组件
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Django基于RBAC的权限组件"><a href="#Django基于RBAC的权限组件" class="headerlink" title="Django基于RBAC的权限组件"></a>Django基于RBAC的权限组件</h1><hr>
+
+<h3 id="RBAC前奏"><a href="#RBAC前奏" class="headerlink" title="RBAC前奏"></a>RBAC前奏</h3><ol>
+<li><p>RBAC概念<br>RBAC（Role-Based Access Control，基于角色的访问控制），就是用户通过角色与权限进行关联。简单地说，一个用户拥有若干角色，每一个角色拥有若干权限。这样，就构造成“用户-角色-权限”的授权模型。在这种模型中，用户与角色之间，角色与权限之间，一般者是多对多的关系。</p>
+</li>
+<li><p>扩展</p>
+<ul>
+<li>角色是什么？可以理解为一定数量的权限的集合，权限的载体。例如：一个论坛系统，“超级管理员”、“版主”都是角色。版主可管理版内的帖子、可管理版内的用户等，这些是权限。要给某个用户授予这些权限，不需要直接将权限授予用户，可将“版主”这个角色赋予该用户。 </li>
+<li>当用户的数量非常大时，要给系统每个用户逐一授权（授角色），是件非常烦琐的事情。这时，就需要给用户分组，每个用户组内有多个用户。除了可给用户授权外，还可以给用户组授权。这样一来，用户拥有的所有权限，就是用户个人拥有的权限与该用户所在用户组拥有的权限之和。</li>
+<li>在应用系统中，权限表现成什么？对功能模块的操作，对上传文件的删改，菜单的访问，甚至页面上某个按钮、某个图片的可见性控制，都可属于权限的范畴。有些权限设计，会把功能操作作为一类，而把文件、菜单、页面元素等作为另一类，这样构成“用户-角色-权限-资源”的授权模型。而在做数据表建模时，可把功能操作和资源统一管理，也就是都直接与权限表进行关联，这样可能更具便捷性和易扩展性。</li>
+<li>请留意权限表中有一列“权限类型”，我们根据它的取值来区分是哪一类权限，如“MENU”表示菜单的访问权限、“OPERATION”表示功能模块的操作权限、“FILE”表示文件的修改权限、“ELEMENT”表示页面元素的可见性控制等。</li>
+<li>这样设计的好处有二。其一，不需要区分哪些是权限操作，哪些是资源，（实际上，有时候也不好区分，如菜单，把它理解为资源呢还是功能模块权限呢？）。其二，方便扩展，当系统要对新的东西进行权限控制时，我只需要建立一个新的关联表“权限XX关联表”，并确定这类权限的权限类型字符串。</li>
+<li>这里要注意的是，权限表与权限菜单关联表、权限菜单关联表与菜单表都是一对一的关系。（文件、页面权限点、功能操作等同理）。也就是每添加一个菜单，就得同时往这三个表中各插入一条记录。这样，可以不需要权限菜单关联表，让权限表与菜单表直接关联，此时，须在权限表中新增一列用来保存菜单的ID，权限表通过“权限类型”和这个ID来区分是种类型下的哪条记录。</li>
+<li>随着系统的日益庞大，为了方便管理，可引入角色组对角色进行分类管理，跟用户组不同，角色组不参与授权。例如：某电网系统的权限管理模块中，角色就是挂在区局下，而区局在这里可当作角色组，它不参于权限分配。另外，为方便上面各主表自身的管理与查找，可采用树型结构，如菜单树、功能树等，当然这些可不需要参于权限分配。</li>
+</ul>
+</li>
+<li><p>基于rbac的实现<br><a href="https://github.com/shonenada/flask-rbac" target="_blank" rel="noopener">flask-rbac</a><br><a href="https://pypi.python.org/pypi/simple-rbac/0.1.1" target="_blank" rel="noopener">simple-rbac</a></p>
+</br>
+
+</li>
+</ol>
+<h3 id="知识点储备"><a href="#知识点储备" class="headerlink" title="知识点储备"></a>知识点储备</h3><ol>
+<li>Django ORM<br>常用的orm方法，all,values,values_list等<br>from models import User</li>
+</ol>
+<ul>
+<li>all<br>models.User.objects.all(),返回值为queryset类型，形如：[obj,obj,obj]</li>
+<li>values<br>models.User.objects.values(‘id’,’username’,’password’),返回值为queryset类型，形如：[{‘id’:1,’username’:’shuke’,’password’:’123456’}]</li>
+<li>values_list<br>models.User.objects.values_list(‘id’,’username’,’password’),返回值为queryset类型，形如: [(1,’shuke’,’123456’),(2,’mary’,’123456’)]</li>
+</ul>
+<ol start="2">
+<li>一对多及多对多</li>
+</ol>
+<ul>
+<li>一对多（FK常用操作）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">from django.db import models</span><br><span class="line">class A(models.Model):</span><br><span class="line">    name &#x3D; models.CharField(max_length&#x3D;32)</span><br><span class="line"></span><br><span class="line">class B(models.Model):</span><br><span class="line">    title &#x3D; models.CharField(max_length&#x3D;32)</span><br><span class="line">    fk &#x3D; models.ForeignKey(to&#x3D;&quot;A&quot;)</span><br><span class="line"># 跨表操作</span><br><span class="line">a. all()</span><br><span class="line">b_list &#x3D; models.B.objects.all()</span><br><span class="line">for item in b_list:</span><br><span class="line">    item.id</span><br><span class="line">    item.name</span><br><span class="line">    item.fk_id</span><br><span class="line">    item.fk</span><br><span class="line">    item.fk.name</span><br><span class="line">    item.fk.id</span><br><span class="line">b. values()</span><br><span class="line">b_list &#x3D; models.B.objects.values(&#39;id&#39;,&#39;name&#39;,&#39;fk_id&#39;,&#39;fk__name&#39;)</span><br><span class="line">for item in b_list:</span><br><span class="line">    item[&#39;id&#39;]</span><br><span class="line">    item[&#39;name&#39;]</span><br><span class="line">    item[&#39;fk_id&#39;]</span><br><span class="line">    item[&#39;fk__name&#39;]</span><br><span class="line">c. values_list()</span><br><span class="line">b_list &#x3D; models.B.objects.values_list(&#39;id&#39;,&#39;name&#39;,&#39;fk_id&#39;,&#39;fk__name&#39;)</span><br><span class="line">for item in b_list:</span><br><span class="line">    item[0]  # id</span><br><span class="line">    item[1]  # name</span><br><span class="line">    item[2]  # fk_id</span><br><span class="line">    item[3]  # fk__name</span><br><span class="line">d. 查找名称是&quot;Jack&quot;的用户所有B表中的数据</span><br><span class="line">models.B.objects.filter(fk__name&#x3D;&quot;Jack&quot;).all()</span><br></pre></td></tr></table></figure></li>
+<li>多对多(ManyToMany)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">from django.db import models</span><br><span class="line">class A(models.Model):</span><br><span class="line">    name &#x3D; models.CharField(max_length&#x3D;32)</span><br><span class="line"></span><br><span class="line">class B(models.Model):</span><br><span class="line">    title &#x3D; models.CharField(max_length&#x3D;32)</span><br><span class="line">    m2m &#x3D; models.ManyToMany(to&#x3D;&quot;A&quot;)</span><br><span class="line">PS: 自动会生成第3张表</span><br><span class="line">a. 在A和B表中各插入2条数据</span><br><span class="line">models.A.objects.create(name&#x3D;&quot;Jack&quot;)</span><br><span class="line">models.A.objects.create(name&#x3D;&quot;Mary&quot;)</span><br><span class="line"></span><br><span class="line">models.A.objects.create(title&#x3D;&quot;IT&quot;)</span><br><span class="line">models.A.objects.create(title&#x3D;&quot;CTO&quot;)</span><br><span class="line"></span><br><span class="line">b. CTO和[&#39;Jack&#39;,&#39;Mary&#39;]创建关系</span><br><span class="line">obj &#x3D; models.B.objects.get(title&#x3D;&quot;CTO&quot;)</span><br><span class="line">obj.m2m.add(1)   # 此处可以写id也可以写关联的A表中的obj</span><br><span class="line">obj.m2m.add(2)</span><br><span class="line"></span><br><span class="line">c. 查找CTO的关联的人</span><br><span class="line">obj &#x3D; models.B.objects.get(title&#x3D;&quot;CTO&quot;)</span><br><span class="line">obj.m2m.all()    # 得到一个QuerySet列表，内容为A表中的对象</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="3">
+<li>中间件<br>中间件其实就是一个类，包含2个方法,形如:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class MiddleWare:</span><br><span class="line">    # 所有的resquest请求都需要经过该方法,且该方法返回值为None时，继续请求下一个中间件</span><br><span class="line">    def process_request(self,request):</span><br><span class="line">        pass</span><br><span class="line">    def process_response(self,request,response):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><em>注: 中间件编写完成后需要在settings文件中进行注册使用，注册时注意中间件顺序</em></p>
+<ol start="4">
+<li>Session与Cookie的区别</li>
+</ol>
+<ul>
+<li>由于HTTP协议是无状态的协议，所以服务端需要记录用户的状态时，就需要用某种机制来识具体的用户，这个机制就是Session.典型的场景比如购物车，当你点击下单按钮时，由于HTTP协议无状态，所以并不知道是哪个用户操作的，所以服务端要为特定的用户创建了特定的Session，用用于标识这个用户，并且跟踪用户，这样才知道购物车里面有几本书。这个Session是保存在服务端的，有一个唯一标识。在服务端保存Session的方法很多，内存、数据库、文件都有。集群的时候也要考虑Session的转移，在大型的网站，一般会有专门的Session服务器集群，用来保存用户会话，这个时候 Session 信息都是放在内存的，使用一些缓存服务比如Memcached之类的来放 Session。</li>
+<li>思考一下服务端如何识别特定的客户？这个时候Cookie就登场了。每次HTTP请求的时候，客户端都会发送相应的Cookie信息到服务端。实际上大多数的应用都是用 Cookie 来实现Session跟踪的，第一次创建Session的时候，服务端会在HTTP协议中告诉客户端，需要在 Cookie 里面记录一个Session ID，以后每次请求把这个会话ID发送到服务器，我就知道你是谁了。有人问，如果客户端的浏览器禁用了 Cookie 怎么办？一般这种情况下，会使用一种叫做URL重写的技术来进行会话跟踪，即每次HTTP交互，URL后面都会被附加上一个诸如 sid=xxxxx 这样的参数，服务端据此来识别用户。</li>
+<li>Cookie其实还可以用在一些方便用户的场景下，设想你某次登陆过一个网站，下次登录的时候不想再次输入账号了，怎么办？这个信息可以写到Cookie里面，访问网站的时候，网站页面的脚本可以读取这个信息，就自动帮你把用户名给填了，能够方便一下用户。这也是Cookie名称的由来，给用户的一点甜头。</li>
+<li>总结：Session是在服务端保存的一个数据结构，用来跟踪用户的状态，这个数据可以保存在集群、数据库、文件中；Cookie是客户端保存用户信息的一种机制，用来记录用户的一些信息，也是实现Session的一种方式。</li>
+</ul>
+<ol start="5">
+<li>正则模块re<br>re.match()方法<br>决定RE是否在字符串刚开始的位置匹配,返回_sre.SRE_Match对象，如果不能匹配返回None。<br>注：这个方法并不是完全匹配。当pattern结束时若string还有剩余字符，仍然视为成功。想要完全匹配，可以在表达式末尾加上边界匹配符’$’<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">re.match(pattern, string, flags&#x3D;0)</span><br><span class="line"></span><br><span class="line">print(re.match(&#39;com&#39;,&#39;comwww.runcomoob&#39;).group())</span><br><span class="line">print(re.match(&#39;com&#39;,&#39;Comwww.runcomoob&#39;,re.I).group())</span><br><span class="line">执行结果如下：</span><br><span class="line">com</span><br><span class="line">com</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<hr>
+</br>
+
+<h3 id="RBAC实现"><a href="#RBAC实现" class="headerlink" title="RBAC实现"></a>RBAC实现</h3><h4 id="开发RBAC流程"><a href="#开发RBAC流程" class="headerlink" title="开发RBAC流程"></a>开发RBAC流程</h4><ol>
+<li>表结构设计</li>
+<li>Django Admin录入数据</li>
+<li>用户登陆<ul>
+<li>获取角色</li>
+<li>获取权限</li>
+<li>对权限URL进行去重</li>
+</ul>
+</li>
+<li>生成权限结构信息，写入session中<br>{<br> 1: {<pre><code>&apos;urls&apos;: [&apos;/userinfo/&apos;, &apos;/userinfo/add/&apos;, &apos;/userinfo/(\\d+)/delete/&apos;, &apos;/userinfo/(\\d+)/change/&apos;],
+&apos;codes&apos;: [&apos;list&apos;, &apos;add&apos;, &apos;del&apos;, &apos;edit&apos;]</code></pre> },<br> 2: {<pre><code>&apos;urls&apos;: [&apos;/order/&apos;, &apos;/order/add/&apos;, &apos;/order/(\\d+)/delete/&apos;, &apos;/order/(\\d+)/change/&apos;],
+&apos;codes&apos;: [&apos;list&apos;, &apos;add&apos;, &apos;del&apos;, &apos;edit&apos;]</code></pre> }<br>}</li>
+<li>注册中间件<ul>
+<li>白名单</li>
+<li>获取当前访问url: request.path_info</li>
+<li>session中获取权限，进行权限访问验证</li>
+</ul>
+</li>
+<li>自动生成菜单功能<ul>
+<li>采用自定义tag方式实现(inclusion_tag)</li>
+<li>作为模板使用{ menu_html request }方式导入html文件中使用</li>
+</ul>
+</li>
+<li>通过Django Admin后台进行管理及维护工作 </br>
+
+</li>
+</ol>
+<h4 id="Django-ORM表结构设计"><a href="#Django-ORM表结构设计" class="headerlink" title="Django ORM表结构设计"></a>Django ORM表结构设计</h4><p><strong>5个类6张表</strong></p>
+<ol>
+<li>菜单表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Menu(models.Models):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    菜单表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    title &#x3D; models.CharField(max_length&#x3D;32,verbose_name&#x3D;&#39;菜单标题&#39;)</span><br><span class="line">    </span><br><span class="line">     # django admin后台显示用</span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;菜单表&quot;</span><br><span class="line">    # 重写__str__方法，实例化后的对象将以字符串的形式展示，但实际是一个obj,所以，请不要相信你的眼睛，必要时使用type(arg)进行验证</span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.title</span><br></pre></td></tr></table></figure></li>
+<li>权限组表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Group(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    权限组</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    caption &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;组名称&quot;)</span><br><span class="line">    menu &#x3D; models.ForeignKey(to&#x3D;&quot;Menu&quot;, default&#x3D;1, blank&#x3D;True, verbose_name&#x3D;&quot;关联的菜单&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;权限组&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.caption</span><br></pre></td></tr></table></figure></li>
+<li>权限表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class Permission(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    权限表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    title &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;标题&quot;)</span><br><span class="line">    url &#x3D; models.CharField(max_length&#x3D;128, verbose_name&#x3D;&quot;含正则的URL&quot;)</span><br><span class="line">    # menu_gp为null说明是title为菜单项</span><br><span class="line">    menu_gp &#x3D; models.ForeignKey(to&#x3D;&quot;Permission&quot;, null&#x3D;True, blank&#x3D;True, verbose_name&#x3D;&quot;默认选中的组内权限ID&quot;, related_name&#x3D;&quot;pm&quot;)</span><br><span class="line">    code &#x3D; models.CharField(max_length&#x3D;16, verbose_name&#x3D;&quot;权限码&quot;)</span><br><span class="line">    group &#x3D; models.ForeignKey(to&#x3D;&quot;Group&quot;, blank&#x3D;True, verbose_name&#x3D;&quot;所属组&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;权限表&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.title</span><br></pre></td></tr></table></figure></li>
+<li>用户表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class User(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    用户表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    username &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;用户名&quot;)</span><br><span class="line">    password &#x3D; models.CharField(max_length&#x3D;64, verbose_name&#x3D;&quot;密码&quot;)</span><br><span class="line">    email &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;邮箱&quot;)</span><br><span class="line">    roles &#x3D; models.ManyToManyField(to&#x3D;&quot;Role&quot;, blank&#x3D;True, verbose_name&#x3D;&quot;用户关联的角色&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;用户表&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.username</span><br></pre></td></tr></table></figure></li>
+<li>角色表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Role(models.Model):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    角色表</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    title &#x3D; models.CharField(max_length&#x3D;32, verbose_name&#x3D;&quot;角色名称&quot;)</span><br><span class="line">    permissions &#x3D; models.ManyToManyField(to&#x3D;&quot;Permission&quot;, blank&#x3D;True, verbose_name&#x3D;&quot;角色关联的权限&quot;)</span><br><span class="line"></span><br><span class="line">    class Meta:</span><br><span class="line">        verbose_name_plural &#x3D; &quot;角色表&quot;</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.title</span><br></pre></td></tr></table></figure></li>
+<li>附加</li>
+</ol>
+<ul>
+<li>创建数据库表结构信息</li>
+<li>创建超级用户</li>
+<li>在admin.py中注册models类</li>
+<li>登陆admin管理后台添加数据，进行管理</li>
+</ul>
+</br>
+
+<h3 id="settings中添加配置项"><a href="#settings中添加配置项" class="headerlink" title="settings中添加配置项"></a>settings中添加配置项</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">在文件末尾添加配置信息</span><br><span class="line"></span><br><span class="line">vim projectname&#x2F;settings.py</span><br><span class="line"># ########################### 权限管理相关 ###########################3</span><br><span class="line">PERMISSION_MENU_KEY &#x3D; &quot;asdkjalsdf9uajsdf&quot;</span><br><span class="line">PERMISSION_URL_DICT_KEY &#x3D; &quot;iujmsufnsdflsdkf&quot;</span><br><span class="line"></span><br><span class="line">VALID_URL&#x3D; [</span><br><span class="line">    &#39;^&#x2F;login&#x2F;&#39;,</span><br><span class="line">    &quot;^&#x2F;admin*&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="初始化权限信息"><a href="#初始化权限信息" class="headerlink" title="初始化权限信息"></a>初始化权限信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">#cat rbac&#x2F;service&#x2F;init_permission.py</span><br><span class="line"></span><br><span class="line">from django.conf import settings</span><br><span class="line"></span><br><span class="line">def init_permission(request,user):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    用户权限信息初始化，获取当前用户所有权限信息，并保存到Session中</span><br><span class="line">    此处的request以及user参数均为对象，user为登陆成功时在数据库中查询到的user对象</span><br><span class="line">    :param request:</span><br><span class="line">    :param user:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    # 去空去重</span><br><span class="line">    permission_list &#x3D; user.roles.filter(permissions__id__isnull&#x3D;False).values(</span><br><span class="line">        &#39;permissions__id&#39;,</span><br><span class="line">        &#39;permissions__title&#39;,                # 用户列表</span><br><span class="line">        &#39;permissions__url&#39;,</span><br><span class="line">        &#39;permissions__code&#39;,</span><br><span class="line">        &#39;permissions__menu_gp_id&#39;,           # 组内菜单ID，Null表示是菜单</span><br><span class="line">        &#39;permissions__group_id&#39;,             # 权限的组ID</span><br><span class="line">        &#39;permissions__group__menu_id&#39;,       # 当前权限所在组的菜单ID</span><br><span class="line">        &#39;permissions__group__menu__title&#39;,   # 当前权限所在组的菜单名称</span><br><span class="line">    ).distinct()</span><br><span class="line">    </span><br><span class="line">    # 菜单相关配置，在inclusion_tag中使用</span><br><span class="line">    menu_permission_list&#x3D; []</span><br><span class="line">    for item in permission_list:</span><br><span class="line">        tpl &#x3D; &#123;</span><br><span class="line">            &#39;id&#39;: item[&#39;permissions__id&#39;],</span><br><span class="line">            &#39;title&#39;: item[&#39;permissions__title&#39;],</span><br><span class="line">            &#39;url&#39;: item[&#39;permissions__url&#39;],</span><br><span class="line">            &#39;menu_gp_id&#39;: item[&#39;permissions_menu_gp_id&#39;],</span><br><span class="line">            &#39;menu_id&#39;: item[&#39;permissions__group__menu_id&#39;],</span><br><span class="line">            &#39;menu_title&#39;: item[&#39;permissions__group__menu__title&#39;] </span><br><span class="line">        &#125;</span><br><span class="line">        menu_permission_list.append(tpl)</span><br><span class="line">        request.session[settings.PERMISSION_MENU_KEY] &#x3D; menu_permission_list</span><br><span class="line">        # 形如</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        &#123;&quot;url&quot;: &quot;&#x2F;host&#x2F;&quot;,&quot;menu_title&quot;: &quot;主机管理&quot;,&quot;title&quot;: &quot;主机列表&quot;,&quot;id&quot;: 1,&quot;menu_gp_id&quot;: null,&quot;menu_id&quot;: 1&#125;,</span><br><span class="line">        &#123;&quot;url&quot;: &quot;&#x2F;host&#x2F;add&#x2F;&quot;,&quot;menu_title&quot;: &quot;主机管理&quot;,&quot;title&quot;: &quot;添加主机&quot;,&quot;id&quot;: 2,&quot;menu_gp_id&quot;: 1,&quot;menu_id&quot;: 1&#125;,</span><br><span class="line">        &#123;&quot;url&quot;: &quot;&#x2F;host&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,&quot;menu_title&quot;: &quot;主机管理&quot;,&quot;title&quot;: &quot;删除主机&quot;,&quot;id&quot;: 3,&quot;menu_gp_id&quot;: 1,&quot;menu_id&quot;: 1&#125;,</span><br><span class="line">        &#123;&quot;url&quot;: &quot;&#x2F;host&#x2F;(\\d+)&#x2F;change&#x2F;&quot;,&quot;menu_title&quot;: &quot;主机管理&quot;,&quot;title&quot;: &quot;修改主机&quot;,&quot;id&quot;: 4,&quot;menu_gp_id&quot;: 1,&quot;menu_id&quot;: 1&#125;</span><br><span class="line">        &#123;&quot;url&quot;: &quot;&#x2F;userinfo&#x2F;&quot;,&quot;menu_title&quot;: &quot;用户管理&quot;,&quot;title&quot;: &quot;用户列表&quot;,&quot;id&quot;: 5,&quot;menu_gp_id&quot;: null,&quot;menu_id&quot;: 2&#125;,</span><br><span class="line">        &#123;&quot;url&quot;: &quot;&#x2F;userinfo&#x2F;add&#x2F;&quot;,&quot;menu_title&quot;: &quot;用户管理&quot;,&quot;title&quot;: &quot;添加用户&quot;,&quot;id&quot;: 6,&quot;menu_gp_id&quot;: 5,&quot;menu_id&quot;: 2&#125;,</span><br><span class="line">        ......</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    # 权限相关，中间件使用</span><br><span class="line">    permission_dict &#x3D; &#123;&#125;</span><br><span class="line">    for item in permission_list:</span><br><span class="line">        group_id &#x3D; item[&#39;permissions__group_id&#39;]</span><br><span class="line">        code &#x3D; item[&#39;permissions__code&#39;]</span><br><span class="line">        url &#x3D; item[&#39;permissions__url&#39;]</span><br><span class="line">        if group_id in permission_dict:</span><br><span class="line">            permission_dict[group_id][&#39;codes&#39;].append(code)</span><br><span class="line">            permission_dict[group_id][&#39;urls&#39;].append(url)</span><br><span class="line">        else:</span><br><span class="line">            permission_dict[group_id] &#x3D; &#123;&quot;codes&quot;: [code, ], &quot;urls&quot;: [url, ]&#125;</span><br><span class="line">    request.session[settings.PERMISSION_URL_DICT_KEY] &#x3D; permission_dict</span><br><span class="line">    # 形如</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;1&quot;: &#123;</span><br><span class="line">            &quot;codes&quot;: [&quot;list&quot;,&quot;add&quot;,&quot;delete&quot;,&quot;edit&quot;],</span><br><span class="line">            &quot;urls&quot;: [&quot;&#x2F;host&#x2F;&quot;,&quot;&#x2F;host&#x2F;add&#x2F;&quot;,&quot;&#x2F;host&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,&quot;&#x2F;host&#x2F;(\\d+)&#x2F;change&#x2F;&quot;]</span><br><span class="line">         &#125;,</span><br><span class="line">        &quot;2&quot;: &#123;</span><br><span class="line">            &quot;codes&quot;: [&quot;list&quot;,&quot;add&quot;,&quot;delete&quot;,&quot;change&quot;],</span><br><span class="line">            &quot;urls&quot;: [&quot;&#x2F;userinfo&#x2F;&quot;,&quot;&#x2F;userinfo&#x2F;add&#x2F;&quot;,&quot;&#x2F;userinfo&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,&quot;&#x2F;userinfo&#x2F;(\\d+)&#x2F;change&#x2F;&quot;]</span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+<p><em>注: 用户登陆成功后进行初始化权限信息,在处理用户权限时需要进行数据去重</em></p>
+<h3 id="菜单List及权限Dict格式如下所示："><a href="#菜单List及权限Dict格式如下所示：" class="headerlink" title="菜单List及权限Dict格式如下所示："></a>菜单List及权限Dict格式如下所示：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"># 菜单List request.session[settings.PERMISSION_MENU_KEY]</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;host&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;主机管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;主机列表&quot;,</span><br><span class="line">        &quot;id&quot;: 1,</span><br><span class="line">        &quot;menu_gp_id&quot;: null,</span><br><span class="line">        &quot;menu_id&quot;: 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;host&#x2F;add&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;主机管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;添加主机&quot;,</span><br><span class="line">        &quot;id&quot;: 2,</span><br><span class="line">        &quot;menu_gp_id&quot;: 1,</span><br><span class="line">        &quot;menu_id&quot;: 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;host&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;主机管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;删除主机&quot;,</span><br><span class="line">        &quot;id&quot;: 3,</span><br><span class="line">        &quot;menu_gp_id&quot;: 1,</span><br><span class="line">        &quot;menu_id&quot;: 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;host&#x2F;(\\d+)&#x2F;change&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;主机管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;修改主机&quot;,</span><br><span class="line">        &quot;id&quot;: 4,</span><br><span class="line">        &quot;menu_gp_id&quot;: 1,</span><br><span class="line">        &quot;menu_id&quot;: 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;userinfo&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;用户管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;用户列表&quot;,</span><br><span class="line">        &quot;id&quot;: 5,</span><br><span class="line">        &quot;menu_gp_id&quot;: null,</span><br><span class="line">        &quot;menu_id&quot;: 2</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;userinfo&#x2F;add&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;用户管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;添加用户&quot;,</span><br><span class="line">        &quot;id&quot;: 6,</span><br><span class="line">        &quot;menu_gp_id&quot;: 5,</span><br><span class="line">        &quot;menu_id&quot;: 2</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;userinfo&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;用户管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;删除用户&quot;,</span><br><span class="line">        &quot;id&quot;: 7,</span><br><span class="line">        &quot;menu_gp_id&quot;: 5,</span><br><span class="line">        &quot;menu_id&quot;: 2</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;url&quot;: &quot;&#x2F;userinfo&#x2F;(\\d+)&#x2F;change&#x2F;&quot;,</span><br><span class="line">        &quot;menu_title&quot;: &quot;用户管理&quot;,</span><br><span class="line">        &quot;title&quot;: &quot;修改用户&quot;,</span><br><span class="line">        &quot;id&quot;: 8,</span><br><span class="line">        &quot;menu_gp_id&quot;: 5,</span><br><span class="line">        &quot;menu_id&quot;: 2</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"># 权限Dict request.session[settings.PERMISSION_URL_DICT_KEY]</span><br><span class="line">&#123;</span><br><span class="line">    &quot;1&quot;: &#123;</span><br><span class="line">        &quot;codes&quot;: [</span><br><span class="line">            &quot;list&quot;,</span><br><span class="line">            &quot;add&quot;,</span><br><span class="line">            &quot;delete&quot;,</span><br><span class="line">            &quot;edit&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;urls&quot;: [</span><br><span class="line">            &quot;&#x2F;host&#x2F;&quot;,</span><br><span class="line">            &quot;&#x2F;host&#x2F;add&#x2F;&quot;,</span><br><span class="line">            &quot;&#x2F;host&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,</span><br><span class="line">            &quot;&#x2F;host&#x2F;(\\d+)&#x2F;change&#x2F;&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;2&quot;: &#123;</span><br><span class="line">        &quot;codes&quot;: [</span><br><span class="line">            &quot;list&quot;,</span><br><span class="line">            &quot;add&quot;,</span><br><span class="line">            &quot;delete&quot;,</span><br><span class="line">            &quot;change&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;urls&quot;: [</span><br><span class="line">            &quot;&#x2F;userinfo&#x2F;&quot;,</span><br><span class="line">            &quot;&#x2F;userinfo&#x2F;add&#x2F;&quot;,</span><br><span class="line">            &quot;&#x2F;userinfo&#x2F;(\\d+)&#x2F;delete&#x2F;&quot;,</span><br><span class="line">            &quot;&#x2F;userinfo&#x2F;(\\d+)&#x2F;change&#x2F;&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</br>
+
+<h4 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">cat rbac&#x2F;middleware&#x2F;rbac.py</span><br><span class="line"></span><br><span class="line">from django.shortcuts import redirect,HttpResponse</span><br><span class="line">from django.conf import settings</span><br><span class="line"></span><br><span class="line"># 在后续版本中可能会被废弃，故在此直接引入</span><br><span class="line">#from django.utils.deprecation import MiddlewareMixin</span><br><span class="line">class MiddlewareMixin(object):</span><br><span class="line">    def __init__(self, get_response&#x3D;None):</span><br><span class="line">        self.get_response &#x3D; get_response</span><br><span class="line">        super(MiddlewareMixin, self).__init__()</span><br><span class="line"></span><br><span class="line">    def __call__(self, request):</span><br><span class="line">        response &#x3D; None</span><br><span class="line">        if hasattr(self, &#39;process_request&#39;):</span><br><span class="line">            response &#x3D; self.process_request(request)</span><br><span class="line">        if not response:</span><br><span class="line">            response &#x3D; self.get_response(request)</span><br><span class="line">        if hasattr(self, &#39;process_response&#39;):</span><br><span class="line">            response &#x3D; self.process_response(request, response)</span><br><span class="line">        return response</span><br><span class="line"></span><br><span class="line">class RbacMiddleware(MiddlewareMixin):</span><br><span class="line">    def process_request(self,request):</span><br><span class="line">        # 1. 当前请求URL</span><br><span class="line">        current_request_url &#x3D; request.path_info</span><br><span class="line"></span><br><span class="line">        # 2. 处理白名单,如login及admin页面需开放访问权限，根据实际情况而定</span><br><span class="line">        for url in settings.VALID_URL_LIST:</span><br><span class="line">            if re.match(url,current_request_url):</span><br><span class="line">                return None</span><br><span class="line"></span><br><span class="line">        # 3. 获取session中保存的权限信息</span><br><span class="line">        permission_dict &#x3D; request.session.get(settings.PERMISSION_MENU_LIST)</span><br><span class="line">        if not permission_dict:</span><br><span class="line">            # 登陆页面</span><br><span class="line">            return redirect(settings.RBAC_LOGIN_URL)</span><br><span class="line"></span><br><span class="line">        flag &#x3D; False</span><br><span class="line">        for group_id, values in permission_dict.items():</span><br><span class="line">            for url in values[&#39;urls&#39;]:</span><br><span class="line">                regex &#x3D; settings.URL_FORMAT.format(url)</span><br><span class="line">                if re.match(regex, current_request_url):</span><br><span class="line">                    flag &#x3D; True</span><br><span class="line">                    break</span><br><span class="line">            if flag:</span><br><span class="line">                break</span><br><span class="line">        if not flag:</span><br><span class="line">            # 无权访问页面，可以直接redirect</span><br><span class="line">            return HttpResponse(&#39;无权访问&#39;)</span><br></pre></td></tr></table></figure>
+</br>
+
+<h4 id="自动生成菜单template-tags"><a href="#自动生成菜单template-tags" class="headerlink" title="自动生成菜单template tags"></a>自动生成菜单template tags</h4><ol>
+<li>template tags部分<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2017&#x2F;11&#x2F;20</span><br><span class="line"></span><br><span class="line">from django.conf import settings</span><br><span class="line">from django.template import Library</span><br><span class="line">import re</span><br><span class="line">import json</span><br><span class="line"></span><br><span class="line">register &#x3D; Library()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@register.inclusion_tag(&#39;menu.html&#39;)</span><br><span class="line">def menu_html(request):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    获取session中的菜单信息，匹配当前URL，生成菜单</span><br><span class="line">    :param request: 请求的requst对象</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    menu_list &#x3D; request.session.get(settings.PERMISSION_MENU_KEY)</span><br><span class="line">    # 当前请求URL</span><br><span class="line">    current_url &#x3D; request.path_info</span><br><span class="line"></span><br><span class="line">    menu_dict &#x3D; &#123;&#125;</span><br><span class="line">    # menu_gp_id为空则是菜单</span><br><span class="line">    for item in menu_list:</span><br><span class="line">        if not item[&#39;menu_gp_id&#39;]:</span><br><span class="line">            menu_dict[item[&#39;id&#39;]] &#x3D; item</span><br><span class="line"></span><br><span class="line">    for item in menu_list:</span><br><span class="line">        regax &#x3D; &quot;^&#123;0&#125;$&quot;.format(item[&#39;url&#39;])</span><br><span class="line">        if re.match(regax, current_url):</span><br><span class="line">            menu_gp_id &#x3D; item[&#39;menu_gp_id&#39;]</span><br><span class="line">            if menu_gp_id:</span><br><span class="line">                menu_dict[menu_gp_id][&#39;active&#39;] &#x3D; True</span><br><span class="line">            else:</span><br><span class="line">                menu_dict[item[&#39;id&#39;]][&#39;active&#39;] &#x3D; True</span><br><span class="line"></span><br><span class="line">    result &#x3D; &#123;&#125;</span><br><span class="line">    for item in menu_dict.values():</span><br><span class="line">        active &#x3D; item.get(&#39;active&#39;)</span><br><span class="line">        menu_id &#x3D; item[&#39;menu_id&#39;]</span><br><span class="line">        if menu_id in result:</span><br><span class="line">            result[menu_id][&#39;children&#39;].append(&#123;&#39;title&#39;: item[&#39;title&#39;], &#39;url&#39;: item[&#39;url&#39;], &#39;active&#39;: active&#125;)</span><br><span class="line">            if active:</span><br><span class="line">                result[menu_id][&#39;active&#39;] &#x3D; True</span><br><span class="line">        else:</span><br><span class="line">            result[menu_id] &#x3D; &#123;</span><br><span class="line">                &#39;menu_id&#39;: item[&#39;menu_id&#39;],</span><br><span class="line">                &#39;menu_title&#39;: item[&#39;menu_title&#39;],</span><br><span class="line">                &#39;active&#39;: active,</span><br><span class="line">                &#39;children&#39;: [</span><br><span class="line">                    &#123;&#39;title&#39;: item[&#39;title&#39;], &#39;url&#39;: item[&#39;url&#39;], &#39;active&#39;: active&#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">    print(json.dumps(result, indent&#x3D;4, ensure_ascii&#x3D;False))</span><br><span class="line">    return &#123;&#39;menu_dict&#39;: result&#125;</span><br></pre></td></tr></table></figure></li>
+<li>生成的菜单树格式如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;1&quot;: &#123;</span><br><span class="line">        &quot;children&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;url&quot;: &quot;&#x2F;host&#x2F;&quot;,</span><br><span class="line">                &quot;active&quot;: null,</span><br><span class="line">                &quot;title&quot;: &quot;主机列表&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        &quot;menu_id&quot;: 1,</span><br><span class="line">        &quot;menu_title&quot;: &quot;主机管理&quot;,</span><br><span class="line">        &quot;active&quot;: null</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;2&quot;: &#123;</span><br><span class="line">        &quot;children&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;url&quot;: &quot;&#x2F;userinfo&#x2F;&quot;,</span><br><span class="line">                &quot;active&quot;: null,</span><br><span class="line">                &quot;title&quot;: &quot;用户列表&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        &quot;menu_id&quot;: 2,</span><br><span class="line">        &quot;menu_title&quot;: &quot;用户管理&quot;,</span><br><span class="line">        &quot;active&quot;: null</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>menu_tpl.html部分<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for k,item in menu_dict.items %&#125;</span><br><span class="line">    &lt;div class&#x3D;&quot;item&quot;&gt;</span><br><span class="line">        &lt;div class&#x3D;&quot;item-title&quot;&gt; &#123;&#123; item.menu_title &#125;&#125; &lt;&#x2F;div&gt;</span><br><span class="line">        &#123;% if item.active %&#125;</span><br><span class="line">            &lt;div class&#x3D;&quot;item-permission&quot;&gt;</span><br><span class="line">        &#123;% else %&#125;</span><br><span class="line">            &lt;div class&#x3D;&quot;item-permission hide&quot;&gt;</span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">            &#123;% for v in item.children %&#125;</span><br><span class="line">                &#123;% if v.active %&#125;</span><br><span class="line">                    &lt;a href&#x3D;&quot;&#123;&#123; v.url &#125;&#125;&quot; class&#x3D;&quot;active&quot;&gt;&#123;&#123; v.title &#125;&#125;&lt;&#x2F;a&gt;</span><br><span class="line">                &#123;% else %&#125;</span><br><span class="line">                    &lt;a href&#x3D;&quot;&#123;&#123; v.url &#125;&#125;&quot;&gt;&#123;&#123; v.title &#125;&#125;&lt;&#x2F;a&gt;</span><br><span class="line">                &#123;% endif %&#125;</span><br><span class="line">            &#123;% endfor %&#125;</span><br><span class="line">        &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure></li>
+<li>HTML部分使用tags<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 上文中的menu_html函数依赖request参数，此处需要传入</span><br><span class="line">&#123; load rbac &#125;</span><br><span class="line">&#123; menu_html request &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><em>注: 自定义tags只支持传入1个参数</em><br></br></p>
+<h4 id="注册中间件使用"><a href="#注册中间件使用" class="headerlink" title="注册中间件使用"></a>注册中间件使用</h4><p>project/settings.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE &#x3D; [</span><br><span class="line">    &#39;django.middleware.security.SecurityMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.sessions.middleware.SessionMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.common.CommonMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.csrf.CsrfViewMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.messages.middleware.MessageMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.clickjacking.XFrameOptionsMiddleware&#39;,</span><br><span class="line">    &#39;rbac.middleware.rbac.RbacMiddleware&#39;,</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h4 id="维护"><a href="#维护" class="headerlink" title="维护"></a>维护</h4><p>在Django Admin中维护rbac的权限系统并使用<br></br></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，基于role实现的rbac组件基本开发完成，在Django中作为app引入在settings文件中注册后就可以生效使用了,engoy it!</p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/">Django基于RBAC的权限组件</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/" title="Django基于RBAC的权限组件">https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/">Django基于RBAC的权限组件</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 14:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 14:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/" title="Django基于RBAC的权限组件">https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Django%E5%9F%BA%E4%BA%8ERBAC%E7%9A%84%E6%9D%83%E9%99%90%E7%BB%84%E4%BB%B6/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Django/" <i class="fa fa-tag"></i> Django</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/Django%E5%9F%BA%E4%BA%8EAdmin%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0%E7%9A%84CURD%E7%BB%84%E4%BB%B6/" rel="next" title="Django基于Admin原理实现的CURD组件">
+                <i class="fa fa-chevron-left"></i> Django基于Admin原理实现的CURD组件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/WebSocket%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/" rel="prev" title="WebSocket小试牛刀">
+                WebSocket小试牛刀 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Django基于RBAC的权限组件"><span class="nav-text">Django基于RBAC的权限组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RBAC前奏"><span class="nav-text">RBAC前奏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识点储备"><span class="nav-text">知识点储备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RBAC实现"><span class="nav-text">RBAC实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开发RBAC流程"><span class="nav-text">开发RBAC流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Django-ORM表结构设计"><span class="nav-text">Django ORM表结构设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#settings中添加配置项"><span class="nav-text">settings中添加配置项</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化权限信息"><span class="nav-text">初始化权限信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单List及权限Dict格式如下所示："><span class="nav-text">菜单List及权限Dict格式如下所示：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#中间件"><span class="nav-text">中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自动生成菜单template-tags"><span class="nav-text">自动生成菜单template tags</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注册中间件使用"><span class="nav-text">注册中间件使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#维护"><span class="nav-text">维护</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

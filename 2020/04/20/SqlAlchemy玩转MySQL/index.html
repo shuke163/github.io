@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PYTHON," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="SqlAlchemy玩转MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SqlAlchemy玩转MySQL">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="SqlAlchemy玩转MySQL">
+<meta property="article:published_time" content="2020-04-20T07:44:38.000Z">
+<meta property="article:modified_time" content="2020-04-20T07:45:33.427Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="PYTHON">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/SqlAlchemy玩转MySQL/"/>
+
+
+
+
+
+  <title>SqlAlchemy玩转MySQL | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SqlAlchemy玩转MySQL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T15:44:38+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">5.3k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">26(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PYTHON/" itemprop="url" rel="index">
+                    <span itemprop="name">PYTHON</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/" class="leancloud_visitors" data-flag-title="SqlAlchemy玩转MySQL">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  SqlAlchemy玩转MySQL
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="SqlAlchemy玩转MySQL"><a href="#SqlAlchemy玩转MySQL" class="headerlink" title="SqlAlchemy玩转MySQL"></a>SqlAlchemy玩转MySQL</h2><h3 id="一-ORM框架"><a href="#一-ORM框架" class="headerlink" title="一. ORM框架"></a>一. ORM框架</h3><ol>
+<li>Web 开发中，一个重要的组成部分便是数据库了。Web 程序中最常用的莫过于关系型数据库了，也称 SQL 数据库。另外，文档数据库（如 mongodb）、键值对数据库（如 redis）近几年也逐渐在 web 开发中流行起来，我们习惯把这两种数据库称为 NoSQL 数据库。</li>
+<li>大多数的关系型数据库引擎（比如 MySQL、Postgres 和 SQLite）都有对应的 Python 包。在这里，我们不直接使用这些数据库引擎提供的 Python 包，而是使用对象关系映射（Object-Relational Mapper, ORM）框架，它将低层的数据库操作指令抽象成高层的面向对象操作。也就是说，如果我们直接使用数据库引擎，我们就要写 SQL 操作语句，但是，如果我们使用了 ORM 框架，我们对诸如表、文档此类的数据库实体就可以简化成对 Python 对象的操作。</li>
+<li>Python 中最广泛使用的 ORM 框架是 SQLAlchemy，它是一个很强大的关系型数据库框架，不仅支持高层的 ORM，也支持使用低层的 SQL 操作，另外，它也支持多种数据库引擎，如 MySQL、Postgres 和 SQLite 等。</li>
+</ol>
+<h3 id="二-介绍"><a href="#二-介绍" class="headerlink" title="二. 介绍"></a>二. 介绍</h3><p>SQLAlchemy是一个基于Python实现的ORM框架。该框架建立在 DB API之上，使用关系对象映射进行数据库操作，简言之：将类和对象转换成SQL，然后使用数据库模块调用DB-API执行SQL并获取执行结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install sqlalchemy</span><br></pre></td></tr></table></figure>
+<p>由于sqlalchemy模块依赖于第三方DB-API模块,因此,我们还需要安装数据库模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pymysql</span><br></pre></td></tr></table></figure>
+
+<h3 id="三-框架基本结构"><a href="#三-框架基本结构" class="headerlink" title="三. 框架基本结构"></a>三. 框架基本结构</h3><p>组成部分：<br>Engine，框架的引擎<br>Connection Pooling ，数据库连接池<br>Dialect，选择连接数据库的DB API种类<br>Schema/Types，架构和类型<br>SQL Exprression Language，SQL表达式语言  </p>
+<h3 id="四-连接串"><a href="#四-连接串" class="headerlink" title="四. 连接串"></a>四. 连接串</h3><p>SQLAlchemy本身无法操作数据库，其必须以来pymsql等第三方插件，Dialect用于和数据API进行交流，根据配置文件的不同调用不同的数据库API，从而实现对数据库的操作，如：<br>|数据库引擎|URL|<br>|—-|—-|<br>|MySQL-Pytho|mysql+mysqldb://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;[:&lt;port&gt;]/&lt;dbname&gt;|<br>|pymysql| mysql+pymysql://&lt;username&gt;:&lt;password&gt;@&lt;host&gt;/&lt;dbname&gt;[?&lt;options&gt;]|<br>|MySQL-Connector|mysql+mysqlconnector://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;[:&lt;port&gt;]/&lt;dbname&gt;|<br>|Postgres|postgresql://username:password@hostname/database|<br>|SQLite (Unix)|sqlite:////absolute/path/to/database|<br>|SQLite (Windows)|sqlite:///c:/absolute/path/to/database|<br>|cx_Oracle|oracle+cx_oracle://user:pass@host:port/dbname[?key=value&amp;key=value…]|<br>上面的表格中，username 和 password 表示登录数据库的用户名和密码，hostname 表示 SQL 服务所在的主机，可以是本地主机（localhost）也可以是远程服务器，database 表示要使用的数据库。有一点需要注意的是，SQLite 数据库不需要使用服务器，它使用硬盘上的文件名作为 database。<br><a href="http://docs.sqlalchemy.org/en/latest/dialects/index.html" target="_blank" rel="noopener">更多</a></p>
+<h3 id="五-使用"><a href="#五-使用" class="headerlink" title="五. 使用"></a>五. 使用</h3><h4 id="5-1-执行原生SQL"><a href="#5-1-执行原生SQL" class="headerlink" title="5.1 执行原生SQL"></a>5.1 执行原生SQL</h4><ul>
+<li>方式一<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line">import threading</span><br><span class="line">import sqlalchemy</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from sqlalchemy.engine.base import Engine</span><br><span class="line"></span><br><span class="line">engine &#x3D; create_engine(</span><br><span class="line">    &quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;,</span><br><span class="line">    max_overflow&#x3D;0,  # 超过连接池大小外最多创建的连接</span><br><span class="line">    pool_size&#x3D;5,  # 连接池大小</span><br><span class="line">    pool_timeout&#x3D;30,  # 池中没有线程最多等待的时间，否则报错</span><br><span class="line">    pool_recycle&#x3D;-1  # 多久之后对线程池中的线程进行一次连接的回收(重置)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">def task(arg):</span><br><span class="line">    conn &#x3D; engine.raw_connection()</span><br><span class="line">    cursor &#x3D; conn.cursor()</span><br><span class="line">    cursor.execute(</span><br><span class="line">        &quot;select * from USER &quot;</span><br><span class="line">    )</span><br><span class="line">    result &#x3D; cursor.fetchall()</span><br><span class="line">    cursor.close()</span><br><span class="line">    conn.close()</span><br><span class="line">    print(result)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for i in range(20):</span><br><span class="line">    t &#x3D; threading.Thread(target&#x3D;task, args&#x3D;(i,))</span><br><span class="line">    t.start()</span><br></pre></td></tr></table></figure></li>
+<li>方式二<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import threading</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line"></span><br><span class="line">engine &#x3D; create_engine(&quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff&quot;, max_overflow&#x3D;0, pool_size&#x3D;5)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def task(arg):</span><br><span class="line">    conn &#x3D; engine.contextual_connect()</span><br><span class="line">    with conn:</span><br><span class="line">        cur &#x3D; conn.execute(</span><br><span class="line">            &quot;select * from USER &quot;</span><br><span class="line">        )</span><br><span class="line">        result &#x3D; cur.fetchall()</span><br><span class="line">        print(result)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for i in range(20):</span><br><span class="line">    t &#x3D; threading.Thread(target&#x3D;task, args&#x3D;(i,))</span><br><span class="line">    t.start()</span><br></pre></td></tr></table></figure></li>
+<li>方式三<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import threading</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line"></span><br><span class="line">engine &#x3D; create_engine(&quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff&quot;, max_overflow&#x3D;0, pool_size&#x3D;5)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def task(arg):</span><br><span class="line">    cur &#x3D; engine.execute(&quot;select * from USER &quot;)</span><br><span class="line">    # cur &#x3D; engine.execute(&quot;select sleep(10)&quot;)</span><br><span class="line">    result &#x3D; cur.fetchall()</span><br><span class="line">    cur.close()</span><br><span class="line">    print(result)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for i in range(20):</span><br><span class="line">    t &#x3D; threading.Thread(target&#x3D;task, args&#x3D;(i,))</span><br><span class="line">    t.start()</span><br></pre></td></tr></table></figure>
+⚠️ 查看连接 show status like ‘Threads%’;</li>
+</ul>
+<h3 id="六-ORM使用"><a href="#六-ORM使用" class="headerlink" title="六. ORM使用"></a>六. ORM使用</h3><h4 id="6-1-创建数据库表"><a href="#6-1-创建数据库表" class="headerlink" title="6.1 创建数据库表"></a>6.1 创建数据库表</h4><ul>
+<li><p>单表示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">import datetime</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from sqlalchemy.ext.declarative import declarative_base</span><br><span class="line">from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, UniqueConstraint, Index</span><br><span class="line"></span><br><span class="line"># 基类</span><br><span class="line">Base &#x3D; declarative_base()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Users(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;users&#39;</span><br><span class="line"></span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True, nullable&#x3D;False)</span><br><span class="line">    email &#x3D; Column(String(32), unique&#x3D;True)</span><br><span class="line">    ctime &#x3D; Column(DateTime, default&#x3D;datetime.datetime.now)</span><br><span class="line">    # extra &#x3D; Column(Text, nullable&#x3D;True)</span><br><span class="line"></span><br><span class="line">    __table_args__ &#x3D; (</span><br><span class="line">        # UniqueConstraint(&#39;id&#39;, &#39;name&#39;, name&#x3D;&#39;uix_id_name&#39;),   # 联合唯一索引</span><br><span class="line">        # Index(&#39;ix_id_name&#39;, &#39;name&#39;, &#39;email&#39;),                 # 联合索引</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def init_db():</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据类创建数据库表</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    engine &#x3D; create_engine(</span><br><span class="line">        &quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;,</span><br><span class="line">        max_overflow&#x3D;0,   # 超过连接池大小外最多创建的连接</span><br><span class="line">        pool_size&#x3D;5,      # 连接池大小</span><br><span class="line">        pool_timeout&#x3D;30,  # 池中没有线程最多等待的时间，否则报错</span><br><span class="line">        pool_recycle&#x3D;-1   # 多久之后对线程池中的线程进行一次连接的回收（重置）</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    Base.metadata.create_all(engine)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def drop_db():</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据类删除数据库表</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    engine &#x3D; create_engine(</span><br><span class="line">        &quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;,</span><br><span class="line">        max_overflow&#x3D;0,   # 超过连接池大小外最多创建的连接</span><br><span class="line">        pool_size&#x3D;5,      # 连接池大小</span><br><span class="line">        pool_timeout&#x3D;30,  # 池中没有线程最多等待的时间，否则报错</span><br><span class="line">        pool_recycle&#x3D;-1   # 多久之后对线程池中的线程进行一次连接的回收（重置）</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    Base.metadata.drop_all(engine)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    drop_db()</span><br><span class="line">    init_db()</span><br></pre></td></tr></table></figure></li>
+<li><p>FK/M2M示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">import datetime</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from sqlalchemy.ext.declarative import declarative_base</span><br><span class="line">from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, UniqueConstraint, Index</span><br><span class="line">from sqlalchemy.orm import relationship</span><br><span class="line"></span><br><span class="line">Base &#x3D; declarative_base()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ##################### 单表示例 #########################</span><br><span class="line">class Users(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;users&#39;</span><br><span class="line"></span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True)</span><br><span class="line">    age &#x3D; Column(Integer, default&#x3D;18)</span><br><span class="line">    email &#x3D; Column(String(32), unique&#x3D;True)</span><br><span class="line">    ctime &#x3D; Column(DateTime, default&#x3D;datetime.datetime.now)</span><br><span class="line">    extra &#x3D; Column(Text, nullable&#x3D;True)</span><br><span class="line"></span><br><span class="line">    __table_args__ &#x3D; (</span><br><span class="line">        # UniqueConstraint(&#39;id&#39;, &#39;name&#39;, name&#x3D;&#39;uix_id_name&#39;),</span><br><span class="line">        # Index(&#39;ix_id_name&#39;, &#39;name&#39;, &#39;extra&#39;),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Hosts(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;hosts&#39;</span><br><span class="line"></span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True)</span><br><span class="line">    ctime &#x3D; Column(DateTime, default&#x3D;datetime.datetime.now)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ##################### 一对多示例 #########################</span><br><span class="line">class Hobby(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;hobby&#39;</span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    caption &#x3D; Column(String(50), default&#x3D;&#39;篮球&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Person(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;person&#39;</span><br><span class="line">    nid &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True, nullable&#x3D;True)</span><br><span class="line">    hobby_id &#x3D; Column(Integer, ForeignKey(&quot;hobby.id&quot;))</span><br><span class="line"></span><br><span class="line">    # 与生成表结构无关，仅用于查询方便</span><br><span class="line">    hobby &#x3D; relationship(&quot;Hobby&quot;, backref&#x3D;&#39;pers&#39;)  # backref 反向查询</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ##################### 多对多示例 #########################</span><br><span class="line"></span><br><span class="line">class Server2Group(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;server2group&#39;</span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True, autoincrement&#x3D;True)  # 自增主键</span><br><span class="line">    server_id &#x3D; Column(Integer, ForeignKey(&#39;server.id&#39;))</span><br><span class="line">    group_id &#x3D; Column(Integer, ForeignKey(&#39;group.id&#39;))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Group(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;group&#39;</span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(64), unique&#x3D;True, nullable&#x3D;False)</span><br><span class="line"></span><br><span class="line">    # 与生成表结构无关，仅用于查询方便</span><br><span class="line">    servers &#x3D; relationship(&#39;Server&#39;, secondary&#x3D;&#39;server2group&#39;, backref&#x3D;&#39;groups&#39;)  # secondary: 指定关系表</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Server(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;server&#39;</span><br><span class="line"></span><br><span class="line">    id &#x3D; Column(Integer, primary_key&#x3D;True, autoincrement&#x3D;True)</span><br><span class="line">    hostname &#x3D; Column(String(64), unique&#x3D;True, nullable&#x3D;False)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def init_db():</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据类创建数据库表</span><br><span class="line">    :return: </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    engine &#x3D; create_engine(</span><br><span class="line">        &quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;,</span><br><span class="line">        max_overflow&#x3D;0,  # 超过连接池大小外最多创建的连接</span><br><span class="line">        pool_size&#x3D;5,  # 连接池大小</span><br><span class="line">        pool_timeout&#x3D;30,  # 池中没有线程最多等待的时间，否则报错</span><br><span class="line">        pool_recycle&#x3D;-1  # 多久之后对线程池中的线程进行一次连接的回收（重置）</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    Base.metadata.create_all(engine)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def drop_db():</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据类删除数据库表</span><br><span class="line">    :return: </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    engine &#x3D; create_engine(</span><br><span class="line">        &quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;,</span><br><span class="line">        max_overflow&#x3D;0,  # 超过连接池大小外最多创建的连接</span><br><span class="line">        pool_size&#x3D;5,  # 连接池大小</span><br><span class="line">        pool_timeout&#x3D;30,  # 池中没有线程最多等待的时间，否则报错</span><br><span class="line">        pool_recycle&#x3D;-1  # 多久之后对线程池中的线程进行一次连接的回收（重置）</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    Base.metadata.drop_all(engine)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    drop_db()</span><br><span class="line">    init_db()</span><br></pre></td></tr></table></figure>
+<p>指定关联列: hobby = relationship(“Hobby”, backref=’pers’,foreign_keys=”Person.hobby_id”)</p>
+<h4 id="6-1-ORM基本使用"><a href="#6-1-ORM基本使用" class="headerlink" title="6.1 ORM基本使用"></a>6.1 ORM基本使用</h4></li>
+<li><p>初步使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;5&#x2F;14</span><br><span class="line"></span><br><span class="line">from sqlalchemy.orm import sessionmaker</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from models import *</span><br><span class="line"></span><br><span class="line">engine &#x3D; create_engine(&quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;, max_overflow&#x3D;0, pool_size&#x3D;5)</span><br><span class="line">Session &#x3D; sessionmaker(bind&#x3D;engine)</span><br><span class="line"></span><br><span class="line"># 每次执行数据库操作时，都需要创建一个session</span><br><span class="line">session &#x3D; Session()</span><br><span class="line"></span><br><span class="line"># ############# 执行ORM操作 #############</span><br><span class="line">obj1 &#x3D; Users(name&#x3D;&quot;tome&quot;, age&#x3D;19, email&#x3D;&quot;tome163@163.com&quot;)</span><br><span class="line">session.add(obj1)</span><br><span class="line"></span><br><span class="line"># 提交事务</span><br><span class="line">session.commit()</span><br><span class="line"># 关闭session</span><br><span class="line">session.close()</span><br></pre></td></tr></table></figure></li>
+<li><p>原生SQL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from sqlalchemy.orm import sessionmaker</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from sqlalchemy.sql import text</span><br><span class="line">from models import *</span><br><span class="line"></span><br><span class="line">engine &#x3D; create_engine(&quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;, max_overflow&#x3D;0, pool_size&#x3D;5)</span><br><span class="line">Session &#x3D; sessionmaker(bind&#x3D;engine)</span><br><span class="line"></span><br><span class="line">session &#x3D; Session()</span><br><span class="line"></span><br><span class="line"># 查询</span><br><span class="line"># cursor &#x3D; session.execute(&#39;select * from users&#39;)</span><br><span class="line"># result &#x3D; cursor.fetchall()</span><br><span class="line"></span><br><span class="line"># 添加</span><br><span class="line">with engine.connect() as con:</span><br><span class="line">    data &#x3D; (&#123;&#39;name&#39;: &#39;zhangsan&#39;, &#39;age&#39;: 20, &#39;value&#39;: &#39;zhangsan163@163.com&#39;&#125;,</span><br><span class="line">            &#123;&#39;name&#39;: &#39;lisi&#39;, &#39;age&#39;: 20, &#39;value&#39;: &#39;li163@163.com&#39;&#125;)</span><br><span class="line">    statement &#x3D; text(&quot;&quot;&quot;insert into users(name,age,email) values(:name,:age,:value)&quot;&quot;&quot;)</span><br><span class="line">    for line in data:</span><br><span class="line">        cursor &#x3D; con.execute(statement, **line)</span><br><span class="line"></span><br><span class="line">print(cursor.lastrowid)</span><br><span class="line">session.close()</span><br></pre></td></tr></table></figure></li>
+<li><p>基本增删改查</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">from sqlalchemy.orm import sessionmaker</span><br><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from sqlalchemy.sql import text</span><br><span class="line">from models import *</span><br><span class="line"></span><br><span class="line">engine &#x3D; create_engine(&quot;mysql+pymysql:&#x2F;&#x2F;zff:zff123@127.0.0.1:3306&#x2F;zff?charset&#x3D;utf8&quot;, max_overflow&#x3D;0, pool_size&#x3D;5)</span><br><span class="line">Session &#x3D; sessionmaker(bind&#x3D;engine)</span><br><span class="line"></span><br><span class="line">session &#x3D; Session()</span><br><span class="line"></span><br><span class="line"># 1. ################ 添加 ################</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">obj1 &#x3D; Users(name&#x3D;&quot;jack&quot;, age&#x3D;19, email&#x3D;&quot;jak163@163.com&quot;)</span><br><span class="line">session.add(obj1)</span><br><span class="line"></span><br><span class="line">session.add_all([</span><br><span class="line">    Users(name&#x3D;&quot;wang&quot;, age&#x3D;19, email&#x3D;&quot;wang163@163.com&quot;),</span><br><span class="line">    Users(name&#x3D;&quot;lucy&quot;, age&#x3D;19, email&#x3D;&quot;lucy@163.com&quot;),</span><br><span class="line">    Hosts(name&#x3D;&quot;jav-pingtai03br-p002.gru1.blue.net&quot;),</span><br><span class="line">])</span><br><span class="line">session.commit()</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"># 2. ################ 删除 ################</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">session.query(Users).filter(Users.id &gt; 2).delete()</span><br><span class="line">session.commit()</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"># 3. ################ 修改 ################</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">session.query(Users).filter(Users.id &gt; 0).update(&#123;&quot;name&quot; : &quot;shuke&quot;&#125;)</span><br><span class="line">session.query(Users).filter(Users.id &gt; 0).update(&#123;Users.name: Users.name + &quot;163&quot;&#125;, synchronize_session&#x3D;False)</span><br><span class="line">session.query(Users).filter(Users.id &gt; 0).update(&#123;&quot;age&quot;: Users.age + 1&#125;, synchronize_session&#x3D;&quot;evaluate&quot;)</span><br><span class="line">session.commit()</span><br><span class="line"></span><br><span class="line"># sqlalchemy 利用 session 执行 delete 时有一个 synchronize_session 参数用来说明 session 删除对象时需要执行的策略，共三个选项：</span><br><span class="line">1. False</span><br><span class="line">不同步 session，如果被删除的 objects 已经在 session 中存在，在 session commit 或者 expire_all 之前，这些被删除的对象都存在 session 中。</span><br><span class="line">不同步可能会导致获取被删除 objects 时出错。</span><br><span class="line"></span><br><span class="line"># 2. fetch</span><br><span class="line">删除之前从 db 中匹配被删除的对象并保存在 session 中，然后再从 session 中删除，这样做是为了让 session 的对象管理 identity_map 得知被删除的对象究竟是哪些以便更新引用关系。</span><br><span class="line"></span><br><span class="line"># 3. evaluate</span><br><span class="line"># 默认值。根据当前的 query criteria 扫描 session 中的 objects，如果不能正确执行则抛出错误，这句话也可以理解为，如果 session 中原本就没有这些被删除的 objects，扫描当然不会发生匹配，相当于匹配未正确执行。</span><br><span class="line">注意这里报错只会在特定 query criteria 时报错，比如 in 操作。</span><br><span class="line"></span><br><span class="line">session.query(Users).filter(Users.id.in_([1,2,3])).delete()</span><br><span class="line">sqlalchemy.exc.InvalidRequestError: Could not evaluate current criteria in Python. Specify &#39;fetch&#39; or False for the synchronize_session parameter.</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"># 3. ################ 查询 ################</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">r1 &#x3D; session.query(Users).all()</span><br><span class="line">r2 &#x3D; session.query(Users.name.label(&#39;username&#39;), Users.age).all()   # 别名</span><br><span class="line">r3 &#x3D; session.query(Users).filter(Users.name &#x3D;&#x3D; &quot;shuke&quot;).all()</span><br><span class="line">r4 &#x3D; session.query(Users).filter_by(name&#x3D;&#39;shuke&#39;).all()</span><br><span class="line">r5 &#x3D; session.query(Users).filter_by(name&#x3D;&#39;shuke&#39;).first()</span><br><span class="line">r6 &#x3D; session.query(Users).filter(text(&quot;id&lt;:value and name&#x3D;:name&quot;)).params(value&#x3D;2, name&#x3D;&#39;shuke&#39;).order_by(Users.id).all()</span><br><span class="line">r7 &#x3D; session.query(Users).from_statement(text(&quot;SELECT * FROM users where name&#x3D;:name&quot;)).params(name&#x3D;&#39;shuke&#39;).all()</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"># filter和filter_by的区别</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">filter_by用于简单的列名查询，如：</span><br><span class="line">db.users.filter_by(name&#x3D;&#39;Joe&#39;)</span><br><span class="line"></span><br><span class="line">filter对于上面的代码可以这样写：</span><br><span class="line">db.users.filter(db.users.name &#x3D;&#x3D; &#39;Joe&#39;)</span><br><span class="line"></span><br><span class="line">对于复杂的查询使用filter，如：</span><br><span class="line">db.users.filter(or_(db.users.name &#x3D;&#x3D; &#39;Ryan&#39;, db.users.country &#x3D;&#x3D; &#39;England&#39;))</span><br><span class="line"></span><br><span class="line">注意: filter_by使用的是赋值 &#x3D;, 而filter使用的是判断 &#x3D;&#x3D;</span><br><span class="line"></span><br><span class="line">另外：查询时使用like这样写： items &#x3D; session.query.filter(Users.name &#x3D;&#x3D; current_user, Users.title.like(&#39;%&#39; + keyword + &#39;%&#39;)).all()</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">session.close()</span><br></pre></td></tr></table></figure></li>
+<li><p>常用操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"># 条件</span><br><span class="line">ret &#x3D; session.query(Users).filter_by(name&#x3D;&#39;shuke&#39;).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(Users.id &gt; 1, Users.name &#x3D;&#x3D; &#39;eric&#39;).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(Users.id.between(1, 3), Users.name &#x3D;&#x3D; &#39;eric&#39;).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(Users.id.in_([1, 3, 4])).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(~Users.id.in_([1, 3, 4])).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(Users.id.in_(session.query(Users.id).filter_by(name&#x3D;&#39;eric&#39;))).all()</span><br><span class="line"></span><br><span class="line"># 条件 AND &#x2F; OR</span><br><span class="line">from sqlalchemy import and_, or_</span><br><span class="line"></span><br><span class="line">ret &#x3D; session.query(Users).filter(and_(Users.id &gt; 3, Users.name &#x3D;&#x3D; &#39;eric&#39;)).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(or_(Users.id &lt; 3, Users.name &#x3D;&#x3D; &#39;shuke&#39;)).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(</span><br><span class="line">    or_(</span><br><span class="line">        Users.id &lt; 2,</span><br><span class="line">        and_(Users.name &#x3D;&#x3D; &#39;eric&#39;, Users.id &gt; 3),</span><br><span class="line">        Users.extra !&#x3D; &quot;&quot;</span><br><span class="line">    )).all()</span><br><span class="line"></span><br><span class="line"># 通配符</span><br><span class="line">ret &#x3D; session.query(Users).filter(Users.name.like(&#39;e%&#39;)).all()</span><br><span class="line">ret &#x3D; session.query(Users).filter(~Users.name.like(&#39;e%&#39;)).all()  # 取反</span><br><span class="line"></span><br><span class="line"># 限制</span><br><span class="line">ret &#x3D; session.query(Users)[1:2]  # limit</span><br><span class="line"></span><br><span class="line"># 排序</span><br><span class="line">ret &#x3D; session.query(Users).order_by(Users.name.desc()).all()  # 按降序排列</span><br><span class="line">ret &#x3D; session.query(Users).order_by(Users.name.desc(), Users.id.asc()).all()  # 根据name按降序排列，再根据id升序排列</span><br><span class="line"></span><br><span class="line"># 分组</span><br><span class="line">from sqlalchemy.sql import func</span><br><span class="line"></span><br><span class="line">ret &#x3D; session.query(Users).group_by(Users.extra).all()</span><br><span class="line">ret &#x3D; session.query(</span><br><span class="line">    func.max(Users.id),</span><br><span class="line">    func.sum(Users.id),</span><br><span class="line">    func.min(Users.id)).group_by(Users.name).all()</span><br><span class="line"></span><br><span class="line">ret &#x3D; session.query(</span><br><span class="line">    func.max(Users.id),</span><br><span class="line">    func.sum(Users.id),</span><br><span class="line">    func.min(Users.id)).group_by(Users.name).having(func.min(Users.id) &gt; 2).all()</span><br><span class="line"></span><br><span class="line"># 连表查询</span><br><span class="line">默认是innerjoin</span><br><span class="line"># 直接让两个表联合。这里join默认是innerjoin，这里没有写他们的对应关系，它们在内部自己找。</span><br><span class="line"># 它是怎么找的呢，在创建表的时候，有类型是foreignkey，是根据它来找的。</span><br><span class="line">ret &#x3D; session.query(Person).join(Favor).all()</span><br><span class="line">相当于sql语句,两个表通过on，来关联</span><br><span class="line"></span><br><span class="line">a.  查看sql</span><br><span class="line">sql &#x3D; session.query(Person).join(Favor)</span><br><span class="line">print(sql)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">inner join打印sql，只打印person表所有字段信息，不打印favor表</span><br><span class="line">SELECT person.nid AS person_nid, person.name AS person_name, person.favor_id AS person_favor_id</span><br><span class="line">FROM person JOIN favor ON favor.nid &#x3D; person.favor_id</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">b. isouter&#x3D;True即left join</span><br><span class="line">ret1 &#x3D; session.query(Person).join(Favor,isouter&#x3D;True).all()</span><br><span class="line">sql1 &#x3D; session.query(Person).join(Favor,isouter&#x3D;True)</span><br><span class="line">print(sql1)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">打印sql，只打印person表所有字段的信息，但是没有打印favor表</span><br><span class="line">SELECT person.nid AS person_nid, person.name AS person_name, person.favor_id AS person_favor_id</span><br><span class="line">FROM person LEFT OUTER JOIN favor ON favor.nid &#x3D; person.favor_id</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">c. 两张表的信息都打印出来</span><br><span class="line">ret2 &#x3D; session.query(Person, Favor).join(Favor, isouter&#x3D;True).all()</span><br><span class="line">print(ret2)</span><br><span class="line">sql2 &#x3D; session.query(Person, Favor).join(Favor, isouter&#x3D;True)</span><br><span class="line">print(sql2)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">left join,打印结果：打印person和favor两张表的所有字段。</span><br><span class="line">[(&lt;__main__.Person object at 0x0000000003B34FD0&gt;, 1-white), (&lt;__main__.Person object at 0x0000000003B69BE0&gt;, 2-blue),</span><br><span class="line">(&lt;__main__.Person object at 0x0000000003B69C50&gt;, 2-blue)]</span><br><span class="line"></span><br><span class="line">left join,打印sql：打印person和favor两张表的所有字段。</span><br><span class="line">SELECT person.nid AS person_nid, person.name AS person_name, person.favor_id AS person_favor_id,</span><br><span class="line">favor.nid AS favor_nid, favor.caption AS favor_caption</span><br><span class="line">FROM person LEFT OUTER JOIN favor ON favor.nid &#x3D; person.favor_id</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">d. 联表，只打印某些字段</span><br><span class="line">ret3 &#x3D; session.query(Person.name,Favor.caption).join(Favor,isouter&#x3D;True).all()</span><br><span class="line">print(ret3)</span><br><span class="line">sql3 &#x3D; session.query(Person.name,Favor.caption).join(Favor,isouter&#x3D;True)</span><br><span class="line">print(sql3)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">left join,打印结果：某些指定字段值</span><br><span class="line">[(&#39;qiaomei0&#39;, &#39;white&#39;), (&#39;qiaomei1&#39;, &#39;blue&#39;), (&#39;qiaomei2&#39;, &#39;blue&#39;)]</span><br><span class="line">left join,打印sql：某些指定字段值</span><br><span class="line">SELECT person.name AS person_name, favor.caption AS favor_caption</span><br><span class="line">FROM person LEFT OUTER JOIN favor ON favor.nid &#x3D; person.favor_id</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 关联子查询</span><br><span class="line">subqry &#x3D; session.query(func.count(Server.id).label(&quot;sid&quot;)).filter(Server.id &#x3D;&#x3D; Group.id).correlate(Group).as_scalar()</span><br><span class="line">result &#x3D; session.query(Group.name, subqry)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">SELECT &#96;group&#96;.name AS group_name, (SELECT count(server.id) AS sid </span><br><span class="line">FROM server </span><br><span class="line">WHERE server.id &#x3D; &#96;group&#96;.id) AS anon_1 </span><br><span class="line">FROM &#96;group&#96;</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"># 组合</span><br><span class="line">q1 &#x3D; session.query(Users.name).filter(Users.id &gt; 2)</span><br><span class="line">q2 &#x3D; session.query(Favor.caption).filter(Favor.nid &lt; 2)</span><br><span class="line">ret &#x3D; q1.union(q2).all()</span><br><span class="line"></span><br><span class="line">q1 &#x3D; session.query(Users.name).filter(Users.id &gt; 2)</span><br><span class="line">q2 &#x3D; session.query(Favor.caption).filter(Favor.nid &lt; 2)</span><br><span class="line">ret &#x3D; q1.union_all(q2).all()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>联表查询(一对多,基于relationship操作ForeignKey)</p>
+</li>
+</ul>
+<ol>
+<li>正向查询<br>多对一，多的那端开始查，也就是foreignkey写在哪里，从哪里查。<br>使用上面的方法非常麻烦，我们用更高效的方法。<br>只要在表里加上这一句话：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">favor &#x3D; relationship(&quot;Favor&quot;, backref&#x3D;&#39;pers&#39;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;person&#39;</span><br><span class="line">    nid &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True, nullable&#x3D;True)</span><br><span class="line">    favor_id &#x3D; Column(Integer, ForeignKey(&quot;favor.nid&quot;))</span><br><span class="line">    # 与生成表结构无关，仅用于查询方便</span><br><span class="line">    favor &#x3D; relationship(&quot;Favor&quot;, backref&#x3D;&#39;pers&#39;)</span><br><span class="line"> </span><br><span class="line">    # obj代指的是Person表的每一行数据</span><br><span class="line">    # obj.favor代指favor对象，obj.favor.nid就拿到了Person关联的favor对象的id。</span><br><span class="line">    # 所以你不用做联表，它内部帮你做联表。</span><br><span class="line">ret &#x3D; session.query(Person).all()</span><br><span class="line">for obj in ret:     # 每个obj就是一行数据。</span><br><span class="line"> </span><br><span class="line">    print(obj.nid,obj.name,obj.favor_id,obj.favor,obj.favor.nid,obj.favor.caption)</span><br></pre></td></tr></table></figure></li>
+<li>反向查询<br>多对一，从一的那端开始查，也就是从没写foreignkey的表里反查。<br>多对一，从一的那端反查。<br>Person和Favor是多对一，假如查询喜欢蓝色的所有人。Favor的caption为blue的所有对应的Person</li>
+</ol>
+<p>传统方式，反向查询：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret3 &#x3D; session.query(Person.name,Favor.caption).join(Favor,isouter&#x3D;True).filter(Favor.caption &#x3D;&#x3D; &#39;blue&#39;).all()</span><br></pre></td></tr></table></figure>
+<p>Person表里，写了backref=’pers’,就相当于在favor表里加了个字段pers,实际是不存在的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">favor &#x3D; relationship(&quot;Favor&quot;, backref&#x3D;&#39;pers&#39;)</span><br></pre></td></tr></table></figure>
+<p>如下: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class Person(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;person&#39;</span><br><span class="line">    nid &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True, nullable&#x3D;True)</span><br><span class="line">    favor_id &#x3D; Column(Integer, ForeignKey(&quot;favor.nid&quot;))</span><br><span class="line">    # 与生成表结构无关，仅用于查询方便</span><br><span class="line">    favor &#x3D; relationship(&quot;Favor&quot;, backref&#x3D;&#39;pers&#39;)</span><br><span class="line"> </span><br><span class="line">class Favor(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;favor&#39;</span><br><span class="line">    nid &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    caption &#x3D; Column(String(50), default&#x3D;&#39;red&#39;, unique&#x3D;True)</span><br><span class="line">    # Person表里写的：backref&#x3D;&#39;pers&#39;,相当于在这里加上字段pers。只是用于查询，不会修改表结构。</span><br><span class="line">    # pers &#x3D; 。。。。。。。。</span><br><span class="line">    def __repr__(self):</span><br><span class="line">        return &quot;%s-%s&quot; %(self.nid, self.caption)</span><br></pre></td></tr></table></figure>
+<p>你可以直接通过Favor对象的pers字段找到跟这个颜色关联的所有person,在数据库里没有真实的字段对应的，只是帮你生成sql语句而已。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 新方式，反向查询</span><br><span class="line">obj &#x3D; session.query(Favor).filter(Favor.caption&#x3D;&#x3D;&#39;blue&#39;).first()    # 先找到caption为blue的Favor对象</span><br><span class="line">print(obj.nid)</span><br><span class="line">print(obj.caption)</span><br><span class="line">print(obj.pers)</span><br><span class="line"> </span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">打印结果：</span><br><span class="line">2</span><br><span class="line">blue</span><br><span class="line">[&lt;__main__.Person object at 0x0000000003B5BBE0&gt;, &lt;__main__.Person object at 0x0000000003B5BC50&gt;]</span><br><span class="line">&#39;&#39;&#39;</span><br></pre></td></tr></table></figure>
+<p>Foreignkey(一对多总结)<br>Foreignkey和relationship要成对写在一个表里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Person(Base):</span><br><span class="line">    __tablename__ &#x3D; &#39;person&#39;</span><br><span class="line">    nid &#x3D; Column(Integer, primary_key&#x3D;True)</span><br><span class="line">    name &#x3D; Column(String(32), index&#x3D;True, nullable&#x3D;True)</span><br><span class="line">    favor_id &#x3D; Column(Integer, ForeignKey(&quot;favor.nid&quot;))</span><br><span class="line">    # 与生成表结构无关，仅用于查询方便</span><br><span class="line">    favor &#x3D; relationship(&quot;Favor&quot;, backref&#x3D;&#39;pers&#39;)</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line">Person对Favor 是多对一的关系，foreignkey加在了多的那端(Person表)</span><br><span class="line">Person对象.favor.favor的字段：叫做正向查找</span><br><span class="line">Favor对象.pers.person的字段：反向查找</span><br><span class="line"></span><br><span class="line">- M2M(基于relationship的m2m关系)</span><br></pre></td></tr></table></figure>
+<p>import time<br>import threading</p>
+<p>from sqlalchemy.ext.declarative import declarative_base<br>from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint, Index<br>from sqlalchemy.orm import sessionmaker, relationship<br>from sqlalchemy import create_engine<br>from sqlalchemy.sql import text<br>from sqlalchemy.engine.result import ResultProxy<br>from db import Users, Hosts, Hobby, Person, Group, Server, Server2Group</p>
+<p>engine = create_engine(“mysql+pymysql://root:<a href="mailto:123@127.0.0.1">123@127.0.0.1</a>:3306/s6?charset=utf8”, max_overflow=0, pool_size=5)<br>Session = sessionmaker(bind=engine)<br>session = Session()</p>
+<h1 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h1><p>“””<br>session.add_all([<br>    Server(hostname=’c1.com’),<br>    Server(hostname=’c2.com’),<br>    Group(name=’A组’),<br>    Group(name=’B组’),<br>])<br>session.commit()</p>
+<p>s2g = Server2Group(server_id=1, group_id=1)<br>session.add(s2g)<br>session.commit()</p>
+<p>gp = Group(name=’C组’)<br>gp.servers = [Server(hostname=’c3.com’),Server(hostname=’c4.com’)]<br>session.add(gp)<br>session.commit()</p>
+<p>ser = Server(hostname=’c6.com’)<br>ser.groups = [Group(name=’F组’),Group(name=’G组’)]<br>session.add(ser)<br>session.commit()<br>“””</p>
+<h1 id="使用relationship正向查询"><a href="#使用relationship正向查询" class="headerlink" title="使用relationship正向查询"></a>使用relationship正向查询</h1><p>“””<br>v = session.query(Group).first()<br>print(v.name)<br>print(v.servers)<br>“””</p>
+<h1 id="使用relationship反向查询"><a href="#使用relationship反向查询" class="headerlink" title="使用relationship反向查询"></a>使用relationship反向查询</h1><p>“””<br>v = session.query(Server).first()<br>print(v.hostname)<br>print(v.groups)<br>“””<br>session.close()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- 多线程执行示例</span><br></pre></td></tr></table></figure>
+<p>import time<br>import threading<br>from sqlalchemy.ext.declarative import declarative_base<br>from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint, Index<br>from sqlalchemy.orm import sessionmaker, relationship<br>from sqlalchemy import create_engine<br>from db import Users</p>
+<p>engine = create_engine(“mysql+pymysql://root:<a href="mailto:123@127.0.0.1">123@127.0.0.1</a>:3306/s6”, max_overflow=0, pool_size=5)<br>Session = sessionmaker(bind=engine)</p>
+<p>def task(arg):<br>    session = Session()<br>    obj1 = Users(name=”shuke”)<br>    session.add(obj1)<br>    session.commit()</p>
+<p>for i in range(10):<br>    t = threading.Thread(target=task, args=(i,))<br>    t.start()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 基于scoped_session使得线程安全</span><br><span class="line">基于ThreadLocal实现</span><br></pre></td></tr></table></figure>
+<p>from sqlalchemy.orm import sessionmaker<br>from sqlalchemy import create_engine<br>from sqlalchemy.orm import scoped_session<br>from models import Users</p>
+<p>engine = create_engine(“mysql+pymysql://root:<a href="mailto:123@127.0.0.1">123@127.0.0.1</a>:3306/s6”, max_overflow=0, pool_size=5)<br>Session = sessionmaker(bind=engine)</p>
+<p>“””</p>
+<h1 id="线程安全，基于本地线程实现每个线程用同一个session"><a href="#线程安全，基于本地线程实现每个线程用同一个session" class="headerlink" title="线程安全，基于本地线程实现每个线程用同一个session"></a>线程安全，基于本地线程实现每个线程用同一个session</h1><h1 id="特殊的：scoped-session中有原来方法的Session中的一下方法："><a href="#特殊的：scoped-session中有原来方法的Session中的一下方法：" class="headerlink" title="特殊的：scoped_session中有原来方法的Session中的一下方法："></a>特殊的：scoped_session中有原来方法的Session中的一下方法：</h1><p>public_methods = (<br>    ‘<strong>contains</strong>‘, ‘<strong>iter</strong>‘, ‘add’, ‘add_all’, ‘begin’, ‘begin_nested’,<br>    ‘close’, ‘commit’, ‘connection’, ‘delete’, ‘execute’, ‘expire’,<br>    ‘expire_all’, ‘expunge’, ‘expunge_all’, ‘flush’, ‘get_bind’,<br>    ‘is_modified’, ‘bulk_save_objects’, ‘bulk_insert_mappings’,<br>    ‘bulk_update_mappings’,<br>    ‘merge’, ‘query’, ‘refresh’, ‘rollback’,<br>    ‘scalar’<br>)</p>
+<p>“””<br>session = scoped_session(Session)</p>
+<h1 id="执行ORM操作"><a href="#执行ORM操作" class="headerlink" title="############# 执行ORM操作"></a>############# 执行ORM操作</h1><p>obj1 = Users(name=”shuke”)<br>session.add(obj1)</p>
+<h1 id="提交事务"><a href="#提交事务" class="headerlink" title="提交事务"></a>提交事务</h1><p>session.commit()</p>
+<h1 id="关闭session"><a href="#关闭session" class="headerlink" title="关闭session"></a>关闭session</h1><p>session.close()</p>
+<pre><code>
+
+参考资料:
+[Flask-SQLAlchemy-武沛齐-博客园](http://www.cnblogs.com/wupeiqi/articles/8259356.html)  
+[mysql和SQLAlchemy-博客园](https://www.cnblogs.com/wangqiaomei/p/5721523.html)  
+[使用flask-sqlalchemy玩转MySQL | Wing&apos;s Tech Space](https://wing324.github.io/2017/02/25/%E4%BD%BF%E7%94%A8flask-sqlalchemy%E7%8E%A9%E8%BD%ACMySQL/)  
+[Flask-Migrate的使用 | Wing&apos;s Tech Space](https://wing324.github.io/2017/02/26/Flask-Migrate%E7%9A%84%E4%BD%BF%E7%94%A8/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</code></pre>
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/">SqlAlchemy玩转MySQL</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 15:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 15:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/" title="SqlAlchemy玩转MySQL">https://shuke163.github.io/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/">SqlAlchemy玩转MySQL</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 15:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 15:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/" title="SqlAlchemy玩转MySQL">https://shuke163.github.io/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/SqlAlchemy%E7%8E%A9%E8%BD%ACMySQL/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PYTHON/" <i class="fa fa-tag"></i> PYTHON</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84AWS-EC2%E4%B8%BB%E6%9C%BA%E4%BF%A1%E6%81%AF/" rel="next" title="获取所有的AWS EC2主机信息">
+                <i class="fa fa-chevron-left"></i> 获取所有的AWS EC2主机信息
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/python%E4%B8%80%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" rel="prev" title="python一些不为人知的小技巧">
+                python一些不为人知的小技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SqlAlchemy玩转MySQL"><span class="nav-text">SqlAlchemy玩转MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-ORM框架"><span class="nav-text">一. ORM框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-介绍"><span class="nav-text">二. 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-框架基本结构"><span class="nav-text">三. 框架基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-连接串"><span class="nav-text">四. 连接串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-使用"><span class="nav-text">五. 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-执行原生SQL"><span class="nav-text">5.1 执行原生SQL</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六-ORM使用"><span class="nav-text">六. ORM使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-创建数据库表"><span class="nav-text">6.1 创建数据库表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-ORM基本使用"><span class="nav-text">6.1 ORM基本使用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-text">添加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用relationship正向查询"><span class="nav-text">使用relationship正向查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用relationship反向查询"><span class="nav-text">使用relationship反向查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程安全，基于本地线程实现每个线程用同一个session"><span class="nav-text">线程安全，基于本地线程实现每个线程用同一个session</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特殊的：scoped-session中有原来方法的Session中的一下方法："><span class="nav-text">特殊的：scoped_session中有原来方法的Session中的一下方法：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行ORM操作"><span class="nav-text">############# 执行ORM操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#提交事务"><span class="nav-text">提交事务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关闭session"><span class="nav-text">关闭session</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.8k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
