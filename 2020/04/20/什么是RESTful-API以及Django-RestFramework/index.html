@@ -763,7 +763,7 @@ def put(self, request, *args, **kwargs):
 </head>
 <body>
 <form action="http://127.0.0.1:8000/test/" method="post" enctype="multipart/form-data">
-    <input type="text" name="user" />
+    <input type="text" name="user">
     <input type="file" name="img">
 
 <pre><code>&lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;</code></pre></form>
@@ -773,7 +773,7 @@ def put(self, request, *args, **kwargs):
 from django.conf.urls import url, include
 from web.views import TestView
 
-<p>urlpatterns = [<br>    url(r’test/(?P<filename>[^/]+)’, TestView.as_view(), name=’test’),<br>]</p>
+<p>urlpatterns = [<br>    url(r’test/(?P<filename>[^/]+)’, TestView.as_view(), name=’test’),<br>]</filename></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <h1 id="usr-bin-env-python-2"><a href="#usr-bin-env-python-2" class="headerlink" title="!/usr/bin/env python"></a>!/usr/bin/env python</h1><h1 id="coding-utf-8-3"><a href="#coding-utf-8-3" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework.views import APIView<br>from rest_framework.response import Response<br>from rest_framework.parsers import FileUploadParser</p>
 <p>class TestView(APIView):<br>    authentication_classes = []<br>    permission_classes = []<br>    parser_classes = [FileUploadParser, ]</p>
@@ -801,7 +801,7 @@ def put(self, request, *args, **kwargs):
 </head>
 <body>
 <form action="http://127.0.0.1:8000/test/f1.numbers" method="post" enctype="multipart/form-data">
-    <input type="text" name="user" />
+    <input type="text" name="user">
     <input type="file" name="img">
 
 <pre><code>&lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;</code></pre></form>
@@ -935,7 +935,7 @@ def post(self, request, *args, **kwargs):
 
     return Response(&apos;POST请求，响应内容&apos;)</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 3.6.3 生成URL</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views.s6_serializers import TestView</p>
-<p>urlpatterns = [<br>    url(r’test/‘, TestView.as_view(), name=’test’),<br>    url(r’detail/(?P<pk>\d+)/‘, TestView.as_view(), name=’detail’),<br>]</p>
+<p>urlpatterns = [<br>    url(r’test/‘, TestView.as_view(), name=’test’),<br>    url(r’detail/(?P<pk>\d+)/‘, TestView.as_view(), name=’detail’),<br>]</pk></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">models</span><br></pre></td></tr></table></figure>
 <p>from django.db import models</p>
 <h1 id="Create-your-models-here-1"><a href="#Create-your-models-here-1" class="headerlink" title="Create your models here."></a>Create your models here.</h1><p>from django.db import models</p>
@@ -985,7 +985,7 @@ def post(self, request, *args, **kwargs):
 
     return Response(&apos;POST请求，响应内容&apos;)</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">请求如下图所示:</span><br><span class="line">![images](https:&#x2F;&#x2F;note.youdao.com&#x2F;yws&#x2F;api&#x2F;personal&#x2F;file&#x2F;WEBe8cf0d66e9af86eaccbbfdc47f098d67?method&#x3D;download&amp;shareKey&#x3D;cff9deb39e5ad27072b3d2ccae7b1307)</span><br><span class="line"></span><br><span class="line">#### 3.6.4 自动生成URL</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from app01.views import TestView</p>
-<p>urlpatterns = [<br>    url(r’test/‘, TestView.as_view(), name=’test’),<br>    url(r’detail/(?P<pk>\d+)/‘, TestView.as_view(), name=’detail-info’),<br>]</p>
+<p>urlpatterns = [<br>    url(r’test/‘, TestView.as_view(), name=’test’),<br>    url(r’detail/(?P<pk>\d+)/‘, TestView.as_view(), name=’detail-info’),<br>]</pk></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <h1 id="usr-bin-env-python-6"><a href="#usr-bin-env-python-6" class="headerlink" title="!/usr/bin/env python"></a>!/usr/bin/env python</h1><h1 id="coding-utf-8-9"><a href="#coding-utf-8-9" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework.views import APIView<br>from rest_framework.response import Response<br>from rest_framework import serializers<br>from . import models</p>
 <p>class PasswordValidator(object):<br>    def <strong>init</strong>(self, base):<br>        self.base = str(base)</p>
@@ -1084,13 +1084,13 @@ serializer = UserSerializer(page_user_list, many=True)
 response = paginator.get_paginated_response(serializer.data)
 return response</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3.8  路由系统</span><br><span class="line">#### 3.8.1 自定义路由</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views import s11_render</p>
-<p>urlpatterns = [<br>    url(r’^test/$’, s11_render.TestView.as_view()),<br>    url(r’^test.(?P<format>[a-z0-9]+)$’, s11_render.TestView.as_view()),<br>    url(r’^test/(?P<pk>[^/.]+)/$’, s11_render.TestView.as_view()),<br>    url(r’^test/(?P<pk>[^/.]+).(?P<format>[a-z0-9]+)$’, s11_render.TestView.as_view())<br>]</p>
+<p>urlpatterns = [<br>    url(r’^test/$’, s11_render.TestView.as_view()),<br>    url(r’^test.(?P<format>[a-z0-9]+)$’, s11_render.TestView.as_view()),<br>    url(r’^test/(?P<pk>[^/.]+)/$’, s11_render.TestView.as_view()),<br>    url(r’^test/(?P<pk>[^/.]+).(?P<format>[a-z0-9]+)$’, s11_render.TestView.as_view())<br>]</format></pk></pk></format></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <p>from rest_framework.views import APIView<br>from rest_framework.response import Response<br>from .. import models</p>
 <p>class TestView(APIView):<br>    def get(self, request, <em>args, *</em>kwargs):<br>        print(kwargs)<br>        print(self.renderer_classes)<br>        return Response(‘…’)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 3.8.2 半自动路由</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views import s10_generic</p>
-<p>urlpatterns = [<br>    url(r’^test/$’, s10_generic.UserViewSet.as_view({‘get’: ‘list’, ‘post’: ‘create’})),<br>    url(r’^test/(?P<pk>\d+)/$’, s10_generic.UserViewSet.as_view(<br>        {‘get’: ‘retrieve’, ‘put’: ‘update’, ‘patch’: ‘partial_update’, ‘delete’: ‘destroy’})),<br>]</p>
+<p>urlpatterns = [<br>    url(r’^test/$’, s10_generic.UserViewSet.as_view({‘get’: ‘list’, ‘post’: ‘create’})),<br>    url(r’^test/(?P<pk>\d+)/$’, s10_generic.UserViewSet.as_view(<br>        {‘get’: ‘retrieve’, ‘put’: ‘update’, ‘patch’: ‘partial_update’, ‘delete’: ‘destroy’})),<br>]</pk></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <p>#!/usr/bin/env python</p>
 <h1 id="coding-utf-8-13"><a href="#coding-utf-8-13" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework.viewsets import ModelViewSet<br>from rest_framework import serializers<br>from .. import models</p>
@@ -1106,7 +1106,7 @@ return response</code></pre><figure class="highlight plain"><table><tr><td class
 <p>class UserViewSet(ModelViewSet):<br>    queryset = models.UserInfo.objects.all()<br>    serializer_class = UserSerializer</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 3.9 试图</span><br><span class="line">#### 3.9.1 GenericViewSet</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views.s7_viewset import TestView</p>
-<p>urlpatterns = [<br>    url(r’test/‘, TestView.as_view({‘get’:’list’}), name=’test’),<br>    url(r’detail/(?P<pk>\d+)/‘, TestView.as_view({‘get’:’list’}), name=’xxxx’),<br>]</p>
+<p>urlpatterns = [<br>    url(r’test/‘, TestView.as_view({‘get’:’list’}), name=’test’),<br>    url(r’detail/(?P<pk>\d+)/‘, TestView.as_view({‘get’:’list’}), name=’xxxx’),<br>]</pk></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <p>#!/usr/bin/env python</p>
 <h1 id="coding-utf-8-14"><a href="#coding-utf-8-14" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework import viewsets<br>from rest_framework.response import Response</p>
@@ -1120,7 +1120,7 @@ def delete(self, request, *args, **kwargs):
 def edit(self, request, *args, **kwargs):
     pass</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 3.9.2 ModelViewSet(自定义URL)</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views import s10_generic</p>
-<p>urlpatterns = [<br>    url(r’^test/$’, s10_generic.UserViewSet.as_view({‘get’: ‘list’, ‘post’: ‘create’})),<br>    url(r’^test/(?P<pk>\d+)/$’, s10_generic.UserViewSet.as_view(<br>        {‘get’: ‘retrieve’, ‘put’: ‘update’, ‘patch’: ‘partial_update’, ‘delete’: ‘destroy’})),<br>]</p>
+<p>urlpatterns = [<br>    url(r’^test/$’, s10_generic.UserViewSet.as_view({‘get’: ‘list’, ‘post’: ‘create’})),<br>    url(r’^test/(?P<pk>\d+)/$’, s10_generic.UserViewSet.as_view(<br>        {‘get’: ‘retrieve’, ‘put’: ‘update’, ‘patch’: ‘partial_update’, ‘delete’: ‘destroy’})),<br>]</pk></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <p>#!/usr/bin/env python</p>
 <h1 id="coding-utf-8-15"><a href="#coding-utf-8-15" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework.viewsets import ModelViewSet<br>from rest_framework import serializers<br>from .. import models</p>
@@ -1138,7 +1138,7 @@ def edit(self, request, *args, **kwargs):
 <p>class GroupViewSet(viewsets.ModelViewSet):<br>    “””<br>    API endpoint that allows groups to be viewed or edited.<br>    “””<br>    queryset = Group.objects.all()<br>    serializer_class = GroupSerializer</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3.10 渲染器</span><br><span class="line">根据用户请求URL或用户可接受的类型,筛选出合适的渲染组件</span><br><span class="line">用户请求URL:</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test&#x2F;?format&#x3D;json</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test.json</span><br><span class="line">用户请求头:</span><br><span class="line">- Accept:text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8</span><br><span class="line"></span><br><span class="line">#### 3.10.1 Json</span><br><span class="line">访问URL:</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test&#x2F;?format&#x3D;json</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test.json</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test&#x2F;</span><br><span class="line">路由:</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views import s11_render</p>
-<p>urlpatterns = [<br>    url(r’^test/$’, s11_render.TestView.as_view()),<br>    url(r’^test.(?P<format>[a-z0-9]+)’, s11_render.TestView.as_view()),<br>]</p>
+<p>urlpatterns = [<br>    url(r’^test/$’, s11_render.TestView.as_view()),<br>    url(r’^test.(?P<format>[a-z0-9]+)’, s11_render.TestView.as_view()),<br>]</format></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图:</span><br></pre></td></tr></table></figure>
 <p>#!/usr/bin/env python</p>
 <h1 id="coding-utf-8-16"><a href="#coding-utf-8-16" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework.views import APIView<br>from rest_framework.response import Response<br>from rest_framework import serializers</p>
@@ -1168,7 +1168,7 @@ def edit(self, request, *args, **kwargs):
     ser = TestSerializer(instance=user_list, many=False)
     return Response(ser.data)</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#### 3.10.4 自定义显示模版</span><br><span class="line">访问URL:</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test&#x2F;?format&#x3D;html</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test.html</span><br><span class="line">- http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;test&#x2F;</span><br><span class="line">路由</span><br></pre></td></tr></table></figure>
 <p>from django.conf.urls import url, include<br>from web.views import s11_render</p>
-<p>urlpatterns = [<br>    url(r’^test/$’, s11_render.TestView.as_view()),<br>    url(r’^test.(?P<format>[a-z0-9]+)’, s11_render.TestView.as_view()),<br>]</p>
+<p>urlpatterns = [<br>    url(r’^test/$’, s11_render.TestView.as_view()),<br>    url(r’^test.(?P<format>[a-z0-9]+)’, s11_render.TestView.as_view()),<br>]</format></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">试图</span><br></pre></td></tr></table></figure>
 <p>#!/usr/bin/env python</p>
 <h1 id="coding-utf-8-19"><a href="#coding-utf-8-19" class="headerlink" title="-- coding:utf-8 --"></a>-<em>- coding:utf-8 -</em>-</h1><p>from rest_framework.views import APIView<br>from rest_framework.response import Response<br>from rest_framework import serializers<br>from rest_framework.renderers import TemplateHTMLRenderer<br>from . import models</p>

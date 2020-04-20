@@ -581,9 +581,9 @@ $(function() {
 </head>
 <body>
     <div>
-        <input type="text" id="txt"/>
-        <input type="button" id="btn" value="提交" onclick="sendMsg();"/>
-        <input type="button" id="close" value="关闭连接" onclick="closeConn();"/>
+        <input type="text" id="txt">
+        <input type="button" id="btn" value="提交" onclick="sendMsg();">
+        <input type="button" id="close" value="关闭连接" onclick="closeConn();">
     </div>
     <div id="container" style="border: 1px solid #dddddd;margin: 20px;min-height: 500px;">
 
@@ -621,8 +621,8 @@ $(function() {
             message: $(&quot;#txt&quot;).val()
         };
         wsUpdater.socket.send(JSON.stringify(msg));
-    }</code></pre><p></script></p>
-</body>
+    }</code></pre><p></p>
+</div></body>
 </html>
 ```
 
