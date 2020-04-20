@@ -459,6 +459,7 @@ $(function() {
             </span>
 
               <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
                 <i class="fa fa-folder-o"></i>
               </span>
               
@@ -642,7 +643,8 @@ $(function() {
       $(".fa-clipboard").click(function(){
         swal({   
           title: "",   
-          text: '复制成功',   
+          text: '复制成功',
+          icon: "success",
           html: false,
           timer: 500,   
           showConfirmButton: false
@@ -687,7 +689,8 @@ $(function() {
       $(".fa-clipboard").click(function(){
         swal({   
           title: "",   
-          text: '复制成功',   
+          text: '复制成功',
+          icon: "success",
           html: false,
           timer: 500,   
           showConfirmButton: false
@@ -1661,6 +1664,9 @@ $(function() {
 
   
 
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
   <!-- 页面点击小红心，在末尾添加，避免找不到 -->
   <script type="text/javascript" src="/js/src/love.js"></script>
 </body>
