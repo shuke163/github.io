@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://shuke163.github.io/"/>
-  <updated>2020-04-20T01:53:05.145Z</updated>
+  <updated>2020-04-20T05:53:44.102Z</updated>
   <id>https://shuke163.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何禁用自动命名的Django迁移</title>
+    <link href="https://shuke163.github.io/2020/04/20/"/>
+    <id>https://shuke163.github.io/2020/04/20/</id>
+    <published>2020-04-20T05:52:12.000Z</published>
+    <updated>2020-04-20T05:53:44.102Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="如何禁用自动命名的Django迁移"><a href="#如何禁用自动命名的Django迁移" class="headerlink" title="如何禁用自动命名的Django迁移"></a>如何禁用自动命名的Django迁移</h2><blockquote><p>本文主要介绍如何在<code>Django</code>执行<code>makemigrations</code>时完成文件的命名</p></blockquote><p>当你运行Django的manage.py makemigrations时，它将根据迁移的内容为迁移生成一个名称。例如，如果你是在添加单个字段，它会将迁移命名为0002_mymodel_myfield.py。但是，当你的迁移中包含不止一步操作时，它将使用一个简单的‘auto’和当前日期+时间进行命名，例如，0002_auto_20200113_1837.py。你可以为makemigrations提供-n/–name参数，但是开发人员经常会忘记这一点。</p><p>命名是编程中一个众所周知的难题。管理这些具有自动名称的迁移会很困难: 如果不打开它们，你就无法分辨哪个是哪个，而且如果它们是在同一天生成的，它们就会有相同的名称，那你就可能会混淆它们。</p><p>这在以下情况中会非常令人头疼:</p><ul><li>变基分支</li><li>挖掘历史记录</li><li>部署到生产环境</li></ul><p>在最坏的情况下，运行错误的迁移可能会导致数据丢失!<br>我们还很容易忘记修改迁移名称和提交，因为Django不会提示你输入一个更好的名称。我们可以通过一些自动化措施来防范这种情况!</p><p>让我们来看看实现这一点的三种技术。</p><ol><li><strong>重写makemigrations以要求提供 -n/–name</strong><br>这个方法使用了重写内置管理命令的技术，这与我在文章《让Django测试总是重新构建数据库(如果它存在的话)》中使用的技术相同。</li></ol><p>在你的项目的“核心”应用程序中添加一个新的makemigrations命令(例如:myapp/management/commands/makemigrations.py)，内容如下:</p>]]></content>
+    
+    <summary type="html">
+    
+      如何禁用自动命名的Django迁移
+    
+    </summary>
+    
+    
+      <category term="Django" scheme="https://shuke163.github.io/categories/Django/"/>
+    
+    
+      <category term="Django" scheme="https://shuke163.github.io/tags/Django/"/>
+    
+  </entry>
   
   <entry>
     <title>一些有用的Python库</title>
