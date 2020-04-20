@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DevOps," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="最全的DevOps工具集合，再也不怕选型了！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最全的DevOps工具集合，再也不怕选型了！
+">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="最全的DevOps工具集合，再也不怕选型了！">
+<meta property="article:published_time" content="2020-04-20T12:34:17.000Z">
+<meta property="article:modified_time" content="2020-04-20T12:45:11.401Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="DevOps">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/最全的DevOps工具集合，再也不怕选型了！/"/>
+
+
+
+
+
+  <title>最全的DevOps工具集合，再也不怕选型了！
+ | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">最全的DevOps工具集合，再也不怕选型了！
+</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T20:34:17+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">7.1k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">25(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/" class="leancloud_visitors" data-flag-title="最全的DevOps工具集合，再也不怕选型了！
+">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  最全的DevOps工具集合，再也不怕选型了！
+
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>随着 DevOps 的出现频率越来越高，很多企业都在蠢蠢欲动，想要设计和开发 DevOps 平台。工欲善其事必先利其器，本文为大家总结了 DevOps 各个阶段可以选择的工具，也许 DevOps 平台的技术选型在这一篇文章中就可以完成。<br>DevOps 的目标是持续改进，因此技术选型也是分阶段的。</p>
+<ol>
+<li>规划工具<br>在规划阶段最重要的是要制定共同的目标、保证透明度和赋权。目前业内比较常用的规划工具主要包括 GitLab、TaskTop、CollabNet VersionOne、Pivotal Tracker、Trello 和 Azure Boards。</li>
+</ol>
+<p>GitLab<br>GitLab 是基于 Web 的 DevOps 生命周期工具。它提供了一个 Git 存储库管理器，使用由 GitLab Inc. 开发的开源许可证来提供 Wiki、问题跟踪和 CI/CD 管道功能。<br>GitLab 提供了一些工具用来在实践中规划事务，还可以用来查看工作的范围。</p>
+<p>Tasktop<br>Tasktop 可以将所有这些工具添加到 Tasktop 支持的全套敏捷和应用程序生命周期管理（ALM）、PPM 和 ITSM 工具中，从而在整个生命周期中提供前所未有的可视化特性。</p>
+<p>CollabNet VersionOne<br>VersionOne 支持 Scrum、看板、XP、SAFe 和混合开发方法，简化了跨所有团队、程序、软件产品组合和企业的计划、跟踪和报告工作</p>
+<p>Pivotal Tracker<br>全球各地开发人员都可以使用这款敏捷项目管理工具，围绕一个共享的，带有优先级的 backlog 进行实时协作。</p>
+<p>Trello<br>Trello 是基于 Web 的看板风格列表制作应用程序，是 Atlassian 的子应用。<br>许多团队在规划各个 sprint 时都会用它。</p>
+<p>Azure Boards<br>可以跟踪软件项目，并使用敏捷工具（包括 Scrum boards、看板 boards 和仪表板等）改进规划工作。同时，还有工具可以帮助你可视化工作、共享计划、跟踪进度，并确保你正在向目标迈进。</p>
+<ol start="2">
+<li>问题跟踪<br>问题跟踪阶段是为了提供客户响应能力，减少知识浪费，缩短反馈链路。目前业内比较常用的问题跟踪工具包括 Atlassian Jira、JetBrains YouTrack 和 ZenDesk。</li>
+</ol>
+<p>Atlassian Jira<br>Jira 是 Atlassian 开发的专用问题跟踪产品，提供了错误跟踪和敏捷项目管理功能。</p>
+<p>JetBrains YouTrack<br>YouTrack 是由 JetBrains 开发的，基于浏览器的专用商业软件，融合了错误跟踪器、问题跟踪系统以及项目管理软件。它的卖点是基于查询的问题搜索，拥有自动完成、分批处理问题、自定义问题属性集，以及创建自定义工作流的特性。</p>
+<p>Zendesk<br>Zendesk 可以轻松地从所有渠道跟踪每一个客户问题。目前 Uber 和 Airbnb 等许多公司都在使用 Zendesk Support 作为他们的问题跟踪软件。</p>
+<ol start="3">
+<li>源代码控制<br>源代码控制主要是为了控制资产，减少沟通障碍，赋能团队。目前业内比较常用的 SCM 工具包括 Git、GitHub、GitLab、Bitbucket 和 Subversion。</li>
+</ol>
+<p>Git<br>Git 是一个分布式版本控制系统，用来在软件开发过程中跟踪源代码的更改。它是专为协调不同程序员的工作而设计的，也可用于跟踪各种文件集中的更改。它的优势包括速度、数据完整性以及对分布式非线性工作流的支持</p>
+<p>GitHub<br>GitHub 提供了 Git 的分布式版本控制和源代码管理功能，自己也有很多特性。</p>
+<p>GitLab<br>GitLab 中的版本控制提供了世界一流的源代码管理功能，可帮助你的开发团队共享、协作并尽可能提高生产力。</p>
+<p>Bitbucket<br>Bitbucket 是 Atlassian 所有的、基于 Web 的版本控制库托管服务，可用在使用 Mercurial 或 Git 版本控制系统的源代码和开发项目上。</p>
+<p>Subversion<br>Apache Subversion 是一个软件版本和修订控制系统，其根据 Apache 许可开源。软件开发人员可使用 Subversion 来维护源代码、网页和文档等文件的当前和历史版本。</p>
+<ol start="4">
+<li>构建工具<br>构建阶段主要是为了保持打包的一致性，自动执行容易出错的活动，生成早期质量信号。目前业内比较常用的构建工具包括 Maven/Gradle、MSBuild、Rake、JFrog Artifactory、Sonatype Nexus 和 NuGet。</li>
+</ol>
+<p>Maven/Gradle<br>Maven 是主要用于 Java 项目的自动化构建工具。Maven 还可以构建和管理以 C#、Ruby、Scala 等语言编写的项目。<br>Gradle 是一个开源的自动化构建系统，其基于 Apache Ant 和 Apache Maven 的理念，并引入了基于 Groovy 的领域特定语言，替代 Apache Maven 使用的 XML 格式来声明项目配置。</p>
+<p>MSBuild<br>Microsoft Build Engine（通常称为 MSBuild）是用来托管代码及原生 C++ 代码的免费开源构建工具集，它之前是.NET Framework 的一部分。Visual Studio 依赖 MSBuild（反之则不然）。</p>
+<p>Rake<br>Rake 是一个软件任务管理和自动化构建工具。它允许用户指定任务并描述依赖关系。你也可以对命名空间中的组任务执行这些操作。</p>
+<p>JFrog Artifactory<br>JFrog Artifactory 这款工具可用来存储构建过程的二进制输出，以备分发和部署之用。Artifactory 支持许多软件包格式，如 Maven、Debian、npm、Helm、Ruby、Python 和 Docker。<br>JFrog 提供了高可用性、复制、灾难恢复和可伸缩特性，并兼容许多本地和云存储产品。</p>
+<p>Sonatype Nexus<br>Sonatype Nexus 是一款存储库管理器。你可以用它代理、收集和管理依赖项，这样就用不着和一大堆 JAR 打交道了。它简化了软件分发的工作。<br>你可以配置自己的内部构建，然后发布到 Nexus 上供其他开发者使用。</p>
+<p>NuGet<br>NuGet 是.NET 的软件包管理器。NuGet 客户端工具提供了生成和使用软件包的功能。<br>NuGet Gallery 是为所有包作者和使用者提供的软件包中心存储库。</p>
+<ol start="5">
+<li>测试工具<br>测试阶段主要是检测内部质量，建立对已部署构件的信心。目前业内常用的测试工具包括 JUnit、xUnit.net、Selenium、Jasmine 和 Cucumber。</li>
+</ol>
+<p>JUnit<br>JUnit 是用于 Java 编程语言的单元测试框架。JUnit 在测试驱动开发的环境中扮演着重要角色，从 SUnit 起源的一组单元测试框架（统称为 xUnit）之一。</p>
+<p>xUnit.net<br>xUnit.net 是由 NUnit 的原作者编写的，用于.NET Framework 的开源单元测试工具。</p>
+<p>Selenium<br>Selenium 是用于测试 Web 应用程序的可移植框架。Selenium 提供了一种回放工具，使用户无需学习测试脚本语言就能编写功能测试。</p>
+<p>Jasmine<br>Jasmine 是用于 JavaScript 的开源测试框架。它可以在任何支持 JavaScript 的平台上运行，不会入侵应用程序或 IDE，还有着易读的语法。在它身上可以找到 Screw.Unit、JSSpec、JSpec 和 RSpec 等诸多单元测试框架的影子</p>
+<p>Cucumber<br>Cucumber 是一种支持行为驱动开发的软件工具。Cucumber BDD 方法的核心是一种称为 Gherkin 的普通语言解析器。它能用客户可以理解的逻辑语言来指定预期的软件行为。</p>
+<ol start="6">
+<li>持续集成和部署（CI/CD）<br>CI 工具的存在是为了快速反馈和减少缺陷、等待。目前业务比较常用的 CI 工具包括 Jenkins、CircleCI、Travis CI、Concourse、AWS CodePipeline 和 Azure Pipelines。</li>
+</ol>
+<p>Jenkins<br>Jenkins 是一个免费的开源自动化服务器。Jenkins 可用来自动化软件开发过程中非人类参与的工作，基于 CI 和 CD 的技术理念。这是一个基于服务器的系统，可在 servlet 容器（例如 Apache Tomcat）中运行。</p>
+<p>CircleCI<br>CircleCI 是世界上最大的共享 CI/CD 平台，也是代码从构思到交付过程的中央枢纽。<br>作为最常用的 DevOps 工具之一，CircleCI 每天处理超过 100 万个构建，因此收集了大量关于工程团队工作方式以及代码运行方式的数据。Spotify、Coinbase、Stitch Fix 和 BuzzFeed 等公司使用 CircleCI 来提升工程团队的生产力、发布更好的产品并更快地将产品推向市场。</p>
+<p>Travis CI<br>TravisCI 是一项托管 CI 服务，用于构建和测试 GitHub 上托管的软件项目。Travis CI 为私有项目提供各种付费计划，并提供了开源的免费方案。TravisPro 提供了在客户自己的硬件上定制化部署专有版本的能力。</p>
+<p>Concourse<br>Concourse 是用 Go 编写的自动化系统。人们经常将它用于 CI/CD，其卖点是强大的可伸缩性，可以提供很简单或者很复杂的自动化管道。</p>
+<ol start="7">
+<li><p>AWS CodePipeline<br>AWS CodePipeline 是一项完全托管的 CD 服务，可帮助你自动化发布管道，以实现快速、可靠的应用程序和基础架构更新流程。<br>每当你更改代码时，CodePipeline 都会根据你定义的发布模型自动执行发布流程中的构建、测试和部署阶段。这使你能够快速可靠地交付功能和更新。<br>你可以轻松地将 AWS CodePipeline 与第三方服务（例如 GitHub）或你自己的自制插件集成。使用 AWS CodePipeline 时你按需付费即可。它没有前期费用或长期承诺。</p>
+</li>
+<li><p>Azure Pipelines<br>可用它获取适用于 Linux、macOS 和 Windows 的云托管管道。生成 Web、桌面和移动应用程序。部署到云端或本地。<br>使用 Pipelines 自动化构建和部署流程可以节约很多时间，从而腾出更多资源投入创造活动。<br>而 CD 工具主要是为了将复杂的管道自动化，统一团队目标。目前业内比较常用的 CD 工具包括 Spinnaker、Octopus Deploy 和 AWS CodeDeploy。</p>
+</li>
+</ol>
+<p>Spinnaker<br>Spinnaker 是一个免费的开源 CD 软件平台，最初由 Netflix 开发，不久被谷歌看中并发展起来。<br>Spinnaker 是一个多云 CD 平台，能够以高速度和强信心来发布软件更改。它提供了强大而灵活的管道管理系统，并支持与主流云提供商的集成。</p>
+<p>Octopus Deploy<br>Octopus Deploy 是全球领先的 CD 团队使用的自动部署和发布管理工具。<br>Octopus 是一个工具集，可以显著简化任何 DevOps 流程，以通过云或虚拟机连续测试和部署大量微服务或应用程序。</p>
+<p>AWS CodeDeploy<br>AWS CodeDeploy 是一项完全托管的部署服务，可自动将软件部署到各种计算服务上，例如 Amazon EC2、AWS Fargate、AWS Lambda 和你的本地服务器等。<br>你可以使用 AWS CodeDeploy 自动执行软件部署，无需容易出错的手动操作。</p>
+<ol start="7">
+<li>配置管理工具<br>配置管理工具的作用是将基础架构代码化，加强一致性。目前业内常用的配置管理工具包括 Terraform、BOSH、Chef、Ansible、Puppet、Google Cloud Deployment Manager。</li>
+</ol>
+<p>Terraform<br>Terraform 是由 HashiCorp 创建的开源基础架构即代码（IaC）软件工具。它让用户能够使用 Hashicorp 配置语言或 JSON（可选）这两种高级配置语言来定义和配置数据中心基础架构。</p>
+<p>BOSH<br>BOSH 是一个将小型和大规模云软件的发布工程、部署和生命周期管理统一在一起的项目。BOSH 可以在数百个 VM 上配置和部署软件。它还能以接近零的停机时间执行监视、故障恢复和软件更新任务。<br>虽然 BOSH 是为了部署 Cloud Foundry 而开发的，但它也可以用来部署几乎所有软件（例如 Hadoop）。BOSH 特别适合大型分布式系统。<br>此外，BOSH 支持多个基础架构即服务（IaaS）提供商，例如 VMware vSphere、Google Cloud Platform、Amazon WebServices EC2、Microsoft Azure、OpenStack 和阿里云。它带有一个云提供商界面（CPI），使用户可以扩展 BOSH 以支持其他 IaaS 提供商，如 Apache CloudStack 和 VirtualBox 等。</p>
+<p>Chef<br>Chef 是一种配置管理工具，用来处理物理服务器、虚拟机和云中的机器设置。许多公司使用 Chef 软件来控制和管理自己的基础架构，他们包括 Facebook、Etsy、Cheezburger 和 Indiegogo 等。<br>Chef 是持续自动化软件领域的领导者、应用程序自动化领域的创新者，也是 DevOps 运动的创始人之一。Chef 与全球 1000 多家最具创新力的公司合作，以实现他们数字化转型的愿景，并提供可快速交付软件的实践和平台。</p>
+<p>Ansible<br>Ansible 是一种开源的软件预备、配置管理和应用程序部署工具。它可以在许多类 Unix 系统上运行，既可以配置类 Unix 系统也可以配置微软 Windows。它自带声明式语言来描述系统配置。</p>
+<p>Puppet<br>Puppet 提供的能力可以定义系统所需的软件和配置，然后在初始设置后保持指定状态。<br>用户使用与 Ruby 类似的声明式领域特定语言（DSL）来定义指定环境或基础架构的配置参数。Puppet 使用称为 Facter 的一个实用程序获取系统信息，该程序跟随 Puppet 软件包一并安装。<br>Puppet master 是一个系统，使用清单来管理它所控制的所有节点的重要配置信息。<br>Master 控制的节点都安装了 Puppet 并运行 Puppet 代理（即守护程序）。代理收集的节点配置信息将发送到 Puppet master。然后，Puppet master 根据节点的配置策略来编制一个目录。每个节点都使用这些信息来将任何必要的配置更新应用到自己身上。<br>Puppet 使用的是 pull 模式，在该模式下，代理定期轮询 master，以检索特定于站点和节点的配置。在这种基础架构中，受管理的节点通常以后台服务的形式运行 Puppet 代理应用程序。</p>
+<p>Google Cloud Deployment Manager<br>Google Cloud Deployment Manager 是一项基础架构管理服务，可轻松创建、部署和管理 Google Cloud Platform 资源。</p>
+<ol start="8">
+<li>云平台<br>云平台主要是为了自动化、观察软件的运行时，目前业内常用的云平台包括 Amazon Web Services、Microsoft Azure、Google Cloud Platform、Pivotal Cloud Foundry、Heroku 和 Container Schedulers。</li>
+</ol>
+<p>Amazon Web Services<br>Amazon Web Services（AWS）是一个安全的云服务平台，提供计算能力、数据库存储、内容交付等功能，以帮助业务扩展和成长。<br>简单来说，AWS 允许你进行以下操作：<br>在云中运行 Web 和应用程序服务器以托管动态网站<br>将所有文件安全地存储在云中，可以从任何地方访问它们<br>使用托管数据库（如 MySQL、PostgreSQL、Oracle 或 SQLServer）存储信息<br>使用内容交付网络（CDN）在世界范围内快速交付静态和动态文件<br>向你的众多客户发送大量电子邮件</p>
+<p>Microsoft Azure<br>Microsoft Azure 是由微软创建的一种云计算服务，可通过微软管理的数据中心构建、测试、部署和管理应用程序和服务。<br>Microsoft Azure（以前称为 Windows Azure）是微软的公共云计算平台。它提供了多种云服务，包括计算、分析、存储和网络等用途。用户可以在这些服务中挑选自己所需的选项，以在公有云中开发和扩展新的应用程序，或运行现有应用程序。</p>
+<p>Google Cloud Platform<br>由谷歌提供的 Google Cloud Platform 是一套云计算服务，运行在谷歌内部为其最终用户产品（例如 Google Search、Gmail 和 YouTube）打造的同一套基础架构上。<br>Google Cloud Platform 提供了计算资源，用于在 Web 上部署和运营应用程序。它的专长是为个人和企业提供构建和运行软件的场所，并使用 Web 来连接软件用户。<br>谷歌的云计算服务可帮助你直面各种业务挑战，包括数据管理、混合和多云以及 AI 和 ML 等。</p>
+<p>Pivotal Cloud Foundry<br>Pivotal Cloud Foundry（PCF）是一个开源、多云的应用程序平台即服务（PaaS），由 501 组织 Cloud Foundry Foundation 管理。该软件最初由 VMware 开发，但之后转移到了 Pivotal Software。随着 VMware 于 2019 年底收购 Pivotal，它也重新回到了 VMware。<br>PCF 是用于部署、管理和持续交付应用程序、容器和函数的多云平台。PCF 允许开发人员快速部署和交付软件，而无需管理底层基础架构。</p>
+<p>Pivotal Cloud Foundry<br>Pivotal Cloud Foundry（PCF）是一个开源、多云的应用程序平台即服务（PaaS），由 501 组织 Cloud Foundry Foundation 管理。该软件最初由 VMware 开发，但之后转移到了 Pivotal Software。随着 VMware 于 2019 年底收购 Pivotal，它也重新回到了 VMware。<br>PCF 是用于部署、管理和持续交付应用程序、容器和函数的多云平台。PCF 允许开发人员快速部署和交付软件，而无需管理底层基础架构。</p>
+<ol start="9">
+<li>容器调度程序<br>容器调度程序的主要任务是在最合适的主机上启动容器，并将它们连接起来。它必须具备自动故障转移能力，并且在数据太多，单个实例无法处理 / 计算时扩展容器。<br>三种最受欢迎的容器调度程序分别是 Docker Swarm、Apache Mesos 和 Kubernetes。</li>
+</ol>
+<p>Docker Swarm<br>DockerSwarm 是 Docker 开发的容器调度程序。由 Docker 开发的这个集群解决方案提供了很多优势，比如说它使用了标准的 Docker API。Swarm 的架构由两大元素组成：</p>
+<p>Apache Mesos 和 Mesosphere Marathon<br>Mesos 的目的是建立一个可扩展且高效的系统，以支持当前和将来的各种框架。这也是主要问题所在：Hadoop 和 MPI 之类的框架都是独立开发的，因此无法在各个框架之间进行细粒度的共享。<br>Mesos 的对策是添加一个资源共享薄层，为框架提供访问集群资源的公共接口。Mesos 正在将对调度的控制权委派给框架，因为许多框架已经实现了复杂的调度机制。<br>根据要在集群上运行的作业类型可以将框架分为四类，其中一些具有 Marathon 之类的原生 Docker 支持。Mesos 0.20.0 中添加了对 Docker 容器的支持。<br>我们将重点介绍 Mesos 与 Marathon 的搭配用法，因为后者是 Mesosphere 积极维护的框架，在调度方面提供了许多功能，如约束、运行状况检查、服务发现和负载平衡等。</p>
+<p>如图所见，集群中有四个元素。ZooKeeper 帮助 Marathon 查找 Mesos master 的地址，可以使用多个实例来处理故障。<br>Marathon 负责启动、监视并扩展容器。Mesos master 将分配给节点的任务发送给 Marathon，并在节点具有一些可用的 CPU/RAM 时向 Marathon 提出要约。Mesos slaves 负责运行容器并提交自身可用资源的列表。</p>
+<p>Kubernetes<br>Kubernetes 是用于 Docker 容器的编排系统，使用标签和 pods 的概念将容器分为许多逻辑单元。Pod 是 Kubernetes 与其他两种解决方案之间的主要区别所在——它们是位于同一地点的容器的集合，共同组成部署和调度服务。与基于基于相似性的容器协同调度机制（如 Swarm 和 Mesos）相比，这种方法简化了集群的管理。<br>Kubernetes 调度程序的任务是监视 PodSpec 为空的 Pod。NodeName 赋予一个值，以将容器调度在集群中的某个位置。<br>这是与 Swarm 和 Mesos 不一样的地方，因为 Kubernetes 允许开发人员在运行 Pod 时通过定义 PodSpec.NodeName 来绕过调度程序。<br>调度程序使用谓词和优先级来定义容器应运行的节点。这些参数的默认值可以使用新的调度程序策略配置覆盖。<br>如果使用命令行标志 policy-config-file 指向描述启动 Kubernetes 时要使用的谓词和优先级的 JSON 文件，调度程序就会使用管理员定义的策略。</p>
+<ol start="10">
+<li>监控和记录工具<br>监控和记录工具主要是为了在发生故障时快速响应，快速恢复，同时减少事故期间的人员参与。目前业内比较常用的监控和记录工具包括 ELK Stack、Datadog、New Relic、Prometheus、Zipkin 和 Azure Monitor。</li>
+</ol>
+<p>ELK Stack<br>ELK Stack 是三个开源产品的集合——它们分别是 Elasticsearch、Logstash 和 Kibana。它们都是由 Elastic 公司开发、管理和维护的。<br>E 代表 ElasticSearch，用于存储日志<br>L 代表 Logstash，用于传输、处理和存储日志<br>K 代表 Kibana，是一种可视化工具（Web 界面）</p>
+<p>Datadog<br>Datadog 是针对云规模应用程序的监视服务，可通过基于 SaaS 的数据分析平台来监视服务器、数据库、工具和服务。<br>Datadog Application Performance Monitoring（APM 或跟踪）可与你的日志和基础架构监视器并用，提供自动生成的仪表板（用于监视关键指标，如请求量和延迟）乃至单个请求的跟踪细节，帮助你深入了解应用程序的性能表现。<br>应用程序收到请求时，Datadog 可以在整个分布式系统上查看跟踪，并向你显示关于该请求状况的详细系统数据。</p>
+<p>New Relic<br>New Relic 是一家位于加州旧金山的技术公司，致力于开发基于云的软件，以帮助网站和应用程序所有者跟踪服务性能。<br>New Relic 开发的用于应用程序性能监视（APM）的软件分析产品，可提供有关 Web 应用程序性能以及最终用户体验满意度的实时和趋势数据。</p>
+<p>Prometheus<br>Prometheus 是用于事件监视和警报的免费软件应用程序。它将实时指标记录在一个时间序列数据库中，该数据库使用 HTTP 拉取模型构建，支持灵活查询和实时警报。<br>Prometheus 服务器的工作方式是抓取，也就是调用监视器上配置的各个节点的指标端点。它定期收集这些指标并将其存储在本地。节点在 Prometheus 服务器抓取的端点上公开这些指标。</p>
+<p>Zipkin<br>Zipkin 是一个分布式跟踪系统。它能收集用来解决服务架构中延迟问题所需的时序数据。其功能包括收集和查找这类数据。<br>如果日志文件中有跟踪 ID，则你可以直接跳至该跟踪 ID。否则，你可以基于属性来查询，可用属性包括服务、操作名称、tagsm 和持续时间等。系统会为你总结一些有趣的数据，例如在一个服务中花费的时间百分比，以及操作是否失败等。</p>
+<p>Azure Monitor<br>Azure Monitor 提供了一个全面的解决方案，从你的云和本地环境中收集、分析数据和执行遥测任务，从而最大程度地提高应用程序和服务的可用性和性能。<br>它可以帮助你了解应用程序的性能，并主动识别影响它们的问题以及它们所依赖的资源。<br>你可以使用 Azure Monitor 做很多事情，例如：<br>使用 Application Insights 检测和诊断跨应用程序和依赖项的问题<br>将基础架构问题与分别适用于 VM/ 容器的 AzureMonitor 相关联<br>使用 Log Analytics 深度分析监视数据，以进行故障排除和深度诊断<br>通过智能警报和自动化操作支持大规模运营<br>使用 Azure 仪表板和工作簿创建可视化内容</p>
+<ol start="11">
+<li>通讯工具<br>通讯工具主要是用于多团队沟通，减少等待时间，改善协作能力。目前业内比较常用的通讯工具包括 Slack、Microsoft Teams、Google Hangouts 和 Zoom。</li>
+</ol>
+<p>Slack<br>Slack 是 Slack Technologies 开发的专用即时消息平台。<br>Slack 本质上是整个公司的聊天室，旨在取代电子邮件作为你交流和共享信息的主要方法。它的工作空间使你可以按频道来组织小组讨论，并支持私信功能，可以一站式共享信息和文件等。</p>
+<p>Microsoft Teams<br>Microsoft Teams 是一个统一的通信和协作平台，提供了可靠的工作聊天、视频会议、文件存储和应用程序集成特性。<br>Teams 是基于聊天的协作工具，可为跨越全球、远程和分散的团队提供在一个公共空间共同工作和共享信息的能力。它有一些很酷的功能，如文档协作、一对一聊天和团队聊天等等。</p>
+<p>Google Hangouts<br>Google Hangouts 是谷歌开发的一种通讯软件产品。Hangouts 最初是 Google+ 的功能，后来在 2013 年成为独立产品，当时谷歌也开始将 Google+ Messenger 和 Google Talk 的功能集成到 Hangouts 中。<br>Hangouts Chat 是一种与组织中的成员交流的有效方法。你可以向一位或多位同事发送消息，创建空间来与多人开始持续会话，并使用机器助手来帮助你自动化操作。Chat 可在你的计算机浏览器以及适用于 Android 和 iOS 的移动应用中使用。</p>
+<p>Zoom<br>Zoom Video Communications 是一家远程会议服务公司，总部位于加州圣何塞。它提供了将视频会议、在线会议、聊天和移动协作结合在一起的远程会议服务。<br>对于寻求整体业务解决方案的团队来说，Skype 是更好的选择。Zoom 非常适合经常进行视频聊天和会议的团队。但是，这两种工具都不是专门为远程工作而构建的。</p>
+<ol start="12">
+<li>知识共享工具<br>知识共享工具主要是为了提高新员工的生产力，减少重复错误。目前比较常用的知识共享工具包括 GitHub Pages、Confluence、Jekyll 和 Google Sites。</li>
+</ol>
+<p>GitHub Pages<br>GitHub Pages 是一种静态站点托管服务，可直接从 GitHub 上的存储库中获取 HTML、CSS 和 JavaScript 文件，还可以在构建过程中运行这些文件并发布网站。你可以在 GitHub Pages 示例集合中查看 GitHub Pages 网站的示例。</p>
+<p>Confluence<br>Confluence 是 Atlassian 开发和发行的协作软件程序。Atlassian 用 Java 编程语言编写了 Confluence，并于 2004 年首次发布。<br>Confluence 是一个协作 Wiki 工具，用于帮助团队有效地协作和共享知识。借助 Confluence，你可以在 Team Calendars 附加组件的帮助下捕获项目需求、向特定用户分配任务，还能一次管理多个日历。</p>
+<p>Jekyll<br>Jekyll 是一个简单的，博客型的静态网站生成器，可用于个人、项目或组织的网站生成。它是由 GitHub 的联合创始人 Tom Preston-Werner 用 Ruby 编写的，根据开源 MIT 许可发行。<br>Jekyll 是一个解析引擎，打包为一个 Ruby gem，用来从动态组件（例如模板、部件、液态代码、markdown 等）构建静态网站。Jekyll 被称为“简单、博客型的静态站点生成器”。</p>
+<p>Google Sites<br>Google Sites 是谷歌提供的结构化 Wiki 和网页创建工具。Google Sites 宣称的目标是让任何人都能够创建让不同编辑者协作的简单网站。<br>你们可以一起用它为团队、项目或活动创建引人入胜的高质量站点。这些网站在各种设备的屏幕上看起来都很漂亮——所有这些工作都无需学习设计或编程知识。</p>
+<ol start="13">
+<li>小结<br>本文介绍整个 DevOps 工具链——包括规划工具、问题跟踪工具、源代码管理、构建和测试代码、持续集成和部署源代码、管理配置、使用云平台、监控和记录等工具，后面还有沟通和知识共享这些软工具的介绍。<br>DevOps 是一种令人兴奋的工作方式。这不是唯一可行的方法，甚至可能不是最好的方法，将来可能会出现更好的选择。但就目前而言，这是一种团队集体合作，且是通过可持</li>
+</ol>
+<h2 id="refs"><a href="#refs" class="headerlink" title="refs"></a>refs</h2><p><a href="https://medium.com/better-programming/the-devops-toolchain-a56713179700" target="_blank" rel="noopener">https://medium.com/better-programming/the-devops-toolchain-a56713179700</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/">最全的DevOps工具集合，再也不怕选型了！
+</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 20:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 20:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/" title="最全的DevOps工具集合，再也不怕选型了！
+">https://shuke163.github.io/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/">最全的DevOps工具集合，再也不怕选型了！
+</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 20:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 20:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/" title="最全的DevOps工具集合，再也不怕选型了！
+">https://shuke163.github.io/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/%E6%9C%80%E5%85%A8%E7%9A%84DevOps%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88%EF%BC%8C%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%80%95%E9%80%89%E5%9E%8B%E4%BA%86%EF%BC%81/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DevOps/" <i class="fa fa-tag"></i> DevOps</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/%E6%8E%A8%E8%8D%90%E4%B8%80%E4%BA%9B%E8%83%BD%E6%9E%81%E5%A4%A7%E6%8F%90%E9%AB%98%E7%94%9F%E4%BA%A7%E5%8A%9B%E7%9A%84-Python-%E5%BA%93/" rel="next" title="推荐一些能极大提高生产力的 Python 库
+">
+                <i class="fa fa-chevron-left"></i> 推荐一些能极大提高生产力的 Python 库
+
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#refs"><span class="nav-text">refs</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共199.7k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
