@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DevOps," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Jenkins-python-api">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jenkins-python-api">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Jenkins-python-api/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Jenkins-python-api">
+<meta property="article:published_time" content="2020-04-20T11:49:56.000Z">
+<meta property="article:modified_time" content="2020-04-20T11:50:27.192Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="DevOps">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Jenkins-python-api/"/>
+
+
+
+
+
+  <title>Jenkins-python-api | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Jenkins-python-api/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Jenkins-python-api</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T19:49:56+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">7.9k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">47(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/Jenkins-python-api/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Jenkins-python-api/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/Jenkins-python-api/" class="leancloud_visitors" data-flag-title="Jenkins-python-api">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Jenkins-python-api
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Jenkins-python-api"><a href="#Jenkins-python-api" class="headerlink" title="Jenkins-python-api"></a>Jenkins-python-api</h1><hr>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Jenkins作为最流行的自动化流程的核心工具，我们使用它自带的web-ui完全可以满足日常的构建及发布工作，但是如果需要和其他系统做集成就必须二次开发或者通过API方式进行交互了。</p>
+<h2 id="Jenkins介绍及相关"><a href="#Jenkins介绍及相关" class="headerlink" title="Jenkins介绍及相关"></a>Jenkins介绍及相关</h2><p><a href="https://www.w3cschool.cn/jenkins/jenkins-5h3228n2.html" target="_blank" rel="noopener">参考资料</a></p>
+<h2 id="python版本的API调用"><a href="#python版本的API调用" class="headerlink" title="python版本的API调用"></a>python版本的API调用</h2><h3 id="目前python版本的API主要有两个第三方包"><a href="#目前python版本的API主要有两个第三方包" class="headerlink" title="目前python版本的API主要有两个第三方包"></a>目前python版本的API主要有两个第三方包</h3><ol>
+<li>JenkinsApi</li>
+</ol>
+<ul>
+<li><a href="https://github.com/pycontribs/jenkinsapi" target="_blank" rel="noopener">github</a></li>
+<li><a href="https://jenkinsapi.readthedocs.io/en/latest/api.html" target="_blank" rel="noopener">文档</a></li>
+</ul>
+<ol start="2">
+<li>Python Jenkins</li>
+</ol>
+<ul>
+<li><a href="https://github.com/openstack/python-jenkins" target="_blank" rel="noopener">github</a></li>
+<li><a href="http://python-jenkins.readthedocs.io/en/latest/api.html" target="_blank" rel="noopener">文档</a></li>
+</ul>
+<h2 id="API示例"><a href="#API示例" class="headerlink" title="API示例"></a>API示例</h2><h3 id="JenkinsAPi模块"><a href="#JenkinsAPi模块" class="headerlink" title="JenkinsAPi模块"></a>JenkinsAPi模块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;1&#x2F;17</span><br><span class="line"></span><br><span class="line">from jenkinsapi.jenkins import Jenkins</span><br><span class="line">from jenkinsapi.build import Build</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def get_server_instance():</span><br><span class="line">    jenkins_url &#x3D; &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;</span><br><span class="line">    server &#x3D; Jenkins(jenkins_url, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;)</span><br><span class="line">    return server</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server &#x3D; get_server_instance()</span><br><span class="line"></span><br><span class="line"># 1. 版本</span><br><span class="line">print(server.version)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">2.101</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 2. 所有的job列表</span><br><span class="line">print(server.keys())</span><br><span class="line">print(server.get_jobs_list())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#39;ansible-playbook&#39;, &#39;my-github&#39;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 3. 全局信息查看</span><br><span class="line">server.pprint()</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.Hudson&#39;,</span><br><span class="line"> &#39;jobs&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;,</span><br><span class="line">           &#39;color&#39;: &#39;blue&#39;,</span><br><span class="line">           &#39;name&#39;: &#39;ansible-playbook&#39;,</span><br><span class="line">           &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;&#125;,</span><br><span class="line">          &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;,</span><br><span class="line">           &#39;color&#39;: &#39;disabled&#39;,</span><br><span class="line">           &#39;name&#39;: &#39;my-github&#39;,</span><br><span class="line">           &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;&#125;]&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 3. 指定job的config.xml配置</span><br><span class="line">print(&quot;my-github job config:\n&quot;, server[&#39;my-github&#39;].get_config())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">my-github job config:</span><br><span class="line"> &lt;?xml version&#x3D;&#39;1.0&#39; encoding&#x3D;&#39;UTF-8&#39;?&gt;</span><br><span class="line">&lt;project&gt;</span><br><span class="line">  &lt;actions&#x2F;&gt;</span><br><span class="line">  &lt;description&gt;&lt;&#x2F;description&gt;</span><br><span class="line">  &lt;keepDependencies&gt;false&lt;&#x2F;keepDependencies&gt;</span><br><span class="line">  &lt;properties&gt;</span><br><span class="line">    &lt;com.coravy.hudson.plugins.github.GithubProjectProperty plugin&#x3D;&quot;github@1.28.1&quot;&gt;</span><br><span class="line">      &lt;projectUrl&gt;https:&#x2F;&#x2F;github.com&#x2F;shuke163&#x2F;CustAdmin.git&#x2F;&lt;&#x2F;projectUrl&gt;</span><br><span class="line">      &lt;displayName&gt;Admin&lt;&#x2F;displayName&gt;</span><br><span class="line">    &lt;&#x2F;com.coravy.hudson.plugins.github.GithubProjectProperty&gt;</span><br><span class="line">    &lt;jenkins.model.BuildDiscarderProperty&gt;</span><br><span class="line">      &lt;strategy class&#x3D;&quot;hudson.tasks.LogRotator&quot;&gt;</span><br><span class="line">        &lt;daysToKeep&gt;-1&lt;&#x2F;daysToKeep&gt;</span><br><span class="line">        &lt;numToKeep&gt;5&lt;&#x2F;numToKeep&gt;</span><br><span class="line">        &lt;artifactDaysToKeep&gt;-1&lt;&#x2F;artifactDaysToKeep&gt;</span><br><span class="line">        &lt;artifactNumToKeep&gt;-1&lt;&#x2F;artifactNumToKeep&gt;</span><br><span class="line">      &lt;&#x2F;strategy&gt;</span><br><span class="line">    &lt;&#x2F;jenkins.model.BuildDiscarderProperty&gt;</span><br><span class="line">    &lt;hudson.model.ParametersDefinitionProperty&gt;</span><br><span class="line">      &lt;parameterDefinitions&gt;</span><br><span class="line">        &lt;hudson.model.ChoiceParameterDefinition&gt;</span><br><span class="line">          &lt;name&gt;ip&lt;&#x2F;name&gt;</span><br><span class="line">          &lt;description&gt;ip&lt;&#x2F;description&gt;</span><br><span class="line">          &lt;choices class&#x3D;&quot;java.util.Arrays$ArrayList&quot;&gt;</span><br><span class="line">            &lt;a class&#x3D;&quot;string-array&quot;&gt;</span><br><span class="line">              &lt;string&gt;127.0.0.1&lt;&#x2F;string&gt;</span><br><span class="line">            &lt;&#x2F;a&gt;</span><br><span class="line">          &lt;&#x2F;choices&gt;</span><br><span class="line">        &lt;&#x2F;hudson.model.ChoiceParameterDefinition&gt;</span><br><span class="line">      &lt;&#x2F;parameterDefinitions&gt;</span><br><span class="line">    &lt;&#x2F;hudson.model.ParametersDefinitionProperty&gt;</span><br><span class="line">  &lt;&#x2F;properties&gt;</span><br><span class="line">  &lt;scm class&#x3D;&quot;hudson.scm.NullSCM&quot;&#x2F;&gt;</span><br><span class="line">  &lt;canRoam&gt;true&lt;&#x2F;canRoam&gt;</span><br><span class="line">  &lt;disabled&gt;true&lt;&#x2F;disabled&gt;</span><br><span class="line">  &lt;blockBuildWhenDownstreamBuilding&gt;false&lt;&#x2F;blockBuildWhenDownstreamBuilding&gt;</span><br><span class="line">  &lt;blockBuildWhenUpstreamBuilding&gt;false&lt;&#x2F;blockBuildWhenUpstreamBuilding&gt;</span><br><span class="line">  &lt;triggers&#x2F;&gt;</span><br><span class="line">  &lt;concurrentBuild&gt;false&lt;&#x2F;concurrentBuild&gt;</span><br><span class="line">  &lt;builders&gt;</span><br><span class="line">    &lt;hudson.tasks.Shell&gt;</span><br><span class="line">      &lt;command&gt;echo $ip&lt;&#x2F;command&gt;</span><br><span class="line">    &lt;&#x2F;hudson.tasks.Shell&gt;</span><br><span class="line">  &lt;&#x2F;builders&gt;</span><br><span class="line">  &lt;publishers&#x2F;&gt;</span><br><span class="line">  &lt;buildWrappers&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;project&gt;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 4. 得到的是一个包含所有jobs的生成器对象</span><br><span class="line">print(server.get_jobs())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#39;ansible-playbook&#39;, &#39;my-github&#39;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 5. 所有的job描述</span><br><span class="line">for job_name, job_instance in server.get_jobs():</span><br><span class="line">    print(&#39;Job Name:%s&#39; % (job_instance.name))</span><br><span class="line">    print(&#39;Job Description:%s&#39; % (job_instance.get_description()))</span><br><span class="line">    print(&#39;Is Job running:%s&#39; % (job_instance.is_running()))</span><br><span class="line">    print(&#39;Is Job enabled:%s&#39; % (job_instance.is_enabled()))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Job Name:ansible-playbook</span><br><span class="line">Job Description:ansible playbook</span><br><span class="line">Is Job running:False</span><br><span class="line">Is Job enabled:True</span><br><span class="line">Job Name:my-github</span><br><span class="line">Job Description:</span><br><span class="line">Is Job running:False</span><br><span class="line">Is Job enabled:True</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 6. Disable&#x2F;Enable a Jenkins Job</span><br><span class="line">job_name &#x3D; &#39;my-github&#39;</span><br><span class="line">if (server.has_job(job_name)):</span><br><span class="line">    job_instance &#x3D; server.get_job(job_name)</span><br><span class="line">    job_instance.disable()</span><br><span class="line">    print(&#39;Name:%s,Is Job Enabled ?:%s&#39; % (job_name, job_instance.is_enabled()))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Name:my-github,Is Job Enabled ?:False</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 7. CURD Job</span><br><span class="line">server.create_job()</span><br><span class="line">server.delete_job(&#39;ansible-playbook&#39;)</span><br><span class="line">server.copy_job(&#39;my-job&#39;, &#39;new-my-job&#39;)</span><br><span class="line">server.rename_job(&#39;my-github&#39;, &#39;new-my-github&#39;)</span><br><span class="line"></span><br><span class="line"># 8. Get Plugin details</span><br><span class="line">for plugin in server.get_plugins().values():</span><br><span class="line">    print(&quot;Short Name:%s&quot; % (plugin.shortName))</span><br><span class="line">    print(&quot;Long Name:%s&quot; % (plugin.longName))</span><br><span class="line">    print(&quot;Version:%s&quot; % (plugin.version))</span><br><span class="line">    print(&quot;URL:%s&quot; % (plugin.url))</span><br><span class="line">    print(&quot;Active:%s&quot; % (plugin.active))</span><br><span class="line">    print(&quot;Enabled:%s&quot; % (plugin.enabled))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Short Name:jsch</span><br><span class="line">Long Name:Jenkins JSch dependency plugin</span><br><span class="line">Version:0.1.54.1</span><br><span class="line">URL:http:&#x2F;&#x2F;wiki.jenkins-ci.org&#x2F;display&#x2F;JENKINS&#x2F;JSch+plugin</span><br><span class="line">Active:True</span><br><span class="line">Enabled:True</span><br><span class="line">Short Name:ws-cleanup</span><br><span class="line">Long Name:Jenkins Workspace Cleanup Plugin</span><br><span class="line">Version:0.34</span><br><span class="line">URL:http:&#x2F;&#x2F;wiki.jenkins-ci.org&#x2F;display&#x2F;JENKINS&#x2F;Workspace+Cleanup+Plugin</span><br><span class="line">Active:True</span><br><span class="line">Enabled:True</span><br><span class="line">......</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 9. 从已完成的构建中获取版本信息</span><br><span class="line">def getSCMInfroFromLatestGoodBuild(url, jobName, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;):</span><br><span class="line">    J &#x3D; Jenkins(url, username, password)</span><br><span class="line">    job &#x3D; J[jobName]</span><br><span class="line">    lgb &#x3D; job.get_last_good_build()</span><br><span class="line">    return lgb.get_revision()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">version &#x3D; getSCMInfroFromLatestGoodBuild(&quot;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&quot;, &#39;ansible-playbook&#39;)</span><br><span class="line">print(version)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">21c2b6ff6c842a86969f36f75424e17ae27eae68</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 10. 其他</span><br><span class="line">print(server.__dict__)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;username&#39;: &#39;admin&#39;, &#39;password&#39;: &#39;admin123&#39;, &#39;requester&#39;: &lt;jenkinsapi.utils.requester.Requester object at 0x103423710&gt;, &#39;lazy&#39;: False, &#39;jobs_container&#39;: None, &#39;_data&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.Hudson&#39;, &#39;jobs&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;ansible-playbook&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;color&#39;: &#39;blue&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;my-github&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;, &#39;color&#39;: &#39;disabled&#39;&#125;]&#125;, &#39;baseurl&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#39;&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">jobs &#x3D; server.__dict__[&#39;_data&#39;][&#39;jobs&#39;]</span><br><span class="line">print(server.resolve_job_folders(jobs))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;ansible-playbook&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;color&#39;: &#39;blue&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;my-github&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;, &#39;color&#39;: &#39;disabled&#39;&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># baseurl</span><br><span class="line">print(server.baseurl)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># username</span><br><span class="line">print(server.username)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">admin</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># password</span><br><span class="line">print(server.password)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">admin123</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 判断job是否存在</span><br><span class="line">print(server.has_job(&#39;prod-java&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">False</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">print(server.get_queue())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;queue</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 查看试图</span><br><span class="line">print(server.views.keys())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#39;My View&#39;, &#39;all&#39;, &#39;myview&#39;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 删除试图</span><br><span class="line">server.delete_view_by_url(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;testview&#x2F;&#39;)</span><br><span class="line"></span><br><span class="line"># 获取最后一次构建</span><br><span class="line">print(server[&#39;ansible-playbook&#39;].get_last_good_build())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">ansible-playbook #27</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># BUILD构建相关</span><br><span class="line"># 1. 构建(方式一)</span><br><span class="line">params &#x3D; &#123;&#39;Branch&#39;: &#39;oriin&#x2F;master&#39;, &#39;host&#39;: &#39;192.168.1.100&#39;&#125;</span><br><span class="line">ret &#x3D; server.build_job(&#39;ansible-playbook&#39;, params)</span><br><span class="line">print(ret)</span><br><span class="line"></span><br><span class="line"># 方式二</span><br><span class="line">job &#x3D; server[&#39;ansible-playbook&#39;]</span><br><span class="line">run_job &#x3D; job.invoke(build_params&#x3D;params)</span><br><span class="line">number &#x3D; run_job.__dict__[&#39;_data&#39;][&#39;executable&#39;][&#39;number&#39;]</span><br><span class="line">build_url &#x3D; run_job.__dict__[&#39;_data&#39;][&#39;executable&#39;][&#39;url&#39;]</span><br><span class="line">print(&quot;第%d次构建: %s&quot; % (number, build_url))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">第40次构建: http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 结果查询</span><br><span class="line"># 1. 方式一</span><br><span class="line">job &#x3D; server.get_job(&#39;ansible-playbook&#39;)</span><br><span class="line">print(job.__dict__[&#39;_data&#39;][&#39;builds&#39;])</span><br><span class="line">url &#x3D; job.__dict__[&#39;_data&#39;][&#39;lastBuild&#39;][&#39;url&#39;]</span><br><span class="line">number &#x3D; job.__dict__[&#39;_data&#39;][&#39;lastBuild&#39;][&#39;number&#39;]</span><br><span class="line">obj &#x3D; Build(url, number, job)</span><br><span class="line"></span><br><span class="line"># 2. 方式二</span><br><span class="line">job &#x3D; server[&#39;ansible-playbook&#39;]</span><br><span class="line">url &#x3D; job.__dict__[&#39;_data&#39;][&#39;lastBuild&#39;][&#39;url&#39;]</span><br><span class="line">number &#x3D; job.__dict__[&#39;_data&#39;][&#39;lastBuild&#39;][&#39;number&#39;]</span><br><span class="line">obj &#x3D; Build(url, number, job)</span><br><span class="line"></span><br><span class="line"># 全局信息</span><br><span class="line">print(obj.pprint())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;,</span><br><span class="line"> &#39;actions&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.ParametersAction&#39;,</span><br><span class="line">              &#39;parameters&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterValue&#39;,</span><br><span class="line">                              &#39;name&#39;: &#39;Branch&#39;,</span><br><span class="line">                              &#39;value&#39;: &#39;oriin&#x2F;master&#39;&#125;,</span><br><span class="line">                             &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;,</span><br><span class="line">                              &#39;name&#39;: &#39;host&#39;,</span><br><span class="line">                              &#39;value&#39;: &#39;192.168.1.100&#39;&#125;]&#125;,</span><br><span class="line">             &#123;&#39;_class&#39;: &#39;hudson.model.CauseAction&#39;,</span><br><span class="line">              &#39;causes&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.Cause$UserIdCause&#39;,</span><br><span class="line">                          &#39;shortDescription&#39;: &#39;Started by user 管理员&#39;,</span><br><span class="line">                          &#39;userId&#39;: &#39;admin&#39;,</span><br><span class="line">                          &#39;userName&#39;: &#39;管理员&#39;&#125;]&#125;,</span><br><span class="line">             &#123;&#125;,</span><br><span class="line">             ......</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_result_url())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;testReport&#x2F;api&#x2F;python</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.is_running())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">False</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.stop())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">True</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.is_good())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">True</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_number())</span><br><span class="line">print(obj.buildno)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">40</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_status())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">SUCCESS</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_revision())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">21c2b6ff6c842a86969f36f75424e17ae27eae68</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_revision_branch())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_console())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Started by user ç®¡çå</span><br><span class="line">[EnvInject] - Loading node environment variables.</span><br><span class="line">Building in workspace &#x2F;Users&#x2F;zhao&#x2F;data&#x2F;workspace&#x2F;workspace&#x2F;ansible-playbook</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-parse --is-inside-work-tree # timeout&#x3D;10</span><br><span class="line">Fetching changes from the remote Git repository</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git config remote.origin.url git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git # timeout&#x3D;10</span><br><span class="line">Fetching upstream changes from git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git --version # timeout&#x3D;10</span><br><span class="line">using GIT_SSH to set credentials deploy key</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git fetch --tags --progress git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git +refs&#x2F;heads&#x2F;*:refs&#x2F;remotes&#x2F;origin&#x2F;*</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-parse refs&#x2F;remotes&#x2F;origin&#x2F;master^&#123;commit&#125; # timeout&#x3D;10</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-parse refs&#x2F;remotes&#x2F;origin&#x2F;origin&#x2F;master^&#123;commit&#125; # timeout&#x3D;10</span><br><span class="line">Checking out Revision 21c2b6ff6c842a86969f36f75424e17ae27eae68 (refs&#x2F;remotes&#x2F;origin&#x2F;master)</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git config core.sparsecheckout # timeout&#x3D;10</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git checkout -f 21c2b6ff6c842a86969f36f75424e17ae27eae68</span><br><span class="line">Commit message: &quot;update tomcat root mode&quot;</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-list --no-walk 21c2b6ff6c842a86969f36f75424e17ae27eae68 # timeout&#x3D;10</span><br><span class="line">[ansible-playbook] $ &#x2F;bin&#x2F;sh -xe &#x2F;Users&#x2F;Shared&#x2F;Jenkins&#x2F;tmp&#x2F;jenkins280834745018509074.sh</span><br><span class="line">+ echo 192.168.1.100</span><br><span class="line">192.168.1.100</span><br><span class="line">+ echo test</span><br><span class="line">test</span><br><span class="line">+ echo http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;</span><br><span class="line">+ echo 40</span><br><span class="line">40</span><br><span class="line">+ echo jenkins-ansible-playbook-40</span><br><span class="line">jenkins-ansible-playbook-40</span><br><span class="line">Recording fingerprints</span><br><span class="line">Finished: SUCCESS</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">print(obj.get_causes())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;_class&#39;: &#39;hudson.model.Cause$UserIdCause&#39;, &#39;shortDescription&#39;: &#39;Started by user 管理员&#39;, &#39;userId&#39;: &#39;admin&#39;, &#39;userName&#39;: &#39;管理员&#39;&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_params())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;Branch&#39;: &#39;oriin&#x2F;master&#39;, &#39;host&#39;: &#39;192.168.1.100&#39;&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_env_vars())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;BUILD_CAUSE&#39;: &#39;MANUALTRIGGER&#39;, &#39;BUILD_CAUSE_MANUALTRIGGER&#39;: &#39;true&#39;, &#39;BUILD_DISPLAY_NAME&#39;: &#39;#40&#39;, &#39;BUILD_ID&#39;: &#39;40&#39;, &#39;BUILD_NUMBER&#39;: &#39;40&#39;, &#39;BUILD_TAG&#39;: &#39;jenkins-ansible-playbook-40&#39;, &#39;BUILD_URL&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;&#39;, &#39;Branch&#39;: &#39;oriin&#x2F;master&#39;, &#39;EXECUTOR_NUMBER&#39;: &#39;1&#39;, &#39;HUDSON_HOME&#39;: &#39;&#x2F;Users&#x2F;zhao&#x2F;data&#x2F;workspace&#39;, &#39;HUDSON_SERVER_COOKIE&#39;: &#39;5634a2d507063d61&#39;, &#39;HUDSON_URL&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;, &#39;JENKINS_HOME&#39;: &#39;&#x2F;Users&#x2F;zhao&#x2F;data&#x2F;workspace&#39;, &#39;JENKINS_SERVER_COOKIE&#39;: &#39;5634a2d507063d61&#39;, &#39;JENKINS_URL&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;, &#39;JOB_BASE_NAME&#39;: &#39;ansible-playbook&#39;, &#39;JOB_NAME&#39;: &#39;ansible-playbook&#39;, &#39;JOB_URL&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;NODE_LABELS&#39;: &#39;master&#39;, &#39;NODE_NAME&#39;: &#39;master&#39;, &#39;ROOT_BUILD_CAUSE&#39;: &#39;MANUALTRIGGER&#39;, &#39;ROOT_BUILD_CAUSE_MANUALTRIGGER&#39;: &#39;true&#39;, &#39;RUN_CHANGES_DISPLAY_URL&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;display&#x2F;redirect?page&#x3D;changes&#39;, &#39;RUN_DISPLAY_URL&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;display&#x2F;redirect&#39;, &#39;TEST_ARGS&#39;: &#39;test&#39;, &#39;host&#39;: &#39;192.168.1.100&#39;&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.job)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">ansible-playbook</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(obj.get_data(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;api&#x2F;python&#x2F;?pretty&#x3D;true&#39;))</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;actions&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.ParametersAction&#39;, &#39;parameters&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterValue&#39;, &#39;name&#39;: &#39;Branch&#39;, &#39;value&#39;: &#39;oriin&#x2F;master&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;, &#39;name&#39;: &#39;host&#39;, &#39;value&#39;: &#39;192.168.1.100&#39;&#125;]&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.CauseAction&#39;, &#39;causes&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.Cause$UserIdCause&#39;, &#39;shortDescription&#39;: &#39;Started by user 管理员&#39;, &#39;userId&#39;: &#39;admin&#39;, &#39;userName&#39;: &#39;管理员&#39;&#125;]&#125;, &#123;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.git.util.BuildData&#39;, &#39;buildsByBranchName&#39;: &#123;&#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.util.Build&#39;, &#39;buildNumber&#39;: 40, &#39;buildResult&#39;: None, &#39;marked&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;, &#39;revision&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;&#125;&#125;, &#39;lastBuiltRevision&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;, &#39;remoteUrls&#39;: [&#39;git@git.idbc.net:ansible-roles&#x2F;zff.ansible.git&#39;], &#39;scmName&#39;: &#39;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitTagAction&#39;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;], &#39;artifacts&#39;: [], &#39;building&#39;: False, &#39;description&#39;: None, &#39;displayName&#39;: &#39;#40&#39;, &#39;duration&#39;: 735, &#39;estimatedDuration&#39;: 897, &#39;executor&#39;: None, &#39;fullDisplayName&#39;: &#39;ansible-playbook #40&#39;, &#39;id&#39;: &#39;40&#39;, &#39;keepLog&#39;: False, &#39;number&#39;: 40, &#39;queueId&#39;: 21, &#39;result&#39;: &#39;SUCCESS&#39;, &#39;timestamp&#39;: 1516172959444, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;40&#x2F;&#39;, &#39;builtOn&#39;: &#39;&#39;, &#39;changeSet&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitChangeSetList&#39;, &#39;items&#39;: [], &#39;kind&#39;: &#39;git&#39;&#125;, &#39;culprits&#39;: []&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Some-API"><a href="#Some-API" class="headerlink" title="Some API"></a>Some API</h4><p>This module is a collection of helpful, high-level functions for automating common tasks. Many of these functions were designed to be exposed to the command-line, hence they have simple string arguments.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line">from jenkinsapi import api as API</span><br><span class="line">server &#x3D; get_server_instance()</span><br><span class="line">jobs &#x3D; server.get_jobs_list()</span><br><span class="line"></span><br><span class="line"># 1. 等待所有job执行完成</span><br><span class="line">ret &#x3D; API.block_until_complete(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;, jobs, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;, ssl_verify&#x3D;False)</span><br><span class="line">print(ret)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Waiting for jobs &quot;ansible-playbook&quot; to complete. Will wait another 12000s</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 2. job 构建的完整名称</span><br><span class="line">ret &#x3D; API.get_build(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;, &#39;ansible-playbook&#39;, 66, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;,</span><br><span class="line">                    ssl_verify&#x3D;False)</span><br><span class="line">print(ret)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">ansible-playbook #66</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 3. 最后一次构建</span><br><span class="line">ret &#x3D; API.get_latest_build(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;, &#39;ansible-playbook&#39;, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;,</span><br><span class="line">                           ssl_verify&#x3D;False)</span><br><span class="line">print(ret)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">ansible-playbook #66</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 4. 最后一次完整构建</span><br><span class="line">ret &#x3D; API.get_latest_complete_build(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;, &#39;ansible-playbook&#39;, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;,</span><br><span class="line">                                    ssl_verify&#x3D;False)</span><br><span class="line">print(ret)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">ansible-playbook #66</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 5. 查询试图信息</span><br><span class="line">ret &#x3D; API.get_nested_view_from_url(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;myview&#x2F;&#39;, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;,</span><br><span class="line">                                   ssl_verify&#x3D;False)</span><br><span class="line">print(ret.get_config_xml_url())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;myview&#x2F;config.xml</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(ret.get_job_dict())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;ansible-playbook&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;my-github&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(ret.pprint())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.ListView&#39;,</span><br><span class="line"> &#39;description&#39;: &#39;测试试图&#39;,</span><br><span class="line"> &#39;jobs&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;,</span><br><span class="line">           &#39;color&#39;: &#39;blue&#39;,</span><br><span class="line">           &#39;name&#39;: &#39;ansible-playbook&#39;,</span><br><span class="line">           &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;&#125;,</span><br><span class="line">          &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;,</span><br><span class="line">           &#39;color&#39;: &#39;disabled&#39;,</span><br><span class="line">           &#39;name&#39;: &#39;my-github&#39;,</span><br><span class="line">           &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;&#125;],</span><br><span class="line"> &#39;name&#39;: &#39;myview&#39;,</span><br><span class="line"> &#39;property&#39;: [],</span><br><span class="line"> &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;myview&#x2F;&#39;&#125;</span><br><span class="line">None</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(ret.get_config())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;hudson.model.ListView&gt;</span><br><span class="line">  &lt;name&gt;myview&lt;&#x2F;name&gt;</span><br><span class="line">  &lt;description&gt;测试试图&lt;&#x2F;description&gt;</span><br><span class="line">  &lt;filterExecutors&gt;false&lt;&#x2F;filterExecutors&gt;</span><br><span class="line">  &lt;filterQueue&gt;false&lt;&#x2F;filterQueue&gt;</span><br><span class="line">  &lt;properties class&#x3D;&quot;hudson.model.View$PropertyList&quot;&#x2F;&gt;</span><br><span class="line">  &lt;jobNames&gt;</span><br><span class="line">    &lt;comparator class&#x3D;&quot;hudson.util.CaseInsensitiveComparator&quot;&#x2F;&gt;</span><br><span class="line">    &lt;string&gt;ansible-playbook&lt;&#x2F;string&gt;</span><br><span class="line">    &lt;string&gt;my-github&lt;&#x2F;string&gt;</span><br><span class="line">  &lt;&#x2F;jobNames&gt;</span><br><span class="line">  &lt;jobFilters&#x2F;&gt;</span><br><span class="line">  &lt;columns&gt;</span><br><span class="line">    &lt;hudson.views.StatusColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.WeatherColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.JobColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.LastSuccessColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.LastDurationColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.BuildButtonColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.plugins.git.GitBranchSpecifierColumn plugin&#x3D;&quot;git@3.7.0&quot;&#x2F;&gt;</span><br><span class="line">  &lt;&#x2F;columns&gt;</span><br><span class="line">  &lt;recurse&gt;false&lt;&#x2F;recurse&gt;</span><br><span class="line">&lt;&#x2F;hudson.model.ListView&gt;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 6. 类似与get_nested_view_from_url函数</span><br><span class="line">ret &#x3D; API.get_view_from_url(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;myview&#x2F;&#39;, username&#x3D;&#39;admin&#39;, password&#x3D;&#39;admin123&#39;,</span><br><span class="line">                            ssl_verify&#x3D;False)</span><br><span class="line">print(ret.get_job_dict())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;ansible-playbook&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;my-github&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">print(ret.get_config_xml_url())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;myview&#x2F;config.xml</span><br><span class="line">&#39;&#39;&#39;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Python-Jenkins模块"><a href="#Python-Jenkins模块" class="headerlink" title="Python Jenkins模块"></a>Python Jenkins模块</h3><h4 id="Working-with-Jenkins-Jobs"><a href="#Working-with-Jenkins-Jobs" class="headerlink" title="Working with Jenkins Jobs"></a>Working with Jenkins Jobs</h4><p>This is an example showing how to create, configure and delete Jenkins jobs.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"># __author__ &#x3D; &quot;shuke&quot;</span><br><span class="line"># Date: 2018&#x2F;1&#x2F;17</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import jenkins</span><br><span class="line"></span><br><span class="line">server &#x3D; jenkins.Jenkins(&#39;http:&#x2F;&#x2F;127.0.0.1:8080&#39;, username&#x3D;&quot;admin&quot;, password&#x3D;&quot;admin123&quot;)</span><br><span class="line">params &#x3D; &#123;&#39;Branch&#39;: &#39;oriin&#x2F;master&#39;, &#39;host&#39;: &#39;192.168.1.110&#39;&#125;</span><br><span class="line"></span><br><span class="line"># server对象</span><br><span class="line"># Jenkins的job数量</span><br><span class="line">print(server.jobs_count())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">2</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># Jenkins-web-ui</span><br><span class="line">print(server.server)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 所有的job信息</span><br><span class="line">all_jobs_li &#x3D; server.get_all_jobs()</span><br><span class="line">for item in all_jobs_li:</span><br><span class="line">    print(&#39;name: %s&#39; % item[&#39;name&#39;], &#39;URL: &#39;, item[&#39;url&#39;])</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">name: ansible-playbook URL:  http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;</span><br><span class="line">name: my-github URL:  http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 账户信息描述</span><br><span class="line">print(server.get_whoami())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.User&#39;, &#39;absoluteUrl&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;user&#x2F;admin&#39;, &#39;description&#39;: &#39;本地测试&#39;, &#39;fullName&#39;: &#39;管理员&#39;, &#39;id&#39;: &#39;admin&#39;, &#39;property&#39;: [&#123;&#39;_class&#39;: &#39;jenkins.security.ApiTokenProperty&#39;&#125;, &#123;&#39;_class&#39;: &#39;com.cloudbees.plugins.credentials.UserCredentialsProvider$UserCredentialsProperty&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.tasks.Mailer$UserProperty&#39;, &#39;address&#39;: &#39;admin@163.com&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.emailext.watching.EmailExtWatchAction$UserProperty&#39;, &#39;triggers&#39;: []&#125;, &#123;&#39;_class&#39;: &#39;jenkins.security.LastGrantedAuthoritiesProperty&#39;&#125;, &#123;&#39;_class&#39;: &#39;org.jenkinsci.plugins.displayurlapi.user.PreferredProviderUserProperty&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.PaneStatusProperties&#39;&#125;, &#123;&#39;_class&#39;: &#39;org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.security.HudsonPrivateSecurityRealm$Details&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.MyViewsProperty&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.search.UserSearchProperty&#39;, &#39;insensitiveSearch&#39;: True&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.favorite.user.FavoriteUserProperty&#39;&#125;]&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># auth</span><br><span class="line">print(server.auth)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">b&#39;Basic YWRtaW46YWRtaW4xMjM&#x3D;&#39;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># DEBUG Job信息</span><br><span class="line">print(server.debug_job_info(&#39;ansible-playbook&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">_class hudson.model.FreeStyleProject</span><br><span class="line">actions [&#123;&#39;_class&#39;: &#39;hudson.model.ParametersDefinitionProperty&#39;, &#39;parameterDefinitions&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition&#39;, &#39;defaultParameterValue&#39;: None, &#39;description&#39;: &#39;分支&#39;, &#39;name&#39;: &#39;Branch&#39;, &#39;type&#39;: &#39;PT_BRANCH&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterDefinition&#39;, &#39;defaultParameterValue&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;, &#39;value&#39;: &#39;127.0.0.1,127.0.0.2,127.0.0.1&#39;&#125;, &#39;description&#39;: &#39;本机&#39;, &#39;name&#39;: &#39;host&#39;, &#39;type&#39;: &#39;StringParameterDefinition&#39;&#125;]&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#39;_class&#39;: &#39;com.cloudbees.plugins.credentials.ViewCredentialsAction&#39;&#125;]</span><br><span class="line">description ansible playbook</span><br><span class="line">displayName ansible-playbook</span><br><span class="line">displayNameOrNull None</span><br><span class="line">fullDisplayName ansible-playbook</span><br><span class="line">fullName ansible-playbook</span><br><span class="line">name ansible-playbook</span><br><span class="line">url http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;</span><br><span class="line">buildable True</span><br><span class="line">......</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">####### CURD Job #######</span><br><span class="line"></span><br><span class="line"># Job是否存在</span><br><span class="line">print(server.job_exists(&#39;my-api&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">True or None</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 获取所有的Job</span><br><span class="line">print(server.get_jobs())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;ansible-playbook&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;color&#39;: &#39;aborted&#39;, &#39;fullname&#39;: &#39;ansible-playbook&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;my-api&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-api&#x2F;&#39;, &#39;color&#39;: &#39;notbuilt&#39;, &#39;fullname&#39;: &#39;my-api&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;my-github&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;, &#39;color&#39;: &#39;disabled&#39;, &#39;fullname&#39;: &#39;my-github&#39;&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 创建Job</span><br><span class="line">server.create_job(&#39;API&#39;, jenkins.RECONFIG_XML)</span><br><span class="line"></span><br><span class="line"># 删除Job</span><br><span class="line">server.delete_job(&#39;my-api&#39;)</span><br><span class="line"></span><br><span class="line"># 复制job</span><br><span class="line">server.copy_job(&#39;my-github&#39;, &#39;copy-my-github&#39;)</span><br><span class="line"></span><br><span class="line"># enable job</span><br><span class="line">server.enable_job(&#39;copy-my-github&#39;)</span><br><span class="line"></span><br><span class="line"># 禁用Job</span><br><span class="line">server.disable_job(&#39;copy-my-github&#39;)</span><br><span class="line"></span><br><span class="line"># 重新配置Job</span><br><span class="line">server.reconfig_job(&#39;copy-my-github&#39;, jenkins.RECONFIG_XML)</span><br><span class="line"></span><br><span class="line"># 重命名Job</span><br><span class="line">server.rename_job(&#39;API&#39;, &#39;my-api&#39;)</span><br><span class="line"></span><br><span class="line"># 触发Job运行</span><br><span class="line"># 触发Job(方式一)</span><br><span class="line">server.build_job_url(&#39;ansible-playbook&#39;, parameters&#x3D;params)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;buildWithParameters?Branch&#x3D;oriin%2Fmaster&amp;host&#x3D;192.168.1.110</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"># 触发Job(方式二)</span><br><span class="line">server.build_job(&#39;ansible-playbook&#39;, parameters&#x3D;params)</span><br><span class="line"></span><br><span class="line"># 查看指定构建编号的输出</span><br><span class="line">print(server.get_build_console_output(&#39;ansible-playbook&#39;, 41))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Started by user 管理员</span><br><span class="line">[EnvInject] - Loading node environment variables.</span><br><span class="line">Building in workspace &#x2F;Users&#x2F;zhao&#x2F;data&#x2F;workspace&#x2F;workspace&#x2F;ansible-playbook</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-parse --is-inside-work-tree # timeout&#x3D;10</span><br><span class="line">Fetching changes from the remote Git repository</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git config remote.origin.url git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git # timeout&#x3D;10</span><br><span class="line">Fetching upstream changes from git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git --version # timeout&#x3D;10</span><br><span class="line">using GIT_SSH to set credentials deploy key</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git fetch --tags --progress git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git +refs&#x2F;heads&#x2F;*:refs&#x2F;remotes&#x2F;origin&#x2F;*</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-parse refs&#x2F;remotes&#x2F;origin&#x2F;master^&#123;commit&#125; # timeout&#x3D;10</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-parse refs&#x2F;remotes&#x2F;origin&#x2F;origin&#x2F;master^&#123;commit&#125; # timeout&#x3D;10</span><br><span class="line">Checking out Revision 21c2b6ff6c842a86969f36f75424e17ae27eae68 (refs&#x2F;remotes&#x2F;origin&#x2F;master)</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git config core.sparsecheckout # timeout&#x3D;10</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git checkout -f 21c2b6ff6c842a86969f36f75424e17ae27eae68</span><br><span class="line">Commit message: &quot;update tomcat root mode&quot;</span><br><span class="line"> &gt; &#x2F;usr&#x2F;local&#x2F;bin&#x2F;git rev-list --no-walk 21c2b6ff6c842a86969f36f75424e17ae27eae68 # timeout&#x3D;10</span><br><span class="line">[ansible-playbook] $ &#x2F;bin&#x2F;sh -xe &#x2F;Users&#x2F;Shared&#x2F;Jenkins&#x2F;tmp&#x2F;jenkins5080034200775659821.sh</span><br><span class="line">+ echo 192.168.1.110</span><br><span class="line">192.168.1.110</span><br><span class="line">+ echo test</span><br><span class="line">test</span><br><span class="line">+ echo http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;41&#x2F;</span><br><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;41&#x2F;</span><br><span class="line">+ echo 41</span><br><span class="line">41</span><br><span class="line">+ echo jenkins-ansible-playbook-41</span><br><span class="line">jenkins-ansible-playbook-41</span><br><span class="line">Finished: SUCCESS</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 下一次构建编号,步长为5</span><br><span class="line">next_bn &#x3D; server.get_job_info(&#39;ansible-playbook&#39;)[&#39;nextBuildNumber&#39;]</span><br><span class="line">server.set_next_build_number(&#39;ansible-playbook&#39;, next_bn + 5)</span><br><span class="line"></span><br><span class="line"># 指定编号的构建Job信息</span><br><span class="line">print(server.get_build_info(&#39;ansible-playbook&#39;, 48))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;actions&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.ParametersAction&#39;, &#39;parameters&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterValue&#39;, &#39;name&#39;: &#39;Branch&#39;, &#39;value&#39;: &#39;oriin&#x2F;master&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;, &#39;name&#39;: &#39;host&#39;, &#39;value&#39;: &#39;192.168.1.110&#39;&#125;]&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.CauseAction&#39;, &#39;causes&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.Cause$UserIdCause&#39;, &#39;shortDescription&#39;: &#39;Started by user 管理员&#39;, &#39;userId&#39;: &#39;admin&#39;, &#39;userName&#39;: &#39;管理员&#39;&#125;]&#125;, &#123;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.git.util.BuildData&#39;, &#39;buildsByBranchName&#39;: &#123;&#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.util.Build&#39;, &#39;buildNumber&#39;: 48, &#39;buildResult&#39;: None, &#39;marked&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;, &#39;revision&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;&#125;&#125;, &#39;lastBuiltRevision&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;, &#39;remoteUrls&#39;: [&#39;git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git&#39;], &#39;scmName&#39;: &#39;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitTagAction&#39;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;], &#39;artifacts&#39;: [], &#39;building&#39;: False, &#39;description&#39;: None, &#39;displayName&#39;: &#39;#48&#39;, &#39;duration&#39;: 1861, &#39;estimatedDuration&#39;: 4305, &#39;executor&#39;: None, &#39;fullDisplayName&#39;: &#39;ansible-playbook #48&#39;, &#39;id&#39;: &#39;48&#39;, &#39;keepLog&#39;: False, &#39;number&#39;: 48, &#39;queueId&#39;: 24, &#39;result&#39;: &#39;SUCCESS&#39;, &#39;timestamp&#39;: 1516185645519, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;48&#x2F;&#39;, &#39;builtOn&#39;: &#39;&#39;, &#39;changeSet&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitChangeSetList&#39;, &#39;items&#39;: [], &#39;kind&#39;: &#39;git&#39;&#125;, &#39;culprits&#39;: []&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 获取正在运行的Job，一般结合build_job方法一起使用</span><br><span class="line">print(server.get_running_builds())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;name&#39;: &#39;ansible-playbook&#39;, &#39;number&#39;: 57, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;57&#x2F;&#39;, &#39;node&#39;: &#39;(master)&#39;, &#39;executor&#39;: 1&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 终止指定编号的Job</span><br><span class="line">server.stop_build(&#39;ansible-playbook&#39;, 62)</span><br><span class="line"></span><br><span class="line"># 获取Job名称</span><br><span class="line">print(server.get_job_name(&#39;ansible-playbook&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">ansible-playbook</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 断言Job是否存在</span><br><span class="line">print(server.assert_job_exists(&#39;ansible-playbook&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">存在则返回None，不存在则抛出错误信息</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 该Job所有的相关信息</span><br><span class="line">print(server.get_job_info(&#39;ansible-playbook&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;actions&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.ParametersDefinitionProperty&#39;, &#39;parameterDefinitions&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition&#39;, &#39;defaultParameterValue&#39;: None, &#39;description&#39;: &#39;分支&#39;, &#39;name&#39;: &#39;Branch&#39;, &#39;type&#39;: &#39;PT_BRANCH&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterDefinition&#39;, &#39;defaultParameterValue&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;, &#39;value&#39;: &#39;127.0.0.1,127.0.0.2,127.0.0.1&#39;&#125;, &#39;description&#39;: &#39;本机&#39;, &#39;name&#39;: &#39;host&#39;, &#39;type&#39;: &#39;StringParameterDefinition&#39;&#125;]&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#39;_class&#39;: &#39;com.cloudbees.plugins.credentials.ViewCredentialsAction&#39;&#125;], &#39;description&#39;: &#39;ansible playbook&#39;, &#39;displayName&#39;: &#39;ansible-playbook&#39;, &#39;displayNameOrNull&#39;: None, &#39;fullDisplayName&#39;: &#39;ansible-playbook&#39;, &#39;fullName&#39;: &#39;ansible-playbook&#39;, &#39;name&#39;: &#39;ansible-playbook&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;buildable&#39;: True, &#39;builds&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 62, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;62&#x2F;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 61, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;61&#x2F;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 60, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;60&#x2F;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 59, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;59&#x2F;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 58, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;58&#x2F;&#39;&#125;], &#39;color&#39;: &#39;aborted&#39;, &#39;firstBuild&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 58, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;58&#x2F;&#39;&#125;, &#39;healthReport&#39;: [&#123;&#39;description&#39;: &#39;Build stability: No recent builds failed.&#39;, &#39;iconClassName&#39;: &#39;icon-health-80plus&#39;, &#39;iconUrl&#39;: &#39;health-80plus.png&#39;, &#39;score&#39;: 100&#125;], &#39;inQueue&#39;: False, &#39;keepDependencies&#39;: False, &#39;lastBuild&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 62, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;62&#x2F;&#39;&#125;, &#39;lastCompletedBuild&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 62, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;62&#x2F;&#39;&#125;, &#39;lastFailedBuild&#39;: None, &#39;lastStableBuild&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 61, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;61&#x2F;&#39;&#125;, &#39;lastSuccessfulBuild&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 61, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;61&#x2F;&#39;&#125;, &#39;lastUnstableBuild&#39;: None, &#39;lastUnsuccessfulBuild&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;number&#39;: 62, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;62&#x2F;&#39;&#125;, &#39;nextBuildNumber&#39;: 63, &#39;property&#39;: [&#123;&#39;_class&#39;: &#39;jenkins.model.BuildDiscarderProperty&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.ParametersDefinitionProperty&#39;, &#39;parameterDefinitions&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition&#39;, &#39;defaultParameterValue&#39;: None, &#39;description&#39;: &#39;分支&#39;, &#39;name&#39;: &#39;Branch&#39;, &#39;type&#39;: &#39;PT_BRANCH&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterDefinition&#39;, &#39;defaultParameterValue&#39;: &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;, &#39;name&#39;: &#39;host&#39;, &#39;value&#39;: &#39;127.0.0.1,127.0.0.2,127.0.0.1&#39;&#125;, &#39;description&#39;: &#39;本机&#39;, &#39;name&#39;: &#39;host&#39;, &#39;type&#39;: &#39;StringParameterDefinition&#39;&#125;]&#125;], &#39;queueItem&#39;: None, &#39;concurrentBuild&#39;: False, &#39;downstreamProjects&#39;: [], &#39;labelExpression&#39;: None, &#39;scm&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitSCM&#39;&#125;, &#39;upstreamProjects&#39;: []&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 查看该试图下所有的Job</span><br><span class="line">print(server.get_jobs(&#39;myview&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;ansible-playbook&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;&#39;, &#39;color&#39;: &#39;aborted&#39;, &#39;fullname&#39;: &#39;ansible-playbook&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;my-api&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-api&#x2F;&#39;, &#39;color&#39;: &#39;notbuilt&#39;, &#39;fullname&#39;: &#39;my-api&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleProject&#39;, &#39;name&#39;: &#39;my-github&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;my-github&#x2F;&#39;, &#39;color&#39;: &#39;disabled&#39;, &#39;fullname&#39;: &#39;my-github&#39;&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 正则匹配获取Job信息</span><br><span class="line"># print(server.get_job_info_regex(&#39;^my&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">Job相关信息</span><br><span class="line">....</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># 获取最后一次构建的Job信息</span><br><span class="line"># build a parameterized job</span><br><span class="line"># requires creating and configuring the ansible-playbook job to accept &#39;param1&#39; &amp; &#39;param2&#39;</span><br><span class="line">job_name &#x3D; &quot;ansible-playbook&quot;</span><br><span class="line">server.build_job(job_name, &#123;&#39;Branch&#39;: &#39;oriin&#x2F;master&#39;, &#39;host&#39;: &#39;192.168.1.110&#39;&#125;)</span><br><span class="line">last_build_number &#x3D; server.get_job_info(job_name)[&#39;lastCompletedBuild&#39;][&#39;number&#39;]</span><br><span class="line">build_info &#x3D; server.get_build_info(job_name, last_build_number)</span><br><span class="line">print(build_info)</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&#123;&#39;_class&#39;: &#39;hudson.model.FreeStyleBuild&#39;, &#39;actions&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.ParametersAction&#39;, &#39;parameters&#39;: [&#123;&#39;_class&#39;: &#39;net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterValue&#39;, &#39;name&#39;: &#39;Branch&#39;, &#39;value&#39;: &#39;origin&#x2F;master&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.StringParameterValue&#39;, &#39;name&#39;: &#39;host&#39;, &#39;value&#39;: &#39;127.0.0.1,127.0.0.2,127.0.0.105&#39;&#125;]&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.CauseAction&#39;, &#39;causes&#39;: [&#123;&#39;_class&#39;: &#39;hudson.model.Cause$UserIdCause&#39;, &#39;shortDescription&#39;: &#39;Started by user 管理员&#39;, &#39;userId&#39;: &#39;admin&#39;, &#39;userName&#39;: &#39;管理员&#39;&#125;]&#125;, &#123;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.git.util.BuildData&#39;, &#39;buildsByBranchName&#39;: &#123;&#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.util.Build&#39;, &#39;buildNumber&#39;: 62, &#39;buildResult&#39;: None, &#39;marked&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;, &#39;revision&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;&#125;&#125;, &#39;lastBuiltRevision&#39;: &#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;branch&#39;: [&#123;&#39;SHA1&#39;: &#39;21c2b6ff6c842a86969f36f75424e17ae27eae68&#39;, &#39;name&#39;: &#39;refs&#x2F;remotes&#x2F;origin&#x2F;master&#39;&#125;]&#125;, &#39;remoteUrls&#39;: [&#39;git@git.icbc.net:ansible-roles&#x2F;zff.ansible.git&#39;], &#39;scmName&#39;: &#39;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitTagAction&#39;&#125;, &#123;&#125;, &#123;&#39;_class&#39;: &#39;jenkins.model.InterruptedBuildAction&#39;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;], &#39;artifacts&#39;: [], &#39;building&#39;: False, &#39;description&#39;: None, &#39;displayName&#39;: &#39;#62&#39;, &#39;duration&#39;: 7069, &#39;estimatedDuration&#39;: 7681, &#39;executor&#39;: None, &#39;fullDisplayName&#39;: &#39;ansible-playbook #62&#39;, &#39;id&#39;: &#39;62&#39;, &#39;keepLog&#39;: False, &#39;number&#39;: 62, &#39;queueId&#39;: 33, &#39;result&#39;: &#39;ABORTED&#39;, &#39;timestamp&#39;: 1516186369042, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;job&#x2F;ansible-playbook&#x2F;62&#x2F;&#39;, &#39;builtOn&#39;: &#39;&#39;, &#39;changeSet&#39;: &#123;&#39;_class&#39;: &#39;hudson.plugins.git.GitChangeSetList&#39;, &#39;items&#39;: [], &#39;kind&#39;: &#39;git&#39;&#125;, &#39;culprits&#39;: []&#125;</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># shutdown jenkins</span><br><span class="line">server.quiet_down()</span><br></pre></td></tr></table></figure>
+<h4 id="Working-with-Jenkins-Views"><a href="#Working-with-Jenkins-Views" class="headerlink" title="Working with Jenkins Views"></a>Working with Jenkins Views</h4><p>This is an example showing how to create, configure and delete Jenkins views.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># 试图相关</span><br><span class="line">print(server.get_views())</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">[&#123;&#39;_class&#39;: &#39;hudson.model.AllView&#39;, &#39;name&#39;: &#39;all&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;&#39;&#125;, &#123;&#39;_class&#39;: &#39;hudson.model.ListView&#39;, &#39;name&#39;: &#39;myview&#39;, &#39;url&#39;: &#39;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;view&#x2F;myview&#x2F;&#39;&#125;]</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line"># CURD VIEW</span><br><span class="line">server.view_exists()</span><br><span class="line">server.create_view(&#39;EMPTY&#39;, jenkins.EMPTY_VIEW_CONFIG_XML)</span><br><span class="line">views &#x3D; server.get_views()</span><br><span class="line">server.delete_view(&#39;EMPTY&#39;)</span><br><span class="line">server.reconfig_view(&#39;newview&#39;,jenkins.EMPTY_VIEW_CONFIG_XML)</span><br><span class="line">server.get_view_name(&#39;EMPTY&#39;)</span><br><span class="line">view_config &#x3D; server.get_view_config(&#39;EMPTY&#39;)</span><br><span class="line"># 获取试图下所有的job</span><br><span class="line">print(server._get_view_jobs(&#39;myview&#39;))</span><br><span class="line"></span><br><span class="line"># 试图配置信息</span><br><span class="line">print(server.get_view_config(&#39;myview&#39;))</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;hudson.model.ListView&gt;</span><br><span class="line">  &lt;name&gt;myview&lt;&#x2F;name&gt;</span><br><span class="line">  &lt;description&gt;测试试图&lt;&#x2F;description&gt;</span><br><span class="line">  &lt;filterExecutors&gt;false&lt;&#x2F;filterExecutors&gt;</span><br><span class="line">  &lt;filterQueue&gt;false&lt;&#x2F;filterQueue&gt;</span><br><span class="line">  &lt;properties class&#x3D;&quot;hudson.model.View$PropertyList&quot;&#x2F;&gt;</span><br><span class="line">  &lt;jobNames&gt;</span><br><span class="line">    &lt;comparator class&#x3D;&quot;hudson.util.CaseInsensitiveComparator&quot;&#x2F;&gt;</span><br><span class="line">    &lt;string&gt;ansible-playbook&lt;&#x2F;string&gt;</span><br><span class="line">    &lt;string&gt;my-github&lt;&#x2F;string&gt;</span><br><span class="line">  &lt;&#x2F;jobNames&gt;</span><br><span class="line">  &lt;jobFilters&#x2F;&gt;</span><br><span class="line">  &lt;columns&gt;</span><br><span class="line">    &lt;hudson.views.StatusColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.WeatherColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.JobColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.LastSuccessColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.LastDurationColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.views.BuildButtonColumn&#x2F;&gt;</span><br><span class="line">    &lt;hudson.plugins.git.GitBranchSpecifierColumn plugin&#x3D;&quot;git@3.7.0&quot;&#x2F;&gt;</span><br><span class="line">  &lt;&#x2F;columns&gt;</span><br><span class="line">  &lt;recurse&gt;false&lt;&#x2F;recurse&gt;</span><br><span class="line">&lt;&#x2F;hudson.model.ListView&gt;</span><br><span class="line">&#39;&#39;&#39;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>建议使用Python Jenkins模块，相对JenkinsApi而言，模块封装的更好。接口调用更方便，更容易上手,模块内容不是很多，可以自己研读源码进行二次开发，方便与其他系统集成，更好的落地DevOps方案的实施;</p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Jenkins-python-api/">Jenkins-python-api</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 19:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 19:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Jenkins-python-api/" title="Jenkins-python-api">https://shuke163.github.io/2020/04/20/Jenkins-python-api/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Jenkins-python-api/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Jenkins-python-api/">Jenkins-python-api</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 19:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 19:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Jenkins-python-api/" title="Jenkins-python-api">https://shuke163.github.io/2020/04/20/Jenkins-python-api/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Jenkins-python-api/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DevOps/" <i class="fa fa-tag"></i> DevOps</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/Jenkins-file-Example/" rel="next" title="Jenkins-file Example">
+                <i class="fa fa-chevron-left"></i> Jenkins-file Example
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/python-315%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="python 315道面试题">
+                python 315道面试题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins-python-api"><span class="nav-text">Jenkins-python-api</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jenkins介绍及相关"><span class="nav-text">Jenkins介绍及相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python版本的API调用"><span class="nav-text">python版本的API调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目前python版本的API主要有两个第三方包"><span class="nav-text">目前python版本的API主要有两个第三方包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API示例"><span class="nav-text">API示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JenkinsAPi模块"><span class="nav-text">JenkinsAPi模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Some-API"><span class="nav-text">Some API</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-Jenkins模块"><span class="nav-text">Python Jenkins模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Working-with-Jenkins-Jobs"><span class="nav-text">Working with Jenkins Jobs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Working-with-Jenkins-Views"><span class="nav-text">Working with Jenkins Views</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共191.5k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

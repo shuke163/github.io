@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Jenkins file 构建示例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jenkins file 构建示例">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Jenkins file 构建示例">
+<meta property="article:published_time" content="2020-04-20T11:57:27.000Z">
+<meta property="article:modified_time" content="2020-04-20T11:58:40.996Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="SRE">
+<meta property="article:tag" content=" DevOPS">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/20/Jenkins-file-构建示例/"/>
+
+
+
+
+
+  <title>Jenkins file 构建示例 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Jenkins file 构建示例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T19:57:27+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/" class="leancloud_visitors" data-flag-title="Jenkins file 构建示例">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Jenkins file 构建示例
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Jenkins-file-构建示例"><a href="#Jenkins-file-构建示例" class="headerlink" title="Jenkins file 构建示例"></a>Jenkins file 构建示例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br></pre></td><td class="code"><pre><span class="line">&#39;pipeline &#123;</span><br><span class="line">    &#x2F;&#x2F;在任何可用的代理上执行Pipeline</span><br><span class="line">    &#x2F;&#x2F;</span><br><span class="line">    agent &#123;</span><br><span class="line">        node &#123;</span><br><span class="line">            label &quot;PTtest&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    options &#123;</span><br><span class="line">        buildDiscarder(logRotator(numToKeepStr: &#39;5&#39;))</span><br><span class="line">        disableConcurrentBuilds()</span><br><span class="line">    &#125;</span><br><span class="line">    tools &#123;</span><br><span class="line">        jdk &#39;Oracle JDK 8&#39;</span><br><span class="line">        maven &#39;Maven 3&#39;</span><br><span class="line">    &#125;</span><br><span class="line">    environment &#123;</span><br><span class="line">        def serviceName  &#x3D; &quot;&quot;</span><br><span class="line">        &#x2F;&#x2F; hosts must be splited by dot</span><br><span class="line">        def warFilePath &#x3D; &#39;mywo-crud-provider&#x2F;target&#x2F;mywo-crud-provider.war&#39;</span><br><span class="line">        def hosts &#x3D; &quot;10.41.118.137&quot;</span><br><span class="line">        def deploy_user &#x3D; &quot;app-deploy&quot;</span><br><span class="line">        def artifactsPath &#x3D; &quot;devops-artifacts&quot;</span><br><span class="line">        def department &#x3D; &quot;meiwozufang&quot;</span><br><span class="line">        def artifactOssPath &#x3D; &quot;$&#123; department &#125;&#x2F;$&#123; env.JOB_NAME &#125;&quot;</span><br><span class="line">        def tempFolder &#x3D; &quot;$&#123; WORKSPACE &#125;&#x2F;$&#123; env.JOB_NAME &#125;&#x2F;$&#123; env.BUILD_NUMBER &#125;&quot;</span><br><span class="line">        def target_dir &#x3D; &quot;&#x2F;data&#x2F;services&#x2F;tomcat-mywo-crud-8090&quot;</span><br><span class="line">        def git_commit_id &#x3D; &quot;&quot;</span><br><span class="line">        def artifact &#x3D; &quot;&quot;</span><br><span class="line">        def jmeterHome &#x3D; &quot;&#x2F;home&#x2F;jenkins&#x2F;apache-jmeter-3.1&quot;</span><br><span class="line">        def antHome &#x3D; &quot;&#x2F;home&#x2F;jenkins&#x2F;apache-ant-1.9.9&quot;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(&#39;Preparation&#39;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                sh &quot;rm -rf &#x2F;tmp&#x2F;$&#123; env.JOB_NAME &#125;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Checkout code&#39;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;starting fetchCode......&quot;</span><br><span class="line">                checkout scm</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;SonarQube analysis&#39;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;starting codeAnalyze......&quot;</span><br><span class="line">                script &#123;</span><br><span class="line">                    echo &quot;starting script......&quot;</span><br><span class="line">                    def sonarqubeScannerHome &#x3D; tool name: &#39;SonarQube Scanner&#39;</span><br><span class="line">                    withSonarQubeEnv(&#39;SonarQube-Public&#39;) &#123;</span><br><span class="line">                        sh &quot;$&#123;sonarqubeScannerHome&#125;&#x2F;bin&#x2F;sonar-scanner&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"> &#x2F;&#x2F;       stage(&quot;SonarQube Quality Gate&quot;) &#123;</span><br><span class="line"> &#x2F;&#x2F;           when &#123;</span><br><span class="line"> &#x2F;&#x2F;               branch fuck</span><br><span class="line"> &#x2F;&#x2F;           &#125;</span><br><span class="line"> &#x2F;&#x2F;           steps &#123;</span><br><span class="line"> &#x2F;&#x2F;               echo &quot;starting waitForQualityGate......&quot;</span><br><span class="line"> &#x2F;&#x2F;               script &#123;</span><br><span class="line"> &#x2F;&#x2F;                   echo &quot;starting script......&quot;</span><br><span class="line"> &#x2F;&#x2F;                    timeout(time: 1, unit: &#39;HOURS&#39;) &#123;</span><br><span class="line"> &#x2F;&#x2F;                      def qg &#x3D; waitForQualityGate()</span><br><span class="line"> &#x2F;&#x2F;                      if (qg.status !&#x3D; &#39;OK&#39;) &#123;</span><br><span class="line"> &#x2F;&#x2F;                         error &quot;Pipeline aborted due to quality gate failure: $&#123;qg.status&#125;&quot;</span><br><span class="line"> &#x2F;&#x2F;                      &#125;</span><br><span class="line"> &#x2F;&#x2F;                    &#125;</span><br><span class="line"> &#x2F;&#x2F;               &#125;</span><br><span class="line"> &#x2F;&#x2F;           &#125;</span><br><span class="line"> &#x2F;&#x2F;       &#125;</span><br><span class="line"></span><br><span class="line">        stage(&#39;Compile branch master&#39;) &#123;</span><br><span class="line">            when &#123;</span><br><span class="line">                branch &#39;master&#39;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                withMaven(globalMavenSettingsConfig: &#39;bfa90212-2742-4611-aa71-8e0ec76d0c28&#39;, jdk: &#39;Oracle JDK 8&#39;, maven: &#39;Maven 3&#39;, mavenSettingsConfig: &#39;02e95d2b-6bb6-457d-943f-13c63095e500&#39;) &#123;</span><br><span class="line">                    sh &quot;mvn -Dmaven.test.skip&#x3D;true  clean package -U -DskipTests&#x3D;True&quot;</span><br><span class="line">                    sh &quot;echo this is master branch.&quot;</span><br><span class="line">                &#125;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Compile branch test&#39;) &#123;</span><br><span class="line">            when &#123;</span><br><span class="line">                branch &#39;test&#39;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                withMaven(globalMavenSettingsConfig: &#39;bfa90212-2742-4611-aa71-8e0ec76d0c28&#39;, jdk: &#39;Oracle JDK 8&#39;, maven: &#39;Maven 3&#39;, mavenSettingsConfig: &#39;02e95d2b-6bb6-457d-943f-13c63095e500&#39;) &#123;</span><br><span class="line">                    sh &quot;mvn -Dmaven.test.skip&#x3D;true  clean package -U -DskipTests&#x3D;True&quot;</span><br><span class="line">                    sh &quot;echo this is test branch.&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Package &amp; Upload to OSS&#39;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                sh &quot;mkdir -p $&#123; tempFolder &#125;&quot;</span><br><span class="line">                script &#123;</span><br><span class="line">                    sh &quot;echo Upload to OSS.&quot;</span><br><span class="line">                    git_commit_id &#x3D; sh(returnStdout: true, script: &#39;git rev-parse --short HEAD&#39;).trim() &#x2F;&#x2F;需要获取shell返回值操作</span><br><span class="line">                    serviceName &#x3D; sh(returnStdout: true, script: &quot;basename $&#123; warFilePath &#125; | cut -d . -f 1&quot;).trim()</span><br><span class="line">                    sh &quot;mv $&#123; warFilePath &#125; $&#123; tempFolder &#125;&#x2F;ROOT.war&quot;</span><br><span class="line">                    artifact &#x3D; &quot;$&#123; serviceName &#125;_$&#123; env.BUILD_NUMBER &#125;-$&#123; env.BRANCH_NAME &#125;-$&#123; git_commit_id &#125;.tar.gz&quot;</span><br><span class="line">                    sh &quot;mkdir -p $&#123; artifactsPath &#125; &amp;&amp; tar czf $&#123; artifactsPath &#125;&#x2F;$&#123; artifact &#125; -C $&#123; tempFolder &#125; ROOT.war&quot;</span><br><span class="line">                    sh &quot;upload-flash -f $&#123; artifactsPath &#125;&#x2F;$&#123; artifact &#125; -t $&#123; artifactOssPath &#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Deploy Package&#39;) &#123;</span><br><span class="line">            when &#123;</span><br><span class="line">                branch &#39;test&#39;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                script &#123;</span><br><span class="line">                    echo &quot;starting deploy......&quot;</span><br><span class="line">                    &#x2F;&#x2F; 运维人员维护私有仓库，保存ansible-playbook的配置文件</span><br><span class="line">                    git([url: &#39;git@git.shuke.com:shuke&#x2F;ansiblefiles.git&#39;, branch: &#39;master&#39;, credentialsId: &#39;7bc6cda9-a250-4d99-962c-e2ede002db06&#39;])</span><br><span class="line">                    withDockerRegistry([credentialsId: &#39;82a6a986-3f85-49f9-a926-0edf499fd1e3&#39;, url: &#39;https:&#x2F;&#x2F;dockerhub.shuke.com:5000&#39;]) &#123;</span><br><span class="line">                        withDockerContainer([image: &#39;dockerhub.shuke.com:5000&#x2F;test&#x2F;ansible_deploy:1.0.4&#39;]) &#123;</span><br><span class="line">                            sh &quot;ansible-playbook -i hosts --extra-vars &#39;warFilePath&#x3D;$&#123; tempFolder &#125;&#x2F;ROOT.war target_dir&#x3D;$&#123; target_dir &#125;&#39; -vv deploy_war.yml -l $&#123; hosts &#125;&quot;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Integration Test&#39;) &#123;</span><br><span class="line">            when &#123;</span><br><span class="line">                branch &#39;test&#39;</span><br><span class="line">            &#125;</span><br><span class="line">            parallel &#123;</span><br><span class="line">                stage(&#39;API Test&#39;) &#123;</span><br><span class="line">                    steps &#123;</span><br><span class="line">                        echo &quot;starting API......&quot;  </span><br><span class="line">                        echo &quot;starting fetchAPI......&quot;</span><br><span class="line">                        dir(&#39;API&#39;) &#123;</span><br><span class="line">                            echo &quot;starting APIScript......&quot;</span><br><span class="line">                            git([url: &#39;git@git.shuke.com:api_test&#x2F;RentHouse.git&#39;, branch: &#39;master&#39;, credentialsId: &#39;7726e85b-f455-40d1-b12c-447ecac70f23&#39;])</span><br><span class="line">                            script &#123;</span><br><span class="line">                                try &#123;</span><br><span class="line">                                    withDockerRegistry([credentialsId: &#39;82a6a986-3f85-49f9-a926-0edf499fd1e3&#39;, url: &#39;https:&#x2F;&#x2F;dockerhub.shuke.com:5000&#39;]) &#123;</span><br><span class="line">                                        withDockerContainer([image: &#39;dockerhub.shuke.com:5000&#x2F;test&#x2F;robotframework:1.0.1&#39;]) &#123;</span><br><span class="line">                                            sh &quot;pybot RentHouse_API_Test&#x2F;test&quot;</span><br><span class="line">                                        &#125; </span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;catch (exc) &#123;</span><br><span class="line">                                   echo &#39;Something failed, I should sound the klaxons!&#39;</span><br><span class="line">                                   emailContent &#x3D;  &quot;API执行过程中报错了！！&quot;</span><br><span class="line">                                &#125;finally&#123;</span><br><span class="line">                                  sh &quot;cp -r .&#x2F;output.xml &#x2F;home&#x2F;jenkins&#x2F;public&#x2F;outputRentHouse_API_Prduction.xml&quot;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">&#x2F;&#x2F;                stage(&#39;UI&#39;) &#123;</span><br><span class="line">&#x2F;&#x2F;                    steps &#123;</span><br><span class="line">&#x2F;&#x2F;                      echo &quot;starting UI......&quot;</span><br><span class="line">&#x2F;&#x2F;                    &#x2F;&#x2F;   测试闪银UI</span><br><span class="line">&#x2F;&#x2F;                        dir(&#39;UI&#39;) &#123;</span><br><span class="line">&#x2F;&#x2F;                            git([url: &#39;git@git.shuke.com:ui_test&#x2F;Wecash_RentalHouse.git&#39;, branch: &#39;master&#39;, credentialsId: &#39;7726e85b-f455-40d1-b12c-447ecac70f23&#39;])</span><br><span class="line">&#x2F;&#x2F;                            script &#123;</span><br><span class="line">&#x2F;&#x2F;                                echo &quot;starting UIScript......&quot;</span><br><span class="line">&#x2F;&#x2F;                                try &#123;</span><br><span class="line">&#x2F;&#x2F;                                   &#x2F;&#x2F;sh &quot;cd &#x2F;gg&quot;</span><br><span class="line">&#x2F;&#x2F;                                   echo &quot;starting UIScript......&quot;</span><br><span class="line">&#x2F;&#x2F;                                   &#x2F;&#x2F; 执行速度太慢，先注释代码</span><br><span class="line">&#x2F;&#x2F;                                   withDockerRegistry([credentialsId: &#39;82a6a986-3f85-49f9-a926-0edf499fd1e3&#39;, url: &#39;https:&#x2F;&#x2F;dockerhub.shuke.com:5000&#39;]) &#123;</span><br><span class="line">&#x2F;&#x2F;                                        withDockerContainer([image: &#39;dockerhub.shuke.com:5000&#x2F;test&#x2F;python-chromedriver:2.7-alpine3.7-selenium&#39;]) &#123;</span><br><span class="line">&#x2F;&#x2F;                                            sh &quot;python TestSuite&#x2F;Runner.py All All business-renthouse&quot;</span><br><span class="line">&#x2F;&#x2F;                                        &#125;</span><br><span class="line">&#x2F;&#x2F;                                    &#125;</span><br><span class="line">&#x2F;&#x2F;                                    sh &quot;&#x2F;usr&#x2F;bin&#x2F;python TestSuite&#x2F;Runner.py All All business-renthouse&quot;</span><br><span class="line">&#x2F;&#x2F;                                &#125;catch (exc) &#123;</span><br><span class="line">&#x2F;&#x2F;                                   echo &#39;Something failed, I should sound the klaxons!&#39;</span><br><span class="line">&#x2F;&#x2F;                                   emailContent &#x3D; &quot;UI执行过程中报错了！！&quot;</span><br><span class="line">&#x2F;&#x2F;                                &#125;</span><br><span class="line">&#x2F;&#x2F;                            &#125;</span><br><span class="line">&#x2F;&#x2F;                        &#125;</span><br><span class="line">&#x2F;&#x2F;                    &#125;</span><br><span class="line">&#x2F;&#x2F;                &#125;</span><br><span class="line">                stage(&#39;PT&#39;) &#123;</span><br><span class="line">                    steps &#123;</span><br><span class="line">                        echo &quot;starting PT......&quot;</span><br><span class="line">                        dir(&#39;PT&#39;) &#123;</span><br><span class="line">                            git credentialsId: &#39;7726e85b-f455-40d1-b12c-447ecac70f23&#39;, url: &#39;git@git.shuke.com:p_test&#x2F;MeiWo.git&#39;</span><br><span class="line">                        &#125;</span><br><span class="line">                        dir(&#39;Tools&#39;) &#123;</span><br><span class="line">                            script &#123;</span><br><span class="line">                                echo &quot;starting PTScript......&quot;</span><br><span class="line">                                git([url: &#39;git@git.shuke.com:gonghui&#x2F;script.git&#39;, branch: &#39;master&#39;, credentialsId: &#39;7726e85b-f455-40d1-b12c-447ecac70f23&#39;])</span><br><span class="line">                                try &#123;</span><br><span class="line">                                    withEnv([&quot;JAVA_HOME&#x3D;$&#123;tool &#39;Oracle JDK 8&#39;&#125;&quot;]) &#123;</span><br><span class="line">                                        sh &quot;$&#123;antHome&#125;&#x2F;bin&#x2F;ant -f $&#123; WORKSPACE &#125;&#x2F;Tools&#x2F;PerformFilesWithPipline&#x2F;build.xml -Dname&#x3D;MeiWo -Denv&#x3D;Test -DJOB_NAME&#x3D;$&#123;JOB_NAME&#125; -DWORKSPACE&#x3D;$&#123;WORKSPACE&#125; -DjmeterHome&#x3D;$&#123;jmeterHome&#125; run&quot;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                    echo &quot;starting PTAnalyze......&quot;</span><br><span class="line">                                    sh &quot;python $&#123; WORKSPACE &#125;&#x2F;Tools&#x2F;PerformFilesWithPipline&#x2F;jmeterQYWeiXinWithTimeoutArgu.py $&#123; WORKSPACE &#125;&#x2F;PT&#x2F;results&#x2F; MeiWo 2 5 500 4000&quot;</span><br><span class="line">                                    sh &quot;cp -r $&#123; WORKSPACE &#125;&#x2F;PT&#x2F;results&#x2F;ParseOri.html &#x2F;home&#x2F;jenkins&#x2F;public&#x2F;&quot;</span><br><span class="line">                                &#125;catch (exc) &#123;</span><br><span class="line">                                    echo &#39;PT执行报错了!!&#39;</span><br><span class="line">                                    emailContent &#x3D; &quot;PT执行过程中报错了！！&quot;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;  </span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;conformReport&amp;noticify&#39;) &#123;</span><br><span class="line">            when &#123;</span><br><span class="line">                branch &#39;test&#39;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                 echo &quot;starting email......&quot;</span><br><span class="line">                 </span><br><span class="line">                dir(&#39;conformresult&#39;) &#123;</span><br><span class="line">                    script&#123;</span><br><span class="line">                        git([url: &#39;git@git.shuke.com:gonghui&#x2F;script.git&#39;, branch: &#39;master&#39;, credentialsId: &#39;7726e85b-f455-40d1-b12c-447ecac70f23&#39;])</span><br><span class="line">                        withDockerRegistry([credentialsId: &#39;82a6a986-3f85-49f9-a926-0edf499fd1e3&#39;, url: &#39;https:&#x2F;&#x2F;dockerhub.shuke.com:5000&#39;]) &#123;</span><br><span class="line">                            withDockerContainer([image: &#39;dockerhub.shuke.com:5000&#x2F;test&#x2F;python3.6.5:1.0.0&#39;,args: &#39;-v &#x2F;data&#x2F;docker&#x2F;jenkins-slave-prod&#x2F;public:&#x2F;home&#x2F;jenkins&#x2F;public&#39;]) &#123;</span><br><span class="line">                                sh &quot;python3 parseScript&#x2F;conformReport.py &#x2F;home&#x2F;jenkins&#x2F;public $&#123; email_list &#125; $&#123;JOB_NAME&#125;-Build&#x2F;&#x2F;$&#123;BUILD_ID&#125;-&quot;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    post &#123;</span><br><span class="line">        always &#123;</span><br><span class="line">            echo &#39;always!&#39;</span><br><span class="line">            deleteDir()</span><br><span class="line">        &#125;</span><br><span class="line">        success &#123;</span><br><span class="line">            emailext body: &quot;Pipeline Success: Please Go to deploy if you pushed master just now&quot;,</span><br><span class="line">                recipientProviders: [[$class: &#39;DevelopersRecipientProvider&#39;], [$class: &#39;RequesterRecipientProvider&#39;]],</span><br><span class="line">                subject: &quot;&#39;$&#123;JOB_NAME&#125;&#39; ($&#123;BUILD_NUMBER&#125;)times SUCCESS&quot;,</span><br><span class="line">                to: &#39;&#39;</span><br><span class="line">            echo &#39;success!&#39;</span><br><span class="line">        &#125;</span><br><span class="line">        failure &#123;</span><br><span class="line">            emailext body: &quot;Pipeline error: Please go to $&#123;BUILD_URL&#125; and verify the build \n $&#123; emailContent &#125;&quot;,</span><br><span class="line">                recipientProviders: [[$class: &#39;DevelopersRecipientProvider&#39;], [$class: &#39;RequesterRecipientProvider&#39;]],</span><br><span class="line">                subject: &quot;&#39;$&#123;JOB_NAME&#125;&#39; ($&#123;BUILD_NUMBER&#125;)times FAILED&quot;,</span><br><span class="line">                to: &#39;&#39;</span><br><span class="line">            echo &#39;failure!&#39;</span><br><span class="line">        &#125;</span><br><span class="line">        unstable &#123;</span><br><span class="line">            echo &#39;unstable!&#39;</span><br><span class="line">        &#125;</span><br><span class="line">        changed &#123;</span><br><span class="line">            echo &#39;changed!&#39;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/">Jenkins file 构建示例</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 19:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 19:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/" title="Jenkins file 构建示例">https://shuke163.github.io/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/">Jenkins file 构建示例</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月20日 - 19:04</p>
+  <p><span>最后更新:</span>2020年04月20日 - 19:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/" title="Jenkins file 构建示例">https://shuke163.github.io/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/20/Jenkins-file-%E6%9E%84%E5%BB%BA%E7%A4%BA%E4%BE%8B/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/MySQL%E7%9B%B8%E5%85%B3%E9%9D%A2%E8%AF%95/" rel="next" title="MySQL相关面试">
+                <i class="fa fa-chevron-left"></i> MySQL相关面试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/Python-RBAC/" rel="prev" title="Python RBAC">
+                Python RBAC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Jenkins-file-构建示例"><span class="nav-text">Jenkins file 构建示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共191.5k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
