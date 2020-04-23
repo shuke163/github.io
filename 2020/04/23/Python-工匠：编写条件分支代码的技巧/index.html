@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PYTHON," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Python 工匠：编写条件分支代码的技巧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 工匠：编写条件分支代码的技巧">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Python 工匠：编写条件分支代码的技巧">
+<meta property="article:published_time" content="2020-04-23T08:01:49.000Z">
+<meta property="article:modified_time" content="2020-04-23T08:02:17.490Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="PYTHON">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/23/Python-工匠：编写条件分支代码的技巧/"/>
+
+
+
+
+
+  <title>Python 工匠：编写条件分支代码的技巧 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python 工匠：编写条件分支代码的技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-23T16:01:49+08:00">
+                2020-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">3.8k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">14(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PYTHON/" itemprop="url" rel="index">
+                    <span itemprop="name">PYTHON</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/" class="leancloud_visitors" data-flag-title="Python 工匠：编写条件分支代码的技巧">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Python 工匠：编写条件分支代码的技巧
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Python-工匠：编写条件分支代码的技巧"><a href="#Python-工匠：编写条件分支代码的技巧" class="headerlink" title="Python 工匠：编写条件分支代码的技巧"></a>Python 工匠：编写条件分支代码的技巧</h2><h3 id="『Python-工匠』是什么？"><a href="#『Python-工匠』是什么？" class="headerlink" title="『Python 工匠』是什么？"></a>『Python 工匠』是什么？</h3><p>我一直觉得编程某种意义上是一门『手艺』，因为优雅而高效的代码，就如同完美的手工艺品一样让人赏心悦目。 在雕琢代码的过程中，有大工程：比如应该用什么架构、哪种设计模式。也有更多的小细节，比如何时使用异常（Exceptions）、或怎么给变量起名。那些真正优秀的代码，正是由无数优秀的细节造就的。 『Python 工匠』这个系列文章，是我的一次小小尝试。它专注于分享 Python 编程中的一些偏『小』的东西。希望能够帮到每一位编程路上的匠人。</p>
+<h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h3><p>编写条件分支代码是编码过程中不可或缺的一部分。 如果用道路来做比喻，现实世界中的代码从来都不是一条笔直的高速公路，而更像是由无数个岔路口组成的某个市区地图。我们编码者就像是驾驶员，需要告诉我们的程序，下个路口需要往左还是往右。 编写优秀的条件分支代码非常重要，因为糟糕、复杂的分支处理非常容易让人困惑，从而降低代码质量。所以，这篇文章将会种重点谈谈在 Python 中编写分支代码应该注意的地方。</p>
+<h3 id="Python-里的分支代码"><a href="#Python-里的分支代码" class="headerlink" title="Python 里的分支代码"></a>Python 里的分支代码</h3><p>Python 支持最为常见的 if/else 条件分支语句，不过它缺少在其他编程语言中常见的 switch/case 语句。 除此之外，Python 还为 for/while 循环以及 try/except 语句提供了 else 分支，在一些特殊的场景下，它们可以大显身手。 下面我会从 最佳实践、常见技巧、常见陷阱 三个方面讲一下如果编写优秀的条件分支代码。</p>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><ol>
+<li>避免多层分支嵌套<br>如果这篇文章只能删减成一句话就结束，那么那句话一定是“要竭尽所能的避免分支嵌套”。 过深的分支嵌套是很多编程新手最容易犯的错误之一。假如有一位新手 JavaScript 程序员写了很多层分支嵌套，那么你可能会看到一层又一层的大括号：if { if { if { … }}}。俗称“嵌套 if 地狱（Nested If Statement Hell）”。 但是因为 Python 使用了缩进来代替 {}，所以过深的嵌套分支会产生比其他语言下更为严重的后果。比如过多的缩进层次很容易就会让代码超过 PEP8 中规定的每行字数限制。让我们看看这段代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">def buy_fruit(nerd, store):</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;去水果店买苹果</span><br><span class="line"></span><br><span class="line">    - 先得看看店是不是在营业</span><br><span class="line"></span><br><span class="line">    - 如果有苹果的话，就买 1 个</span><br><span class="line"></span><br><span class="line">    - 如果钱不够，就回家取钱再来</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    if store.is_open():</span><br><span class="line">        if store.has_stocks(&quot;apple&quot;):</span><br><span class="line">            if nerd.can_afford(store.price(&quot;apple&quot;, amount&#x3D;1)):</span><br><span class="line">                nerd.buy(store, &quot;apple&quot;, amount&#x3D;1)</span><br><span class="line">                return</span><br><span class="line">            else:</span><br><span class="line">                nerd.go_home_and_get_money()</span><br><span class="line">                return buy_fruit(nerd, store)</span><br><span class="line">        else:</span><br><span class="line">            raise MadAtNoFruit(&quot;no apple in store!&quot;)</span><br><span class="line">    else:</span><br><span class="line">        raise MadAtNoFruit(&quot;store is closed!&quot;)</span><br></pre></td></tr></table></figure>
+上面这段代码最大的问题，就是过于直接翻译了原始的条件分支要求，导致短短十几行代码包含了有三层嵌套分支。 这样的代码可读性和维护性都很差。不过我们可以用一个很简单的技巧：”提前结束”来优化这段代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def buy_fruit(nerd, store):</span><br><span class="line"></span><br><span class="line">    if not store.is_open():</span><br><span class="line">        raise MadAtNoFruit(&quot;store is closed!&quot;)</span><br><span class="line">    if not store.has_stocks(&quot;apple&quot;):</span><br><span class="line">        raise MadAtNoFruit(&quot;no apple in store!&quot;)</span><br><span class="line">    if nerd.can_afford(store.price(&quot;apple&quot;, amount&#x3D;1)):</span><br><span class="line">        nerd.buy(store, &quot;apple&quot;, amount&#x3D;1)</span><br><span class="line">        return</span><br><span class="line">    else:</span><br><span class="line">        nerd.go_home_and_get_money()</span><br><span class="line">        return buy_fruit(nerd, store)</span><br></pre></td></tr></table></figure>
+“提前结束”指：在函数内使用 return 或 raise 等语句提前在分支内结束函数。比如，在新的 buy_fruit 函数里，当分支条件不满足时，我们直接抛出异常，结束这段这代码分支。这样的代码没有嵌套分支，更直接也更易读。</li>
+<li>封装那些过于复杂的逻辑判断<br>如果条件分支里的表达式过于复杂，出现了太多的 not/and/or，那么这段代码的可读性就会大打折扣，比如下面这段代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 如果活动还在开放，并且活动剩余名额大于 10，为所有性别为女性，或者级别大于 3</span><br><span class="line"></span><br><span class="line"># 的活跃用户发放 10000 个金币</span><br><span class="line"></span><br><span class="line">if activity.is_active and activity.remaining &gt; 10 and \</span><br><span class="line"></span><br><span class="line">        user.is_active and (user.sex &#x3D;&#x3D; &#39;female&#39; or user.level &gt; 3):</span><br><span class="line"></span><br><span class="line">    user.add_coins(10000)</span><br><span class="line"></span><br><span class="line">    return</span><br></pre></td></tr></table></figure>
+对于这样的代码，我们可以考虑将具体的分支逻辑封装成函数或者方法，来达到简化代码的目的：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if activity.allow_new_user() and user.match_activity_condition():</span><br><span class="line">    user.add_coins(10000)</span><br><span class="line">    return</span><br></pre></td></tr></table></figure>
+事实上，将代码改写后，之前的注释文字其实也可以去掉了。因为后面这段代码已经达到了自说明的目的。至于具体的 什么样的用户满足活动条件？ 这种问题，就应由具体的<code>match_activity_condition()</code>方法来回答了。<blockquote>
+<p>Hint: 恰当的封装不光直接改善了代码的可读性，事实上，如果上面的活动判断逻辑在代码中出现了不止一次的话，封装更是必须的。不然重复代码会极大的破坏这段逻辑的可维护性。</p>
+</blockquote>
+</li>
+<li>留意不同分支下的重复代码<br>重复代码是代码质量的天敌，而条件分支语句又非常容易成为重复代码的重灾区。所以，当我们编写条件分支语句时，需要特别留意，不要生产不必要的重复代码。 让我们看下这个例子：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 对于新用户，创建新的用户资料，否则更新旧资料</span><br><span class="line"></span><br><span class="line">if user.no_profile_exists:</span><br><span class="line">    create_user_profile(</span><br><span class="line">        username&#x3D;user.username,</span><br><span class="line">        email&#x3D;user.email,</span><br><span class="line">        age&#x3D;user.age,</span><br><span class="line">        address&#x3D;user.address,</span><br><span class="line">        # 对于新建用户，将用户的积分置为 0</span><br><span class="line">        points&#x3D;0,</span><br><span class="line">        created&#x3D;now(),</span><br><span class="line">    )</span><br><span class="line">else:</span><br><span class="line">    update_user_profile(</span><br><span class="line">        username&#x3D;user.username,</span><br><span class="line">        email&#x3D;user.email,</span><br><span class="line">        age&#x3D;user.age,</span><br><span class="line">        address&#x3D;user.address,</span><br><span class="line">        updated&#x3D;now(),</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+在上面的代码中，我们可以一眼看出，在不同的分支下，程序调用了不同的函数，做了不一样的事情。但是，因为那些重复代码的存在，我们却很难简单的区分出，二者的不同点到底在哪。 其实，得益于 Python 的动态特性，我们可以简单的改写一下上面的代码，让可读性可以得到显著的提升：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">if user.no_profile_exists:</span><br><span class="line">    profile_func &#x3D; create_user_profile</span><br><span class="line">    extra_args &#x3D; &#123;&#39;points&#39;: 0, &#39;created&#39;: now()&#125;</span><br><span class="line">else:</span><br><span class="line">    profile_func &#x3D; update_user_profile</span><br><span class="line">    extra_args &#x3D; &#123;&#39;updated&#39;: now()&#125;</span><br><span class="line"></span><br><span class="line">profile_func(</span><br><span class="line">    username&#x3D;user.username,</span><br><span class="line">    email&#x3D;user.email,</span><br><span class="line">    age&#x3D;user.age,</span><br><span class="line">    address&#x3D;user.address,</span><br><span class="line">    **extra_args</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+当你编写分支代码时，请额外关注由分支产生的重复代码块，如果可以简单的消灭它们，那就不要迟疑。</li>
+<li>谨慎使用三元表达式<br>三元表达式是 Python 2.5 版本后才支持的语法。在那之前，Python 社区一度认为三元表达式没有必要，我们需要使用 x and a or b 的方式来模拟它。[注] 事实是，在很多情况下，使用普通的 if/else 语句的代码可读性确实更好。盲目追求三元表达式很容易诱惑你写出复杂、可读性差的代码。 所以，请记得只用三元表达式处理简单的逻辑分支。<blockquote>
+<p>language = “python” if you.favor(“dynamic”) else “golang”<br>对于绝大多数情况，还是使用普通的 if/else 语句吧。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="常见技巧"><a href="#常见技巧" class="headerlink" title="常见技巧"></a>常见技巧</h3><ol>
+<li>使用”德摩根定律”<br>在做分支判断时，我们有时候会写成这样的代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 如果用户没有登录或者用户没有使用 chrome，拒绝提供服务</span><br><span class="line">if not user.has_logged_in or not user.is_from_chrome:</span><br><span class="line">    return &quot;our service is only available for chrome logged in user&quot;</span><br></pre></td></tr></table></figure>
+第一眼看到代码时，是不是需要思考一会才能理解它想干嘛？这是因为上面的逻辑表达式里面出现了2个not和1个or。而我们人类恰好不擅长处理过多的“否定”以及“或”这种逻辑关系。 这个时候，就该 德摩根定律 出场了。通俗的说，德摩根定律就是<code>not A or not B</code>等价于<code>not (A and B)</code>通过这样的转换，上面的代码可以改写成这样：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if not (user.has_logged_in and user.is_from_chrome):</span><br><span class="line">    return &quot;our service is only open for chrome logged in user&quot;</span><br></pre></td></tr></table></figure>
+怎么样，代码是不是易读了很多？记住德摩根定律，很多时候它对于简化条件分支里的代码逻辑非常有用。</li>
+<li>自定义对象的”布尔真假”<br>我们常说，在 Python 里，”万物皆对象”。其实，不光”万物皆对象”，我们还可以利用很多魔法方法（文档中称为：user-defined method），来自定义对象的各种行为。我们可以用很多在别的语言里面无法做到、有些魔法的方式来影响代码的执行。 比如，Python的所有对象都有自己的”布尔真假”：</li>
+</ol>
+<ul>
+<li>布尔值为假的对象：None, 0, False, [], (), {}, set(), frozenset(), … …</li>
+<li>布尔值为真的对象：非 0 的数值、True，非空的序列、元组，普通的用户类实例，… …<br>通过内建函数 bool()，你可以很方便的查看某个对象的布尔真假。而 Python 进行条件分支判断时用到的也是这个值：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bool(object())</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+重点来了，虽然所有用户类实例的布尔值都是真。但是 Python 提供了改变这个行为的办法：自定义类的<code>__bool__</code>魔法方法 （在 Python 2.X 版本中为 <strong>nonzero</strong>）。当类定义了<code>__bool__</code>方法后，它的返回值将会被当作类实例的布尔值。 另外，<code>__bool__</code>不是影响实例布尔真假的唯一方法。如果类没有定义<code>__bool__</code>方法，Python 还会尝试调用<code>__len__</code>方法（也就是对任何序列对象调用 len 函数），通过结果是否为 0 判断实例真假。 那么这个特性有什么用呢？看看下面这段代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class UserCollection(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self, users):</span><br><span class="line">        self._users &#x3D; users</span><br><span class="line"></span><br><span class="line">users &#x3D; UserCollection([piglei, raymond])</span><br><span class="line">if len(users._users) &gt; 0:</span><br><span class="line">    print(&quot;There&#39;s some users in collection!&quot;)</span><br></pre></td></tr></table></figure>
+上面的代码里，判断<code>UserCollection</code>是否有内容时用到了<code>users._users</code>的长度。其实，通过为 UserCollection 添加<code>__len__</code>魔法方法，上面的分支可以变得更简单：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class UserCollection:</span><br><span class="line"></span><br><span class="line">    def __init__(self, users):</span><br><span class="line">        self._users &#x3D; users</span><br><span class="line"></span><br><span class="line">    def __len__(self):</span><br><span class="line">        return len(self._users)</span><br><span class="line"></span><br><span class="line">users &#x3D; UserCollection([piglei, raymond])</span><br><span class="line"></span><br><span class="line"># 定义了 __len__ 方法后，UserCollection 对象本身就可以被用于布尔判断了</span><br><span class="line">if users:</span><br><span class="line">    print(&quot;There&#39;s some users in collection!&quot;)</span><br></pre></td></tr></table></figure>
+通过定义魔法方法<code>__len__</code>和<code>__bool__</code>，我们可以让类自己控制想要表现出的布尔真假值，让代码变得更pythonic。</li>
+</ul>
+<ol start="3">
+<li>在条件判断中使用 <code>all()/any()</code><br>all() 和 any() 两个函数非常适合在条件判断中使用。这两个函数接受一个可迭代对象，返回一个布尔值，其中：</li>
+</ol>
+<ul>
+<li>all(seq)：仅当 seq 中所有对象都为布尔真时返回 True，否则返回 False</li>
+<li>any(seq)：只要 seq 中任何一个对象为布尔真就返回 True，否则返回 False<br>假如我们有下面这段代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">def all_numbers_gt_10(numbers):</span><br><span class="line">    &quot;&quot;&quot;仅当序列中所有数字大于 10 时，返回 True</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    if not numbers:</span><br><span class="line">        return False</span><br><span class="line"></span><br><span class="line">    for n in numbers:</span><br><span class="line">        if n &lt;&#x3D; 10:</span><br><span class="line">            return False</span><br><span class="line">    return True</span><br></pre></td></tr></table></figure>
+如果使用<code>all()</code>内建函数，再配合一个简单的生成器表达式，上面的代码可以写成这样：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def all_numbers_gt_10_2(numbers):</span><br><span class="line">    return bool(numbers) and all(n &gt; 10 for n in numbers)</span><br></pre></td></tr></table></figure>
+简单、高效，同时也没有损失可用性。</li>
+</ul>
+<ol start="4">
+<li>使用 try/while/for 中 else 分支<br>让我们看看这个函数：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def do_stuff():</span><br><span class="line">    first_thing_successed &#x3D; False</span><br><span class="line">    try:</span><br><span class="line">        do_the_first_thing()</span><br><span class="line">        first_thing_successed &#x3D; True</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(&quot;Error while calling do_some_thing&quot;)</span><br><span class="line">        return</span><br><span class="line"></span><br><span class="line">    # 仅当 first_thing 成功完成时，做第二件事</span><br><span class="line">    if first_thing_successed:</span><br><span class="line">        return do_the_second_thing()</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>在函数 do_stuff 中，我们希望只有当<code>do_the_first_thing()</code>成功调用后（也就是不抛出任何异常），才继续做第二个函数调用。为了做到这一点，我们需要定义一个额外的变量<code>first_thing_successed</code>来作为标记。 其实，我们可以用更简单的方法达到同样的效果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def do_stuff():</span><br><span class="line">    try:</span><br><span class="line">        do_the_first_thing()</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(&quot;Error while calling do_some_thing&quot;)</span><br><span class="line">        return</span><br><span class="line">    else:</span><br><span class="line">        return do_the_second_thing()</span><br></pre></td></tr></table></figure>
+<p>在 try 语句块最后追加上 else 分支后，分支下的<code>do_the_second_thing()</code>便只会在 try 下面的所有语句正常执行（也就是没有异常，没有 return、break 等）完成后执行。 类似的，Python 里的 for/while 循环也支持添加 else 分支，它们表示：当循环使用的迭代对象被正常耗尽、或 while 循环使用的条件变量变为 False 后才执行 else 分支下的代码。</p>
+<h3 id="常见陷阱"><a href="#常见陷阱" class="headerlink" title="常见陷阱"></a>常见陷阱</h3><ol>
+<li>与 None 值的比较<br>在 Python 中，有两种比较变量的方法：== 和 is，二者在含义上有着根本的区别：</li>
+</ol>
+<ul>
+<li>==：表示二者所指向的的值是否一致</li>
+<li>is：表示二者是否指向内存中的同一份内容，也就是 id(x) 是否等于 id(y)<br>None 在 Python 语言中是一个单例对象，如果你要判断某个变量是否为 None 时，记得使用 is 而不是 ==，因为只有 is 才能在严格意义上表示某个变量是否是 None。 否则，可能出现下面这样的情况：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; class Foo(object):</span><br><span class="line">...     def __eq__(self, other):</span><br><span class="line">...         return True</span><br><span class="line">...</span><br><span class="line">&gt;&gt;&gt; foo &#x3D; Foo()</span><br><span class="line">&gt;&gt;&gt; foo &#x3D;&#x3D; None</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+在上面代码中，Foo 这个类通过自定义<code>__eq__</code>魔法方法的方式，很容易就满足了<code>== None</code>这个条件。 所以，当你要判断某个变量是否为 None 时，请使用 is 而不是 ==。</li>
+</ul>
+<ol start="2">
+<li>留意 and 和 or 的运算优先级<br>看看下面这两个表达式，猜猜它们的值一样吗？<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; (True or False) and False</span><br><span class="line">&gt;&gt;&gt; True or False and False</span><br></pre></td></tr></table></figure>
+答案是：不一样，它们的值分别是 False 和 True，你猜对了吗？ 问题的关键在于：and 运算符的优先级大于 or。因此上面的第二个表达式在 Python 看来实际上是 True or (False and False)。所以结果是 True 而不是 False。 在编写包含多个 and 和 or 的表达式时，请额外注意 and 和 or 的运算优先级。即使执行优先级正好是你需要的那样，你也可以加上额外的括号来让代码更清晰。</li>
+</ol>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>以上就是『Python 工匠』系列文章的第二篇。不知道文章的内容是否对你的胃口。 代码内的分支语句不可避免，我们在编写代码时，需要尤其注意它的可读性，避免对其他看到代码的人造成困扰。</p>
+<h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p>事实上<code>x and a or b</code>不是总能给你正确的结果，只有当 a 与 b 的布尔值为真时，这个表达式才能正常工作，这是由逻辑运算的短路特性决定的。你可以在命令行中运行<code>True and None or 0</code>试试看，结果是0而非 None。</p>
+<h3 id="refs"><a href="#refs" class="headerlink" title="refs"></a>refs</h3><p><a href="http://python.jobbole.com/89060/" target="_blank" rel="noopener">Python 工匠：编写条件分支代码的技巧</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/">Python 工匠：编写条件分支代码的技巧</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月23日 - 16:04</p>
+  <p><span>最后更新:</span>2020年04月23日 - 16:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/" title="Python 工匠：编写条件分支代码的技巧">https://shuke163.github.io/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/">Python 工匠：编写条件分支代码的技巧</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月23日 - 16:04</p>
+  <p><span>最后更新:</span>2020年04月23日 - 16:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/" title="Python 工匠：编写条件分支代码的技巧">https://shuke163.github.io/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/Python-%E5%B7%A5%E5%8C%A0%EF%BC%9A%E7%BC%96%E5%86%99%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8A%80%E5%B7%A7/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PYTHON/" <i class="fa fa-tag"></i> PYTHON</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/23/Nexus%E4%BB%93%E5%BA%93%E8%BF%81%E7%A7%BB/" rel="next" title="Nexus仓库迁移">
+                <i class="fa fa-chevron-left"></i> Nexus仓库迁移
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/23/Python-concurrent-futures-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%BF%9B%E7%A8%8B%E6%B1%A0%E6%A8%A1%E5%9D%97/" rel="prev" title="Python concurrent.futures 线程池进程池模块">
+                Python concurrent.futures 线程池进程池模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">128</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-工匠：编写条件分支代码的技巧"><span class="nav-text">Python 工匠：编写条件分支代码的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#『Python-工匠』是什么？"><span class="nav-text">『Python 工匠』是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序言"><span class="nav-text">序言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-里的分支代码"><span class="nav-text">Python 里的分支代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最佳实践"><span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见技巧"><span class="nav-text">常见技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见陷阱"><span class="nav-text">常见陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-text">结语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注解"><span class="nav-text">注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#refs"><span class="nav-text">refs</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共259.9k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

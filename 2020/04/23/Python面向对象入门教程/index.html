@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PYTHON," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Python面向对象入门教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python面向对象入门教程">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="Python面向对象入门教程">
+<meta property="article:published_time" content="2020-04-23T08:11:14.000Z">
+<meta property="article:modified_time" content="2020-04-23T08:11:33.826Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="PYTHON">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/23/Python面向对象入门教程/"/>
+
+
+
+
+
+  <title>Python面向对象入门教程 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python面向对象入门教程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-23T16:11:14+08:00">
+                2020-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">6.4k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">25(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PYTHON/" itemprop="url" rel="index">
+                    <span itemprop="name">PYTHON</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/" class="leancloud_visitors" data-flag-title="Python面向对象入门教程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Python面向对象入门教程
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Python面向对象入门教程"><a href="#Python面向对象入门教程" class="headerlink" title="Python面向对象入门教程"></a>Python面向对象入门教程</h2><blockquote>
+<p>面向对象编程和函数式编程（面向过程编程）都是程序设计的方法，不过稍有区别</p>
+</blockquote>
+<h3 id="面向过程与面向对象编程区别"><a href="#面向过程与面向对象编程区别" class="headerlink" title="面向过程与面向对象编程区别"></a>面向过程与面向对象编程区别</h3><ol>
+<li>面向过程编程:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1. 导入各种外部库</span><br><span class="line">2. 设计各种全局变量</span><br><span class="line">3. 写一个函数完成某个功能</span><br><span class="line">4. 写一个函数完成某个功能</span><br><span class="line">5. 写一个函数完成某个功能</span><br><span class="line">6. 写一个函数完成某个功能</span><br><span class="line">7. 写一个函数完成某个功能</span><br><span class="line">8. ......</span><br><span class="line">9. 写一个main函数作为程序入口</span><br></pre></td></tr></table></figure>
+在多函数程序中，许多重要的数据被放置在全局数据区，这样它们可以被所有的函数访问。每个函数都可以具有它们自己的局部数据，将某些功能代码封装到函数中，日后便无需重复编写，仅调用函数即可。从代码的组织形式来看就是根据业务逻辑从上到下垒代码,程序从上到下顺序执行.</li>
+<li>面向对象编程:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 导入各种外部库</span><br><span class="line">2. 设计各种全局变量</span><br><span class="line">3. 决定你要的类</span><br><span class="line">4. 给每个类提供完整的一组操作</span><br><span class="line">5. 明确地使用继承来表现不同类之间的共同点</span><br><span class="line">6. 根据需要，决定是否写一个main函数作为程序入口</span><br></pre></td></tr></table></figure>
+面向对象编程中，将函数和变量进一步封装成类，类才是程序的基本元素，它将数据和操作紧密地连结在一起，并保护数据不会被外界的函数意外地改变。类和和类的实例(也称对象)是面向对象的核心概念，是和面向过程编程、函数式编程的根本区别。</li>
+</ol>
+<p>⚠️ 并不是非要用面向对象编程，要看你的程序怎么设计方便，但是就目前来说，基本上都是在使用面向对象编程。</p>
+<h3 id="类的基本用法"><a href="#类的基本用法" class="headerlink" title="类的基本用法"></a>类的基本用法</h3><p>面向对象是通过定义class类来定义，这么说面向对象编程就是只使用class类，在class类中有封装，继承的功能，并且还可以构造要传入的参数，方便控制。</p>
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">import time</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&#39;utf-8&#39;)</span><br><span class="line"></span><br><span class="line">class studetn:</span><br><span class="line">    # 定义一个类名为studetn</span><br><span class="line">    def __init__(self,idx):</span><br><span class="line">    # 定义初始化构造，这里使用init，还有别的属性比如reversed，iter之类的</span><br><span class="line">        self.idx&#x3D;idx</span><br><span class="line">        self.age &#x3D; 18</span><br><span class="line">        # 初始化变量，方便继承</span><br><span class="line">        </span><br><span class="line">    def runx(self):</span><br><span class="line">    # 定义运行函数，从上面继承变量</span><br><span class="line">        print(self.idx)</span><br><span class="line">        time.sleep(1)</span><br><span class="line"></span><br><span class="line"># 这是类的调用，一定要记得类的使用方法，首先传入参数，类赋值给一个变量a</span><br><span class="line"># 然后调用这个类下面定义的函数        </span><br><span class="line">a&#x3D;studetn(&#39;a&#39;)</span><br><span class="line">a.runx()</span><br></pre></td></tr></table></figure>
+<p>术语介绍:</p>
+<ol>
+<li>类(Class): 用来描述具有相同属性和方法的对象的集合。它定义了该集合中每个对象所共有的属性和方法。其中的对象被称作类的实例。</li>
+<li>实例：也称对象。通过类定义的初始化方法，赋予具体的值，成为一个”有血有肉的实体”。</li>
+<li>实例化：创建类的实例的过程或操作。</li>
+<li>实例变量：定义在实例中的变量，只作用于当前实例。</li>
+<li>类变量：类变量是所有实例公有的变量。类变量定义在类中，但在方法体之外。</li>
+<li>数据成员：类变量、实例变量、方法、类方法、静态方法和属性等的统称。</li>
+<li>方法：类中定义的函数。</li>
+<li>静态方法：不需要实例化就可以由类执行的方法</li>
+<li>类方法：类方法是将类本身作为对象进行操作的方法。</li>
+<li>方法重写：如果从父类继承的方法不能满足子类的需求，可以对父类的方法进行改写，这个过程也称override。</li>
+<li>封装：将内部实现包裹起来，对外透明，提供api接口进行调用的机制</li>
+<li>继承：即一个派生类(derived class)继承父类(base class)的变量和方法。</li>
+<li>多态：根据对象类型的不同以不同的方式进行处理。</li>
+</ol>
+<h4 id="类与实例"><a href="#类与实例" class="headerlink" title="类与实例"></a>类与实例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">@author: shuke</span><br><span class="line">@file: ec2.py </span><br><span class="line">@time: 2019&#x2F;03&#x2F;14 10:52</span><br><span class="line">@contact: zhaofengfeng@wecash.net</span><br><span class="line">@software:  learn</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line">import time</span><br><span class="line">import requests</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&#39;utf-8&#39;)</span><br><span class="line"></span><br><span class="line">class cc:</span><br><span class="line">    ccc &#x3D; &#39;ccc&#39;</span><br><span class="line">    # cc就是类名 如果想要继承别的类 就class cc(threading) 意思就是从threading继承</span><br><span class="line">    def __init__(self,a,b,c):</span><br><span class="line">        self.a&#x3D;a</span><br><span class="line">        self.b&#x3D;b</span><br><span class="line">        self.c&#x3D;c</span><br><span class="line">        # 定义构造的过程就是实例化</span><br><span class="line">    def runx(self):</span><br><span class="line">        print self.a*10</span><br><span class="line">        print self.b*5</span><br><span class="line">        print self.c*2</span><br><span class="line">    def runy(self):</span><br><span class="line">        print requests.get(&#39;http:&#x2F;&#x2F;www.langzi.fun&#39;).headers</span><br><span class="line">e &#x3D; cc(&#39;AAA&#39;,&#39;CCC&#39;,&#39;EEE&#39;)</span><br><span class="line">e.runx()</span><br><span class="line">e.runy()</span><br><span class="line"># 这两个就是调用类里面的方法</span><br><span class="line">print e.c</span><br><span class="line">#实例变量指的是实例本身拥有的变量。每个实例的变量在内存中都不一样。</span><br><span class="line">print e.ccc</span><br><span class="line">#类变量，在类里面找到定义的变量。</span><br></pre></td></tr></table></figure>
+<h4 id="调用类的三种方法"><a href="#调用类的三种方法" class="headerlink" title="调用类的三种方法"></a>调用类的三种方法</h4><ol>
+<li>实例方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">import time</span><br><span class="line">import requests</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&#39;utf-8&#39;)</span><br><span class="line"></span><br><span class="line">class dd:</span><br><span class="line">    def __init__(self,url):</span><br><span class="line">        self.url&#x3D;url</span><br><span class="line">    def runx(self):</span><br><span class="line">        print requests.get(self.url).status_code</span><br><span class="line"></span><br><span class="line">a &#x3D; dd(&#39;http:&#x2F;&#x2F;www.langzi.fun&#39;)</span><br><span class="line">a.runx()</span><br><span class="line"># 这种调用方法就是实例方法</span><br></pre></td></tr></table></figure></li>
+<li>静态方法<blockquote>
+<p>静态方法由类调用，无默认参数。将实例方法参数中的self去掉，然后在方法定义上方加上<code>@staticmethod</code>，就成为静态方法。它属于类，和实例无关。建议只使用类名.静态方法的调用方式。（虽然也可以使用实例名.静态方法的方式调用）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">import requests</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&#39;utf-8&#39;)</span><br><span class="line">class ff:</span><br><span class="line">    @staticmethod</span><br><span class="line">    def runx():</span><br><span class="line">        print requests.get(&#39;http:&#x2F;&#x2F;www.langzi.fun&#39;).status_code</span><br><span class="line">ff.runx()</span><br><span class="line">#这里就直接调用了类的变量，只在类中运行而不在实例中运行的方法</span><br></pre></td></tr></table></figure>
+经常有一些跟类有关系的功能但在运行时又不需要实例和类参与的情况下需要用到静态方法. 比如更改环境变量或者修改其他类的属性等能用到静态方法. 这种情况可以直接用函数解决, 但这样同样会扩散类内部的代码，造成维护困难。</li>
+<li>类方法<blockquote>
+<p>类方法由类调用，采用<code>@classmethod</code>装饰，至少传入一个cls（代指类本身，类似self）参数。执行类方法时，自动将调用该方法的类赋值给cls。建议只使用类名.类方法的调用方式。（虽然也可以使用实例名.类方法的方式调用）<br>如果要构造一个类，接受一个网站和这个网站的状态码，然后打印出来。就像这样：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">import requests</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&#39;utf-8&#39;)</span><br><span class="line">class gg:</span><br><span class="line">    def __init__(self,url,stat):</span><br><span class="line">        self.url&#x3D;url</span><br><span class="line">        self.stat&#x3D;stat</span><br><span class="line">    def outer(self):</span><br><span class="line">        print self.url</span><br><span class="line">        print self.stat</span><br><span class="line">a &#x3D; gg(&#39;langzi&#39;,200)</span><br><span class="line">a.outer()</span><br></pre></td></tr></table></figure>
+这样就是使用实例方法，虽然可以实现，但是有的时候传入的参数并不是(‘shuke’,200)这样的格式，而是(‘shuke-200’)这样的，那该怎么做？首先要把这个拆分，但是要使用实例方法实现起来很麻烦，这个时候就可以使用类方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">import requests</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&#39;utf-8&#39;)</span><br><span class="line">class gg:</span><br><span class="line">    url &#x3D; 0</span><br><span class="line">    stat &#x3D; 0</span><br><span class="line">    # 因为使用classmethod后会传入新的变量，所以一开始是需要自己先定义类变量</span><br><span class="line">    def __init__(self,url&#x3D;0,stat&#x3D;0):</span><br><span class="line">    # 这里按照正常的定义构造函数</span><br><span class="line">        self.url&#x3D;url</span><br><span class="line">        self.stat&#x3D;stat</span><br><span class="line">    @classmethod</span><br><span class="line">    # 装饰器，立马执行下面的函数</span><br><span class="line">    def split(cls,info):</span><br><span class="line">        # 这个函数接受两个参数，默认的cls就是这个类的init函数，info就是外面传入进来的</span><br><span class="line">        url,stat&#x3D;map(str,info.split(&#39;-&#39;))</span><br><span class="line">        # 这里转换成了格式化的结构</span><br><span class="line">        data &#x3D; cls(url,stat)</span><br><span class="line">        # 然后执行这个类第一个方法，这个类构造函数需要传入两个参数，于是就传入了两个参数</span><br><span class="line">        return data</span><br><span class="line">        # 这里就直接返回了函数结果</span><br><span class="line">    def outer(self):</span><br><span class="line">        print self.url</span><br><span class="line">        print self.stat</span><br><span class="line"></span><br><span class="line">r &#x3D; gg.split((&#39;langzi-200&#39;))</span><br><span class="line">r.outer()</span><br><span class="line"># 这里是调用类方法，与调用实例方法一样</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="类的特性"><a href="#类的特性" class="headerlink" title="类的特性"></a>类的特性</h3><h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><blockquote>
+<p>封装是指将数据与具体操作的实现代码放在某个对象内部，外部无法访问。必须要先调用类的方法才能启动。</p>
+</blockquote>
+<ol>
+<li>Example<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class cc:</span><br><span class="line">    ccc &#x3D; &#39;ccc&#39;</span><br><span class="line">    # cc就是类名 如果想要继承别的类 就class cc(threading) 意思就是从threading继承</span><br><span class="line">    def __init__(self,a,b,c):</span><br><span class="line">        self.a&#x3D;a</span><br><span class="line">        self.b&#x3D;b</span><br><span class="line">        self.c&#x3D;c</span><br><span class="line">print e.ccc</span><br><span class="line">#类变量，在类里面找到定义的变量。</span><br><span class="line">print ccc</span><br><span class="line"># 这里会报错，这就是封装。类中的函数同理。</span><br></pre></td></tr></table></figure>
+<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><blockquote>
+<p>当我们定义一个class的时候，可以从某个现有的class继承，新的class称为子类（Subclass），而被继承的class称为基类、父类或超类（Base class、Super class）。<br>比如，我们已经编写了一个名为Animal的class，有一个run()方法可以直接打印：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line">    def run(self):</span><br><span class="line">        print &#39;Animal is running...&#39;</span><br></pre></td></tr></table></figure>
+当我们需要编写Dog和Cat类时，就可以直接从Animal类继承：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Dog(Animal):</span><br><span class="line">    pass</span><br><span class="line">class Cat(Animal):</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
+继承有什么好处？最大的好处是子类获得了父类的全部功能。由于Animial实现了run()方法，因此，Dog和Cat作为它的子类，什么事也没干，就自动拥有了run()方法：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dog &#x3D; Dog()</span><br><span class="line">dog.run()</span><br><span class="line">cat &#x3D; Cat()</span><br><span class="line">cat.run()</span><br></pre></td></tr></table></figure>
+当子类和父类都存在相同的run()方法时，我们说，子类的run()覆盖了父类的run()，在代码运行的时候，总是会调用子类的run()。这样，我们就获得了继承的另一个好处: 多态。<h4 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h4><blockquote>
+<p>要理解多态的好处，我们还需要再编写一个函数，这个函数接受一个Animal类型的变量：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">def run_twice(animal):</span><br><span class="line">    animal.run()</span><br><span class="line">    animal.run()</span><br></pre></td></tr></table></figure>
+当我们传入Animal的实例时，run_twice()就打印出：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run_twice(Animal())</span><br><span class="line">运行结果：</span><br><span class="line">Animal is running...</span><br><span class="line">Animal is running...</span><br></pre></td></tr></table></figure>
+当我们传入Dog的实例时，run_twice()就打印出:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run_twice(Dog())</span><br><span class="line">运行结果：</span><br><span class="line">Dog is running...</span><br><span class="line">Dog is running...</span><br></pre></td></tr></table></figure>
+当我们传入Cat的实例时，run_twice()就打印出：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run_twice(Cat())</span><br><span class="line">运行结果：</span><br><span class="line">Cat is running...</span><br><span class="line">Cat is running...</span><br></pre></td></tr></table></figure>
+看上去没啥意思，但是仔细想想，现在，如果我们再定义一个Tortoise类型，也从Animal派生：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class Tortoise(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print &#39;Tortoise is running slowly...&#39;</span><br></pre></td></tr></table></figure>
+当我们调用run_twice()时，传入Tortoise的实例:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run_twice(Tortoise())</span><br><span class="line">运行结果：</span><br><span class="line">Tortoise is running slowly...</span><br><span class="line">Tortoise is running slowly...</span><br></pre></td></tr></table></figure></li>
+<li>你会发现，新增一个Animal的子类，不必对run_twice()做任何修改，实际上，任何依赖Animal作为参数的函数或者方法都可以不加修改地正常运行，原因就在于多态。</li>
+<li>多态的好处就是，当我们需要传入Dog、Cat、Tortoise……时，我们只需要接收Animal类型就可以了，因为Dog、Cat、Tortoise……都是Animal类型，然后，按照Animal类型进行操作即可。由于Animal类型有run()方法，因此，传入的任意类型，只要是Animal类或者子类，就会自动调用实际类型的run()方法，这就是多态的意思.</li>
+<li>对于一个变量，我们只需要知道它是Animal类型，无需确切地知道它的子类型，就可以放心地调用run()方法，而具体调用的run()方法是作用在Animal、Dog、Cat还是Tortoise对象上，由运行时该对象的确切类型决定，这就是多态真正的威力：调用方只管调用，不管细节，而当我们新增一种Animal的子类时，只要确保run()方法编写正确，不用管原来的代码是如何调用的。这就是著名的“开闭”原则</li>
+</ol>
+<ul>
+<li>对扩展开放：允许新增Animal子类</li>
+<li>对修改封闭：不需要修改依赖Animal类型的run_twice()等函数<br>⚠️ 总结: </li>
+</ul>
+<ol>
+<li>继承可以把父类的所有功能都直接拿过来，这样就不必重零做起，子类只需要新增自己特有的方法，也可以把父类不适合的方法覆盖重写；</li>
+<li>有了继承，才能有多态。在调用类实例方法的时候，尽量把变量视作父类类型，这样，所有子类类型都可以正常被接收；</li>
+<li>旧的方式定义Python类允许不从object类继承，但这种编程方式已经严重不推荐使用。任何时候，如果没有合适的类可以继承，就继承自object类。</li>
+</ol>
+<h3 id="魔法方法"><a href="#魔法方法" class="headerlink" title="魔法方法"></a>魔法方法</h3><p>在上面有提到除了<strong>init</strong>之外还有iter,reverse的方法，这里就详细说下除了init初始化还有哪些别的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">__init__ :      构造函数，在生成对象时调用</span><br><span class="line">__del__ :       析构函数，释放对象时使用</span><br><span class="line">__repr__ :      打印，转换</span><br><span class="line">__setitem__ :   按照索引赋值</span><br><span class="line">__getitem__:    按照索引获取值</span><br><span class="line">__len__:        获得长度</span><br><span class="line">__cmp__:        比较运算</span><br><span class="line">__call__:       调用</span><br><span class="line">__add__:        加运算</span><br><span class="line">__sub__:        减运算</span><br><span class="line">__mul__:        乘运算</span><br><span class="line">__div__:        除运算</span><br><span class="line">__mod__:        求余运算</span><br><span class="line">__pow__:        幂</span><br><span class="line">__doc__:        文档和信息</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h4 id="具体使用"><a href="#具体使用" class="headerlink" title="具体使用"></a>具体使用</h4><ol>
+<li><strong>doc</strong><br>说明性文档和信息。Python自建，无需自定义。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    &quot;&quot;&quot; 描述类信息，可被自动收集 &quot;&quot;&quot;</span><br><span class="line">    def func(self):</span><br><span class="line">        pass</span><br><span class="line"># 打印类的说明文档 </span><br><span class="line">print(Foo.__doc__)</span><br></pre></td></tr></table></figure></li>
+<li><strong>init</strong>()<br>实例化方法，通过类创建实例时，自动触发执行。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; 18</span><br><span class="line">obj &#x3D; Foo(&#39;jack&#39;) # 自动执行类中的 __init__ 方法</span><br></pre></td></tr></table></figure></li>
+<li><strong>module</strong> 和 <strong>class</strong><br>module 表示当前操作的对象在属于哪个模块。<br>class 表示当前操作的对象属于哪个类。<br>这两者也是Python内建，无需自定义。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    pass</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">print(obj.__module__)</span><br><span class="line">print(obj.__class__)</span><br></pre></td></tr></table></figure></li>
+<li><strong>del</strong>()<blockquote>
+<p>析构方法，当对象在内存中被释放时，自动触发此方法。<br>注：此方法一般无须自定义，因为Python自带内存分配和释放机制，除非你需要在释放的时候指定做一些动作。析构函数的调用是由解释器在进行垃圾回收时自动触发执行的。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __del__(self):</span><br><span class="line">        print(&quot;我被回收了！&quot;)</span><br><span class="line"></span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">del obj</span><br></pre></td></tr></table></figure></li>
+<li><strong>call</strong>()<blockquote>
+<p>构造方法的执行是由类加括号执行的，即：对象 = 类名()，而对于call() 方法，是由对象后加括号触发的，即：对象() 或者 类()()<br>如果为一个类编写了该方法，那么在该类的实例后面加括号，可会调用这个方法。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line">    def __call__(self, *args, **kwargs):</span><br><span class="line">        print(&#39;__call__&#39;)</span><br><span class="line">obj &#x3D; Foo()     # 执行 __init__</span><br><span class="line">obj()       # 执行 __call__</span><br></pre></td></tr></table></figure>
+可以用Python内建的callable()函数进行测试，判断一个对象是否可以被执行。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">callable(Student())</span><br><span class="line">运行结果：</span><br><span class="line">True</span><br></pre></td></tr></table></figure></li>
+<li><strong>dict</strong><br>列出类或对象中的所有成员！非常重要和有用的一个属性，Python自建，无需用户自己定义。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Province:</span><br><span class="line">    country &#x3D; &#39;China&#39;</span><br><span class="line">    def __init__(self, name, count):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.count &#x3D; count</span><br><span class="line">    def func(self, *args, **kwargs):</span><br><span class="line">        print（&#39;func&#39;）</span><br><span class="line"># 获取类的成员</span><br><span class="line">print(Province.__dict__)</span><br><span class="line"># 获取 对象obj1 的成员 </span><br><span class="line">obj1 &#x3D; Province(&#39;HeBei&#39;,10000)</span><br><span class="line">print(obj1.__dict__)</span><br><span class="line"># 获取 对象obj2 的成员 </span><br><span class="line">obj2 &#x3D; Province(&#39;HeNan&#39;, 3888)</span><br><span class="line">print(obj2.__dict__)</span><br></pre></td></tr></table></figure></li>
+<li><strong>str</strong>()</li>
+</ol>
+<p>如果一个类中定义了str()方法，那么在打印对象时，默认输出该方法的返回值。这也是一个非常重要的方法，需要用户自己定义。　<br>下面的类，没有定义str()方法，打印结果是：&lt;main.Foo object at 0x32io4u2389572394885&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    pass</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">print(obj)</span><br><span class="line">定义了__str__()方法后，打印结果是：&#39;jack&#39;。</span><br><span class="line">class Foo:</span><br><span class="line">    def __str__(self):</span><br><span class="line">        return &#39;jack&#39;</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">print(obj)</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li><strong>getitem</strong>()、<strong>setitem</strong>()、<strong>delitem</strong>()<br>取值、赋值、删除这”三剑客”的套路，在Python中，我们已经见过很多次了，比如前面的<code>@property</code>装饰器。<br>Python中，标识符后面加圆括号，通常代表执行或调用方法的意思。而在标识符后面加中括号[]，通常代表取值的意思。Python设计了<code>getitem()、setitem()、delitem()</code>这三个特殊成员，用于执行与中括号有关的动作。它们分别表示取值、赋值、删除数<br>也就是如下的操作：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a &#x3D; 标识符[]　： 　　执行__getitem__方法</span><br><span class="line">标识符[] &#x3D; a  ： 　　执行__setitem__方法</span><br><span class="line">del 标识符[]　： 　　执行__delitem__方法</span><br></pre></td></tr></table></figure>
+如果有一个类同时定义了这三个魔法方法，那么这个类的实例的行为看起来就像一个字典一样，如下例所示:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    def __getitem__(self, key):</span><br><span class="line">        print(&#39;__getitem__&#39;,key)</span><br><span class="line">    def __setitem__(self, key, value):</span><br><span class="line">        print(&#39;__setitem__&#39;,key,value)</span><br><span class="line">    def __delitem__(self, key):</span><br><span class="line">        print(&#39;__delitem__&#39;,key)</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">result &#x3D; obj[&#39;k1&#39;]      # 自动触发执行 __getitem__</span><br><span class="line">obj[&#39;k2&#39;] &#x3D; &#39;jack&#39;      # 自动触发执行 __setitem__</span><br><span class="line">del obj[&#39;k1&#39;]</span><br></pre></td></tr></table></figure></li>
+<li><strong>iter</strong>()<blockquote>
+<p>这是迭代器方法！列表、字典、元组之所以可以进行for循环，是因为其内部定义了 iter()这个方法。如果用户想让自定义的类的对象可以被迭代，那么就需要在类中定义这个方法，并且让该方法的返回值是一个可迭代的对象。当在代码中利用for循环遍历对象时，就会调用类的这个iter()方法。<br>普通的类：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    pass</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">for i in obj:</span><br><span class="line">    print(i)</span><br><span class="line"># 报错：TypeError: &#39;Foo&#39; object is not iterable&lt;br&gt;# 原因是Foo对象不可迭代</span><br><span class="line">添加一个__iter__()，但什么都不返回：</span><br><span class="line">class Foo:</span><br><span class="line">    def __iter__(self):</span><br><span class="line">        pass</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">for i in obj:</span><br><span class="line">    print(i)</span><br><span class="line"># 报错：TypeError: iter() returned non-iterator of type &#39;NoneType&#39;</span><br><span class="line">#原因是 __iter__方法没有返回一个可迭代的对象</span><br></pre></td></tr></table></figure>
+返回一个可迭代对象：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __init__(self, sq):</span><br><span class="line">        self.sq &#x3D; sq</span><br><span class="line">    def __iter__(self):</span><br><span class="line">        return iter(self.sq)</span><br><span class="line">obj &#x3D; Foo([11,22,33,44])</span><br><span class="line">for i in obj:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+最好的方法是使用生成器：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line">    def __iter__(self):</span><br><span class="line">        yield 1</span><br><span class="line">        yield 2</span><br><span class="line">        yield 3</span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">for i in obj:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure></li>
+<li><strong>len</strong>()<blockquote>
+<p>在Python中，如果你调用内置的len()函数试图获取一个对象的长度，在后台，其实是去调用该对象的len()方法，所以，下面的代码是等价的：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">len(&#39;ABC&#39;)</span><br><span class="line">3</span><br><span class="line">&#39;ABC&#39;.__len__()</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+Python的list、dict、str等内置数据类型都实现了该方法，但是你自定义的类要实现len方法需要好好设计。</li>
+<li><strong>repr</strong>()<blockquote>
+<p>这个方法的作用和str()很像，两者的区别是str()返回用户看到的字符串，而repr()返回程序开发者看到的字符串，也就是说，repr()是为调试服务的。通常两者代码一样。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">    def __str__(self):</span><br><span class="line">        return &quot;this is %s&quot; % self.name</span><br><span class="line">    __repr__ &#x3D; __str__</span><br></pre></td></tr></table></figure></li>
+<li><strong>add</strong>: 加运算 <strong>sub</strong>: 减运算 <strong>mul</strong>: 乘运算 <strong>div</strong>: 除运算 <strong>mod</strong>: 求余运算 <strong>pow</strong>: 幂运算<blockquote>
+<p>这些都是算术运算方法，需要你自己为类设计具体运算代码。有些Python内置数据类型，比如int就带有这些方法。Python支持运算符的重载，也就是重写。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Vector:</span><br><span class="line">   def __init__(self, a, b):</span><br><span class="line">      self.a &#x3D; a</span><br><span class="line">      self.b &#x3D; b</span><br><span class="line">   def __str__(self):</span><br><span class="line">      return &#39;Vector (%d, %d)&#39; % (self.a, self.b)</span><br><span class="line">   def __add__(self,other):</span><br><span class="line">      return Vector(self.a + other.a, self.b + other.b)</span><br><span class="line">v1 &#x3D; Vector(2,10)</span><br><span class="line">v2 &#x3D; Vector(5,-2)</span><br><span class="line">print (v1 + v2)</span><br></pre></td></tr></table></figure></li>
+<li><strong>author</strong>作者信息<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__author__ &#x3D; &quot;shuke&quot;</span><br><span class="line">def show():</span><br><span class="line">    print(__author__)</span><br><span class="line">show()</span><br></pre></td></tr></table></figure></li>
+<li><strong>slots</strong><blockquote>
+<p>Python作为一种动态语言，可以在类定义完成和实例化后，给类或者对象继续添加随意个数或者任意类型的变量或方法，这是动态语言的特性。例如： </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def print_doc(self):</span><br><span class="line">    print(&quot;haha&quot;)</span><br><span class="line"></span><br><span class="line">class Foo:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">obj1 &#x3D; Foo()</span><br><span class="line">obj2 &#x3D; Foo()</span><br><span class="line"># 动态添加实例变量</span><br><span class="line">obj1.name &#x3D; &quot;jack&quot;</span><br><span class="line">obj2.age &#x3D; 18</span><br><span class="line"># 动态的给类添加实例方法</span><br><span class="line">Foo.show &#x3D; print_doc</span><br><span class="line">obj1.show()</span><br><span class="line">obj2.show()</span><br></pre></td></tr></table></figure>
+但是！如果我想限制实例可以添加的变量怎么办？可以使slots限制实例的变量，比如，只允许Foo的实例添加name和age属性。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">def print_doc(self):</span><br><span class="line">    print(&quot;haha&quot;)</span><br><span class="line">class Foo:</span><br><span class="line">    __slots__ &#x3D; (&quot;name&quot;, &quot;age&quot;)</span><br><span class="line">    pass</span><br><span class="line">obj1 &#x3D; Foo()</span><br><span class="line">obj2 &#x3D; Foo()</span><br><span class="line"># 动态添加实例变量</span><br><span class="line">obj1.name &#x3D; &quot;jack&quot;</span><br><span class="line">obj2.age &#x3D; 18</span><br><span class="line">obj1.sex &#x3D; &quot;male&quot;       # 这一句会弹出错误</span><br><span class="line"># 但是无法限制给类添加方法</span><br><span class="line">Foo.show &#x3D; print_doc</span><br><span class="line">obj1.show()</span><br><span class="line">obj2.show()</span><br><span class="line">由于&#39;sex&#39;不在__slots__的列表中，所以不能绑定sex属性，试图绑定sex将得到AttributeError的错误。</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;F:&#x2F;Python&#x2F;pycharm&#x2F;201705&#x2F;1.py&quot;, line 14, in &lt;module&gt;</span><br><span class="line">    obj1.sex &#x3D; &quot;male&quot;</span><br><span class="line">AttributeError: &#39;Foo&#39; object has no attribute &#39;sex&#39;</span><br></pre></td></tr></table></figure>
+需要提醒的是，slots定义的属性仅对当前类的实例起作用，对继承了它的子类是不起作用的。想想也是这个道理，如果你继承一个父类，却莫名其妙发现有些变量无法定义，那不是大问题么？如果非要子类也被限制，除非在子类中也定义slots，这样，子类实例允许定义的属性就是自身的slots加上父类的slots。</li>
+</ol>
+<h3 id="成员保护与访问机制"><a href="#成员保护与访问机制" class="headerlink" title="成员保护与访问机制"></a>成员保护与访问机制</h3><p>有些对象你不想外部访问，即使是通过调用类对象也无法访问</p>
+<h4 id="私有成员"><a href="#私有成员" class="headerlink" title="私有成员"></a>私有成员</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class obj:</span><br><span class="line">    def __init__(self,name):</span><br><span class="line">        self.name&#x3D;name</span><br><span class="line">    def pri(self):</span><br><span class="line">        print self.name</span><br><span class="line">    __age &#x3D; 18</span><br><span class="line">    # 加上双下划线的就是私有变量，只能在类的内部访问，外部无法访问</span><br><span class="line">a &#x3D; obj(&#39;zhao&#39;)</span><br><span class="line">a.pri()</span><br><span class="line"># output</span><br><span class="line">zhao</span><br></pre></td></tr></table></figure>
+<p>如果要在类中调用这个私有成员，可以这么用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class obj:</span><br><span class="line">    def __init__(self,name):</span><br><span class="line">        self.name&#x3D;name</span><br><span class="line">    def prin(self):</span><br><span class="line">        print self.name</span><br><span class="line">    __age &#x3D; 18</span><br><span class="line">    # 加上双下划线的就是私有变量，只能在类的内部访问，外部无法访问</span><br><span class="line">    @classmethod</span><br><span class="line">    # 如果要在类中调用，首先调用类方法</span><br><span class="line">    def pri(cls):</span><br><span class="line">        print cls.__age</span><br><span class="line">        # 然后在使用</span><br><span class="line">a &#x3D; obj(&#39;zhao&#39;)</span><br><span class="line">a.prin()</span><br><span class="line">obj.pri()</span><br><span class="line"># 通过这样直接调用类中的私有变量</span><br><span class="line"># output</span><br><span class="line">zhao</span><br><span class="line">18</span><br></pre></td></tr></table></figure>
+<h3 id="使用get-set-del方法操作私有成员"><a href="#使用get-set-del方法操作私有成员" class="headerlink" title="使用get-set-del方法操作私有成员"></a>使用get-set-del方法操作私有成员</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class obj:</span><br><span class="line">    def __init__(self,name):</span><br><span class="line">        self.name&#x3D;name</span><br><span class="line">    def prin(self):</span><br><span class="line">        print self.name</span><br><span class="line">    __age &#x3D; 18</span><br><span class="line">    # 加上双下划线的就是私有变量，只能在类的内部访问，外部无法访问</span><br><span class="line">    @classmethod</span><br><span class="line">    # 如果要在类中调用，首先调用类方法</span><br><span class="line">    def pri(cls):</span><br><span class="line">        print cls.__age</span><br><span class="line">        # 然后在使用</span><br><span class="line">    @classmethod</span><br><span class="line">    def set_age(cls,value):</span><br><span class="line">        cls.__age &#x3D; value</span><br><span class="line">        return cls.__age</span><br><span class="line">        # 这个用法就是改变__age的值</span><br><span class="line">    @classmethod</span><br><span class="line">    def get_age(cls):</span><br><span class="line">        return cls.__age</span><br><span class="line">        # 这个用法就是直接返回__age的值</span><br><span class="line">    @classmethod</span><br><span class="line">    def del_age(cls):</span><br><span class="line">        del cls.__age</span><br><span class="line">        # 这个用法就是直接删除__age的值</span><br><span class="line"></span><br><span class="line">print obj.get_age()</span><br><span class="line"># 这里是直接调用出__age的值  返回值18</span><br><span class="line">print obj.set_age(20)</span><br><span class="line"># 这里是直接改变__age的值  返回值20</span><br><span class="line">obj.del_age()</span><br><span class="line"># 这里是直接删除__age的值</span><br></pre></td></tr></table></figure>
+<p>思考： 既然是私有变量，不让外部访问，为何有要在后面调用又改变呢？因为可以对私有变量进行额外的检测，处理，加工等等。比如判断value的值，使用isinstance然后做if-else判断。<br>使用私有变量可以对内部变量进行保护，外部无法改变，但是可以对它进行检测处理。<br>这里引申一下私有成员的保护机制，使用<code>_age</code>私有变量其实就是<code>obj._obj__age</code>样子进行保护，说白了你直接使用<code>bj._obj__age</code>可以直接调用内部私有变量age了。</p>
+<h4 id="Propety装饰器"><a href="#Propety装饰器" class="headerlink" title="Propety装饰器"></a>Propety装饰器</h4><blockquote>
+<p>把类的方法伪装成属性调用的方式，就是把类里面的一个函数，变成一个属性一样的东西~<br>一开始调用类的方法要使用圆括号，现在变成了属性进行读取设置存储。<br>举个例子来说明：</p>
+</blockquote>
+<ol>
+<li>调用方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class obj:</span><br><span class="line">    def __init__(self,name,age):</span><br><span class="line">        self.__name&#x3D;name</span><br><span class="line">        self.__age&#x3D;age</span><br><span class="line">        # 讲这些设置成私有变量</span><br><span class="line">    def get_age(self):</span><br><span class="line">        return self.__age</span><br><span class="line">    def set_age(self,value):</span><br><span class="line">        if isinstance(value,int):</span><br><span class="line">            self.__age&#x3D;value</span><br><span class="line">        else:</span><br><span class="line">            raise ValueError(&#39;非整数类型&#39;)</span><br><span class="line">    def del_age(self):</span><br><span class="line">        print &#39;delete over&#39;</span><br><span class="line">a &#x3D; obj(&#39;langzi&#39;,18)</span><br><span class="line">print a.get_age()</span><br><span class="line">a.set_age(20)</span><br><span class="line">print a.get_age()</span><br></pre></td></tr></table></figure></li>
+<li>使用装饰器<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class obj:</span><br><span class="line">    def __init__(self,name,age):</span><br><span class="line">        self.__name&#x3D;name</span><br><span class="line">        self.__age&#x3D;age</span><br><span class="line">        # 把这些设置成私有变量</span><br><span class="line">    @property</span><br><span class="line">    def age(self):</span><br><span class="line">        return self.__age</span><br><span class="line">    @age.setter</span><br><span class="line">    def age(self,value):</span><br><span class="line">        if isinstance(value,int):</span><br><span class="line">            self.__age&#x3D;value</span><br><span class="line">        else:</span><br><span class="line">            raise ValueError(&#39;非整数类型&#39;)</span><br><span class="line">    @age.deleter</span><br><span class="line">    def age(self):</span><br><span class="line">        print &#39;delete over&#39;</span><br><span class="line">a &#x3D; obj(&#39;langzi&#39;,18)</span><br><span class="line"># 使用这些装饰器，可以使用类与对象的方法直接调用</span><br><span class="line">print a.age</span><br><span class="line"># 这里就是直接调用返回age的值</span><br><span class="line">a.age&#x3D;20</span><br><span class="line"># 这里就是直接使用setter把值转换</span><br><span class="line">print a.age</span><br><span class="line">del a.age</span><br><span class="line"># 删除age</span><br></pre></td></tr></table></figure>
+当然这种调用方法有些麻烦，每次都是一个一个去实例类与对象，有个更加简单直观的方法。<h4 id="更加简便的使用property-函数"><a href="#更加简便的使用property-函数" class="headerlink" title="更加简便的使用property()函数"></a>更加简便的使用property()函数</h4><blockquote>
+<p>装饰器的方式将一个方法伪装成属性外，Python内置的<code>uiltins</code>块中的<code>roperty()</code>数，为我们提供了第二种设置类属性的手段。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class People:</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.__name &#x3D; name</span><br><span class="line">        self.__age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def get_age(self):</span><br><span class="line">        return self.__age</span><br><span class="line"></span><br><span class="line">    def set_age(self, age):</span><br><span class="line">        if isinstance(age, int):</span><br><span class="line">            self.__age &#x3D; age</span><br><span class="line">        else:</span><br><span class="line">            raise ValueError</span><br><span class="line"></span><br><span class="line">    def del_age(self):</span><br><span class="line">        print(&quot;删除年龄数据！&quot;)</span><br><span class="line"></span><br><span class="line">    # 核心在这句</span><br><span class="line">    age &#x3D; property(get_age, set_age, del_age, &quot;年龄&quot;)    </span><br><span class="line"></span><br><span class="line">obj &#x3D; People(&quot;jack&quot;, 18)</span><br><span class="line">print(obj.age)</span><br><span class="line">obj.age &#x3D; 19</span><br><span class="line">print(&quot;obj.age:  &quot;, obj.age)</span><br><span class="line">del obj.ag</span><br></pre></td></tr></table></figure>
+通过语句<code>ge = property(get_age, set_age, del_age, &quot;龄&quot;</code>一个方法伪装成为属性。其效果和装饰器的方法是一样的。<br>property()函数的参数：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第一个参数是方法名，调用 实例.属性 时自动执行的方法</span><br><span class="line">第二个参数是方法名，调用 实例.属性 ＝ XXX时自动执行的方法</span><br><span class="line">第三个参数是方法名，调用 del实例.属性 时自动执行的方法</span><br><span class="line">第四个参数是字符串，调用 实例.属性.__doc__时的描述信息。</span><br></pre></td></tr></table></figure>
+在Django框架源码中有使用到此特性</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">Python面向对象入门教程</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月23日 - 16:04</p>
+  <p><span>最后更新:</span>2020年04月23日 - 16:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/" title="Python面向对象入门教程">https://shuke163.github.io/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">Python面向对象入门教程</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月23日 - 16:04</p>
+  <p><span>最后更新:</span>2020年04月23日 - 16:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/" title="Python面向对象入门教程">https://shuke163.github.io/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PYTHON/" <i class="fa fa-tag"></i> PYTHON</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/23/Python%E6%8A%80%E6%9C%AF%E8%BF%9B%E9%98%B6yield/" rel="next" title="Python技术进阶yield">
+                <i class="fa fa-chevron-left"></i> Python技术进阶yield
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/23/Python%E4%B9%8B%E7%A6%85/" rel="prev" title="Python之禅">
+                Python之禅 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">128</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python面向对象入门教程"><span class="nav-text">Python面向对象入门教程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#面向过程与面向对象编程区别"><span class="nav-text">面向过程与面向对象编程区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类的基本用法"><span class="nav-text">类的基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Example"><span class="nav-text">Example</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类与实例"><span class="nav-text">类与实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调用类的三种方法"><span class="nav-text">调用类的三种方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类的特性"><span class="nav-text">类的特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#封装"><span class="nav-text">封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承"><span class="nav-text">继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态"><span class="nav-text">多态</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#魔法方法"><span class="nav-text">魔法方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#具体使用"><span class="nav-text">具体使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#成员保护与访问机制"><span class="nav-text">成员保护与访问机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#私有成员"><span class="nav-text">私有成员</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用get-set-del方法操作私有成员"><span class="nav-text">使用get-set-del方法操作私有成员</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Propety装饰器"><span class="nav-text">Propety装饰器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更加简便的使用property-函数"><span class="nav-text">更加简便的使用property()函数</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共259.9k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

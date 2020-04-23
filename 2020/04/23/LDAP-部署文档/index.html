@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="LDAP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="shuke's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="LDAP 部署文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LDAP 部署文档">
+<meta property="og:url" content="https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="shuke&#39;s Blog">
+<meta property="og:description" content="LDAP 部署文档">
+<meta property="og:image" content="https://www.openldap.org/doc/admin24/config_dit.png">
+<meta property="article:published_time" content="2020-04-23T07:57:24.000Z">
+<meta property="article:modified_time" content="2020-04-23T07:57:37.489Z">
+<meta property="article:author" content="shuke">
+<meta property="article:tag" content="LDAP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.openldap.org/doc/admin24/config_dit.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shuke163.github.io/2020/04/23/LDAP-部署文档/"/>
+
+
+
+
+
+  <title>LDAP 部署文档 | shuke's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shuke's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术 管理 生活 格局 人生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-history"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-list"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-favorite">
+          <a href="/favorite" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            favorite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shuke's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LDAP 部署文档</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-23T15:57:24+08:00">
+                2020-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">3.5k(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">19(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LDAP/" itemprop="url" rel="index">
+                    <span itemprop="name">LDAP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" class="leancloud_visitors" data-flag-title="LDAP 部署文档">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+             <span>℃</span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  LDAP 部署文档
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="LDAP-部署文档"><a href="#LDAP-部署文档" class="headerlink" title="LDAP 部署文档"></a>LDAP 部署文档</h2><h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># cat &#x2F;etc&#x2F;issue</span><br><span class="line">Ubuntu 16.04.6 LTS \n \l</span><br><span class="line"># uname -r</span><br><span class="line">4.4.0-142-generic</span><br><span class="line"># slapd -VV</span><br><span class="line">@(#) $OpenLDAP: slapd  (Ubuntu) (Apr 10 2019 13:01:36) $</span><br><span class="line">	buildd@lgw01-amd64-031:&#x2F;build&#x2F;openldap-QaSHhB&#x2F;openldap-2.4.42+dfsg&#x2F;debian&#x2F;build&#x2F;servers&#x2F;slapd</span><br></pre></td></tr></table></figure>
+
+<h3 id="一-安装"><a href="#一-安装" class="headerlink" title="一. 安装"></a>一. 安装</h3><ol>
+<li>安装软件包<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># apt install slapd ldap-utils -y</span><br><span class="line">在安装过程中,将要求您输入并确认LDAP的管理员密码。</span><br></pre></td></tr></table></figure></li>
+<li>初始化配置<blockquote>
+<p>OpenLDAP 2.3 and later have transitioned to using a dynamic runtime configuration engine, slapd-config. <a href="https://www.openldap.org/doc/admin24/slapdconf2.html" target="_blank" rel="noopener">Configuring slapd</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># dpkg-reconfigure slapd</span><br><span class="line">1. Omit OpenLDAP server configuration: No</span><br><span class="line">2. DNS domain name as base DN: wecash.net</span><br><span class="line">3. Organization name: wecash Organization</span><br><span class="line">4. Administrator password: wecash@2019</span><br><span class="line">5. Database backend to use: MDB</span><br><span class="line">6. Do you want the database to be removed when slapd is purged: No</span><br><span class="line">7. Move old database: Yes</span><br><span class="line">8. Allow LDAPv2 protocol? No</span><br></pre></td></tr></table></figure></li>
+<li>Configuration Layout<br>A sample config tree is shown<br><img src="https://www.openldap.org/doc/admin24/config_dit.png" alt="config_dit.png"></li>
+<li>验证是否运行<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># ps -ef | grep slapd</span><br><span class="line">openldap 11394     1  0 11:54 ?        00:00:00 &#x2F;usr&#x2F;sbin&#x2F;slapd -h ldap:&#x2F;&#x2F;&#x2F; ldapi:&#x2F;&#x2F;&#x2F; -g openldap -u openldap -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">root     11419  1227  0 11:55 pts&#x2F;0    00:00:00 grep --color&#x3D;auto slapd</span><br><span class="line"># netstat -ntlp | grep 389</span><br><span class="line">tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      11394&#x2F;slapd</span><br><span class="line">tcp6       0      0 :::389                  :::*                    LISTEN      11394&#x2F;slapd</span><br></pre></td></tr></table></figure>
+注: 软件默认安装路径为<code>/etc/ldap</code>,mdb数据库文件存放路径为<code>/var/lib/ldap/</code></li>
+<li>测试LDAP的接口<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ldapwhoami -H ldap:&#x2F;&#x2F; -x</span><br><span class="line">anonymous</span><br></pre></td></tr></table></figure>
+anonymous是匿名用户的查询结果,因为我们运行ldapwhoami而不登录到LDAP服务器.这意味着服务器正在运行并应答查询.</li>
+<li>启动停止<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># systemctl stop slapd.service</span><br><span class="line"># systemctl start slapd.service</span><br></pre></td></tr></table></figure>
+至此,LDAP的初步基本配置已经完成.官方文档解释在2.3之后的版本使用动态的配置文件的方式,使用ldapadd, ldapdelete or ldapmodify修改更新配置信息以及数据库信息,不建议使用slapd.conf配置文件方式进行管理.</li>
+</ol>
+<h3 id="二-查看初始化信息"><a href="#二-查看初始化信息" class="headerlink" title="二. 查看初始化信息"></a>二. 查看初始化信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -b cn&#x3D;config dn</span><br><span class="line">dn: cn&#x3D;config</span><br><span class="line">dn: cn&#x3D;module&#123;0&#125;,cn&#x3D;config</span><br><span class="line">dn: cn&#x3D;schema,cn&#x3D;config</span><br><span class="line">dn: cn&#x3D;&#123;0&#125;core,cn&#x3D;schema,cn&#x3D;config</span><br><span class="line">dn: cn&#x3D;&#123;1&#125;cosine,cn&#x3D;schema,cn&#x3D;config</span><br><span class="line">dn: cn&#x3D;&#123;2&#125;nis,cn&#x3D;schema,cn&#x3D;config</span><br><span class="line">dn: cn&#x3D;&#123;3&#125;inetorgperson,cn&#x3D;schema,cn&#x3D;config</span><br><span class="line">dn: olcBackend&#x3D;&#123;0&#125;mdb,cn&#x3D;config</span><br><span class="line">dn: olcDatabase&#x3D;&#123;-1&#125;frontend,cn&#x3D;config</span><br><span class="line">dn: olcDatabase&#x3D;&#123;0&#125;config,cn&#x3D;config</span><br><span class="line">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config</span><br><span class="line"></span><br><span class="line"># ldapsearch -x -LLL -H ldap:&#x2F;&#x2F;&#x2F; -b dc&#x3D;wecash,dc&#x3D;net dn</span><br><span class="line">dn: dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net</span><br></pre></td></tr></table></figure>
+<h3 id="三-TLS"><a href="#三-TLS" class="headerlink" title="三. TLS"></a>三. TLS</h3><ol>
+<li>Install the gnutls-bin and ssl-cert packages<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># apt install gnutls-bin ssl-cert</span><br></pre></td></tr></table></figure></li>
+<li>Create a private key for the Certificate Authority<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># sh -c &quot;certtool --generate-privkey &gt; &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;cakey.pem&quot;</span><br></pre></td></tr></table></figure></li>
+<li>Create the template/file /etc/ssl/ca.info to define the CA<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cn &#x3D; Wecash Company</span><br><span class="line">ca</span><br><span class="line">cert_signing_key</span><br></pre></td></tr></table></figure></li>
+<li>Create the self-signed CA certificate<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># certtool --generate-self-signed --load-privkey &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;cakey.pem --template &#x2F;etc&#x2F;ssl&#x2F;ca.info --outfile &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;cacert.pem</span><br></pre></td></tr></table></figure></li>
+<li>Make a private key for the server<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># certtool --generate-privkey --sec-param Medium --outfile &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;tldap.wecash.net-key.pem</span><br></pre></td></tr></table></figure></li>
+<li>Create the /etc/ssl/tldap.wecash.net.info info file containing<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">organization &#x3D; Wecash Company</span><br><span class="line">cn &#x3D; tldap.wecash.net</span><br><span class="line">tls_www_server</span><br><span class="line">encryption_key</span><br><span class="line">signing_key</span><br><span class="line">expiration_days &#x3D; 3650</span><br></pre></td></tr></table></figure></li>
+<li>Create the server’s certificate<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># certtool --generate-certificate --load-privkey &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;tldap.wecash.net-key.pem --load-ca-certificate &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;cacert.pem --load-ca-privkey &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;cakey.pem --template &#x2F;etc&#x2F;ssl&#x2F;tldap.wecash.net.info --outfile &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;tldap.wecash.net.pem</span><br></pre></td></tr></table></figure></li>
+<li>Adjust permissions and ownership<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># mkdir &#x2F;etc&#x2F;ldap&#x2F;certs</span><br><span class="line"># cp &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;tldap.wecash.net-key.pem &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;</span><br><span class="line"># cp &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;cacert.pem &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;</span><br><span class="line"># cp &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;tldap.wecash.net.pem &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;</span><br><span class="line"># chown -R openldap.openldap &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;</span><br><span class="line"># chmod 0640 &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;tldap.wecash.net-key.pem</span><br><span class="line"># gpasswd -a openldap ssl-cert</span><br></pre></td></tr></table></figure></li>
+<li>Create the file certinfo.ldif<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># cat certinfo.ldif</span><br><span class="line"># create new</span><br><span class="line">dn: cn&#x3D;config</span><br><span class="line">changetype: modify</span><br><span class="line">add: olcTLSCACertificateFile</span><br><span class="line">olcTLSCACertificateFile: &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;cacert.pem</span><br><span class="line">-</span><br><span class="line">replace: olcTLSCertificateFile</span><br><span class="line">olcTLSCertificateFile: &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;tldap.wecash.net.pem</span><br><span class="line">-</span><br><span class="line">replace: olcTLSCertificateKeyFile</span><br><span class="line">olcTLSCertificateKeyFile: &#x2F;etc&#x2F;ldap&#x2F;certs&#x2F;tldap.wecash.net-key.pem</span><br></pre></td></tr></table></figure></li>
+<li>Use the ldapmodify command to tell slapd about our TLS work via the slapd-config database<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f certinfo.ldif</span><br><span class="line">SASL&#x2F;EXTERNAL authentication started</span><br><span class="line">SASL username: gidNumber&#x3D;0+uidNumber&#x3D;0,cn&#x3D;peercred,cn&#x3D;external,cn&#x3D;auth</span><br><span class="line">SASL SSF: 0</span><br><span class="line">modifying entry &quot;cn&#x3D;config&quot;</span><br></pre></td></tr></table></figure></li>
+<li>Contratry to popular belief, you do need Add <code>ldaps:///</code> in /etc/default/slapd in order to use encryption. You should have just<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># vim &#x2F;etc&#x2F;default&#x2F;slapd</span><br><span class="line">SLAPD_SERVICES&#x3D;&quot;ldap:&#x2F;&#x2F;&#x2F; ldapi:&#x2F;&#x2F;&#x2F; ldaps:&#x2F;&#x2F;&#x2F;&quot;</span><br></pre></td></tr></table></figure></li>
+<li>修改请求域名<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># cat slapd.ldif</span><br><span class="line"># log</span><br><span class="line">dn: cn&#x3D;config</span><br><span class="line">changetype: modify</span><br><span class="line">replace: olcLogLevel</span><br><span class="line">olcLogLevel: stats</span><br><span class="line">-</span><br><span class="line">add: olcIdleTimeout</span><br><span class="line">olcIdleTimeout: 30</span><br><span class="line">-</span><br><span class="line">add: olcReferral</span><br><span class="line">olcReferral: ldaps:&#x2F;&#x2F;tldap.wecash.net</span><br><span class="line">-</span><br><span class="line">add: olcLogFile</span><br><span class="line">olcLogFile: &#x2F;var&#x2F;log&#x2F;sladp.log</span><br><span class="line"></span><br><span class="line"># ldapmodify -Q -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f slapd.ldif</span><br><span class="line">modifying entry &quot;cn&#x3D;config&quot;</span><br><span class="line"></span><br><span class="line"># ldapsearch -Y external -H ldapi:&#x2F;&#x2F;&#x2F; -b cn&#x3D;config &quot;(objectClass&#x3D;olcGlobal)&quot;  olcReferral</span><br><span class="line">SASL&#x2F;EXTERNAL authentication started</span><br><span class="line">SASL username: gidNumber&#x3D;0+uidNumber&#x3D;0,cn&#x3D;peercred,cn&#x3D;external,cn&#x3D;auth</span><br><span class="line">SASL SSF: 0</span><br><span class="line"># extended LDIF</span><br><span class="line">#</span><br><span class="line"># LDAPv3</span><br><span class="line"># base &lt;cn&#x3D;config&gt; with scope subtree</span><br><span class="line"># filter: (objectClass&#x3D;olcGlobal)</span><br><span class="line"># requesting: olcReferral</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line"># config</span><br><span class="line">dn: cn&#x3D;config</span><br><span class="line">olcReferral: ldaps:&#x2F;&#x2F;tldap.wecash.net</span><br><span class="line"></span><br><span class="line"># search result</span><br><span class="line">search: 2</span><br><span class="line">result: 0 Success</span><br><span class="line"></span><br><span class="line"># numResponses: 2</span><br><span class="line"># numEntries: 1</span><br></pre></td></tr></table></figure></li>
+<li>restart slapd<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># systemctl restart slapd.service</span><br><span class="line"># netstat -ntlp | grep slapd</span><br><span class="line">tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      13728&#x2F;slapd</span><br><span class="line">tcp        0      0 0.0.0.0:636             0.0.0.0:*               LISTEN      13728&#x2F;slapd</span><br><span class="line">tcp6       0      0 :::389                  :::*                    LISTEN      13728&#x2F;slapd</span><br><span class="line">tcp6       0      0 :::636                  :::*                    LISTEN      13728&#x2F;slapd</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="四-验证数据"><a href="#四-验证数据" class="headerlink" title="四. 验证数据"></a>四. 验证数据</h3><ol>
+<li>初始化一些数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># cat add_content.ldif</span><br><span class="line">dn: ou&#x3D;People,dc&#x3D;example,dc&#x3D;com</span><br><span class="line">objectClass: organizationalUnit</span><br><span class="line">ou: People</span><br><span class="line"></span><br><span class="line">dn: ou&#x3D;Groups,dc&#x3D;example,dc&#x3D;com</span><br><span class="line">objectClass: organizationalUnit</span><br><span class="line">ou: Groups</span><br><span class="line"></span><br><span class="line">dn: cn&#x3D;miners,ou&#x3D;Groups,dc&#x3D;example,dc&#x3D;com</span><br><span class="line">objectClass: posixGroup</span><br><span class="line">cn: miners</span><br><span class="line">gidNumber: 5000</span><br><span class="line"></span><br><span class="line">dn: uid&#x3D;john,ou&#x3D;People,dc&#x3D;example,dc&#x3D;com</span><br><span class="line">objectClass: inetOrgPerson</span><br><span class="line">objectClass: posixAccount</span><br><span class="line">objectClass: shadowAccount</span><br><span class="line">uid: john</span><br><span class="line">sn: Doe</span><br><span class="line">givenName: John</span><br><span class="line">cn: John Doe</span><br><span class="line">displayName: John Doe</span><br><span class="line">uidNumber: 10000</span><br><span class="line">gidNumber: 5000</span><br><span class="line">userPassword: johnldap</span><br><span class="line">gecos: John Doe</span><br><span class="line">loginShell: &#x2F;bin&#x2F;bash</span><br><span class="line">homeDirectory: &#x2F;home&#x2F;john</span><br><span class="line"># ldapadd -x -W -D &quot;cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net&quot; -f add_content.ldif</span><br><span class="line">Enter LDAP Password: ********</span><br><span class="line">adding new entry &quot;ou&#x3D;People,dc&#x3D;example,dc&#x3D;com&quot;</span><br><span class="line">adding new entry &quot;ou&#x3D;Groups,dc&#x3D;example,dc&#x3D;com&quot;</span><br><span class="line">adding new entry &quot;cn&#x3D;miners,ou&#x3D;Groups,dc&#x3D;example,dc&#x3D;com&quot;</span><br><span class="line">adding new entry &quot;uid&#x3D;john,ou&#x3D;People,dc&#x3D;example,dc&#x3D;com&quot;</span><br></pre></td></tr></table></figure>
+此时,使用客户端工具phpLDAPadmin或者LDAP Admin Tool访问LDAP server端即可以查看到数据.</li>
+<li>查询目录结构树<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -x -LLL -H ldap:&#x2F;&#x2F;&#x2F; -b dc&#x3D;wecash,dc&#x3D;net dn</span><br><span class="line">dn: dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: ou&#x3D;Hosts,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: ou&#x3D;Devops,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: ou&#x3D;People,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: ou&#x3D;Marketing,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: ou&#x3D;department,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;iris+ipHostNumber&#x3D;192.168.1.51,ou&#x3D;Hosts,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;gojira+ipHostNumber&#x3D;192.168.1.1,ou&#x3D;Hosts,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;zedan+ipHostNumber&#x3D;192.168.1.52,ou&#x3D;Hosts,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;gamera+ipHostNumber&#x3D;192.168.1.50,ou&#x3D;Hosts,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;git-wecash01cn-p001.pek3.wecash.net,ou&#x3D;Hosts,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: uid&#x3D;shuke,ou&#x3D;Devops,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;dba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;devops,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;tester,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;manager,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;developer,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line">dn: cn&#x3D;Pete Minsky,ou&#x3D;Marketing,dc&#x3D;wecash,dc&#x3D;net</span><br><span class="line"></span><br><span class="line"># 账号登录认证</span><br><span class="line"># ldapwhoami -H ldapi:&#x2F;&#x2F;&#x2F; -x  -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -W</span><br><span class="line">Enter LDAP Password:</span><br><span class="line">dn:cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="五-Logging设置"><a href="#五-Logging设置" class="headerlink" title="五. Logging设置"></a>五. Logging设置</h3><ol>
+<li>Create the file logging.ldif with the following contents<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># cat logging.ldif</span><br><span class="line">dn: cn&#x3D;config</span><br><span class="line">changetype: modify</span><br><span class="line">replace: olcLogLevel</span><br><span class="line">olcLogLevel: stats</span><br></pre></td></tr></table></figure></li>
+<li>更新数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ldapmodify -Q -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f logging.ldif</span><br></pre></td></tr></table></figure></li>
+<li>在/etc/rsyslog.conf增加内容<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Disable rate limiting</span><br><span class="line"># (default is 200 messages in 5 seconds; below we make the 5 become 0)</span><br><span class="line">$SystemLogRateLimitInterval 0</span><br></pre></td></tr></table></figure></li>
+<li>restart the rsyslog daemon<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart syslog.service</span><br></pre></td></tr></table></figure>
+此时,<code>tail -f /var/log/syslog</code>查看日志文件内容,可以查看到LDAP相关log</li>
+</ol>
+<h3 id="六-LDAP命令介绍"><a href="#六-LDAP命令介绍" class="headerlink" title="六. LDAP命令介绍"></a>六. LDAP命令介绍</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ldapmodrdn 命令用于对 OpenLDAP 目录树中 RDN 条目的修改，可以从标准的条目信息输入或者使用 -f 指定 LDIF 文件的格式输入。</span><br><span class="line"># ldapmodrdn -x -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -w weopenldap -H ldapi:&#x2F;&#x2F;&#x2F; &quot;cn&#x3D;dba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot; cn&#x3D;wedba</span><br><span class="line">ldappasswd 命令用于修改密码</span><br><span class="line"># ldappasswd -x -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -w weopenldap -H ldapi:&#x2F;&#x2F;&#x2F; &quot;cn&#x3D;wedba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot; -S</span><br><span class="line">ldapdelete 命令用于从目录树中删除指定条目，并根据 DN 条目删除一个或多个条目，但必须提供所要删除指定条目的权限所绑定的 DN（整个目录树的唯一标识名称）。</span><br><span class="line"># ldapdelete -x -w weopenldap -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net &quot;cn&#x3D;tester,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot;</span><br><span class="line">要检测配置文件的可用性，可设置输出级别:</span><br><span class="line"># slaptest -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">config file testing succeeded</span><br><span class="line"># slaptest -d 3 -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">slapcat 命令用于将数据条目转换为 OpenLDAP 的 LDIF 文件，可用于 OpenLDAP 条目的备份以及结合 slapdadd 指定用于恢复条目。</span><br><span class="line">下面通过slapcat 备份 OpenLDAP 所有目录树条目：</span><br><span class="line"># slapcat -v -l openldap.ldif</span><br><span class="line">LDAP客户端机器验证:</span><br><span class="line"># getent passwd shuke</span><br><span class="line">shuke:*:12514:10202:shuke:&#x2F;home&#x2F;shuke:&#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+<p><a href="https://wiki.shileizcc.com/confluence/pages/viewpage.action?pageId=39223593#OpenLDAP%E5%91%BD%E4%BB%A4%E4%BB%8B%E7%BB%8D-ldapsearch%E5%91%BD%E4%BB%A4" target="_blank" rel="noopener">OpenLDAP 命令介绍-OpenLDAP</a></p>
+<h3 id="七-卸载LDAP"><a href="#七-卸载LDAP" class="headerlink" title="七. 卸载LDAP"></a>七. 卸载LDAP</h3><ol>
+<li>命令卸载<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># apt-get purge --auto-remove slapd ldap-utils</span><br></pre></td></tr></table></figure></li>
+<li>删除目录<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># rm -rf &#x2F;etc&#x2F;ldap &amp;&amp; rm -rf &#x2F;var&#x2F;lib&#x2F;ldap</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="八-Backup-and-Restore"><a href="#八-Backup-and-Restore" class="headerlink" title="八. Backup and Restore"></a>八. Backup and Restore</h3><ol>
+<li>下载脚本文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;alexanderjackson&#x2F;ldap-backup-and-restore&#x2F;master&#x2F;ldap-backup -O &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-backup</span><br><span class="line">wget --no-check-certificate https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;alexanderjackson&#x2F;ldap-backup-and-restore&#x2F;master&#x2F;ldap-restore -O &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-restore</span><br><span class="line">chown root.root &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-backup &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-restore</span><br><span class="line">chmod 500 &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-backup &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-restore</span><br></pre></td></tr></table></figure></li>
+<li>备份脚本<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># grep -v &#39;^#&#39; &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-backup</span><br><span class="line">TIMESTAMP&#x3D;$(date +%Y%m%d-%H%M%S)</span><br><span class="line">BACKUP_PATH&#x3D;&#x2F;data&#x2F;backups&#x2F;ldap&#x2F;$&#123;TIMESTAMP&#125;</span><br><span class="line">echo &quot;  Creating backup at $&#123;BACKUP_PATH&#125;&quot;</span><br><span class="line">mkdir -p $&#123;BACKUP_PATH&#125;</span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;nice &#x2F;usr&#x2F;sbin&#x2F;slapcat -n 0 &gt; $&#123;BACKUP_PATH&#125;&#x2F;config.ldif</span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;nice &#x2F;usr&#x2F;sbin&#x2F;slapcat -n 1 &gt; $&#123;BACKUP_PATH&#125;&#x2F;domain.ldif</span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;nice &#x2F;usr&#x2F;sbin&#x2F;slapcat -n 2 &gt; $&#123;BACKUP_PATH&#125;&#x2F;access.ldif</span><br><span class="line">chmod 640 $&#123;BACKUP_PATH&#125;&#x2F;*.ldif</span><br><span class="line">tar cpzf $&#123;BACKUP_PATH&#125;&#x2F;etc_ldap.tgz &#x2F;etc&#x2F;ldap &gt;&#x2F;dev&#x2F;null 2&gt;&amp;1</span><br><span class="line">tar cpzf $&#123;BACKUP_PATH&#125;&#x2F;var_lib_ldap.tgz &#x2F;var&#x2F;lib&#x2F;ldap &gt;&#x2F;dev&#x2F;null 2&gt;&amp;1</span><br><span class="line">ls -ahl $&#123;BACKUP_PATH&#125;</span><br><span class="line">echo &quot;Run ldap-restore to restore previous backups...&quot;</span><br></pre></td></tr></table></figure></li>
+<li>计划任务<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cat &#x2F;etc&#x2F;cron.d&#x2F;ldap-backup</span><br><span class="line">MAILTO&#x3D;yunwei@wecash.net</span><br><span class="line">0 0 * * *  root    &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;ldap-backup</span><br></pre></td></tr></table></figure></li>
+<li>恢复LDAP数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop slapd.service</span><br><span class="line">sudo mkdir &#x2F;var&#x2F;lib&#x2F;ldap&#x2F;accesslog</span><br><span class="line">sudo slapadd -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d -n 0 -l &#x2F;data&#x2F;backups&#x2F;ldap&#x2F;$&#123;TIMESTAMP&#125;&#x2F;config.ldif</span><br><span class="line">sudo slapadd -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d -n 1 -l &#x2F;data&#x2F;backups&#x2F;ldap&#x2F;$&#123;TIMESTAMP&#125;&#x2F;domain.com.ldif</span><br><span class="line">sudo slapadd -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d -n 2 -l &#x2F;data&#x2F;backups&#x2F;ldap&#x2F;$&#123;TIMESTAMP&#125;&#x2F;access.ldif</span><br><span class="line">sudo chown -R openldap:openldap &#x2F;etc&#x2F;ldap&#x2F;slapd.d&#x2F;</span><br><span class="line">sudo chown -R openldap:openldap &#x2F;var&#x2F;lib&#x2F;ldap&#x2F;</span><br><span class="line">sudo systemctl start slapd.service</span><br></pre></td></tr></table></figure>
+参考脚本文件:<br><a href="https://github.com/alexanderjackson/ldap-backup-and-restore" target="_blank" rel="noopener">GitHub - alexanderjackson/ldap-backup-and-restore</a><br><a href="https://tylersguides.com/articles/backup-restore-openldap/" target="_blank" rel="noopener">How To Backup and Restore OpenLDAP - Tyler’s Guides</a></li>
+</ol>
+<h3 id="ldap3-client-example"><a href="#ldap3-client-example" class="headerlink" title="ldap3 client example"></a>ldap3 client example</h3><p><a href="git@git.wecash.net:devops/ldap3-client.git">ldap3-client-example</a></p>
+<h3 id="ldapPublicKey"><a href="#ldapPublicKey" class="headerlink" title="ldapPublicKey"></a>ldapPublicKey</h3><ol>
+<li>配置文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># cat openssh-lpk.ldif</span><br><span class="line"># LDAP SSH Public Key schema</span><br><span class="line"># Source: https:&#x2F;&#x2F;serverfault.com&#x2F;questions&#x2F;653792&#x2F;ssh-key-authentication-using-ldap</span><br><span class="line"># Homepage: https:&#x2F;&#x2F;github.com&#x2F;AndriiGrytsenko&#x2F;openssh-ldap-publickey</span><br><span class="line"></span><br><span class="line">dn: cn&#x3D;openssh-lpk,cn&#x3D;schema,cn&#x3D;config</span><br><span class="line">objectClass: olcSchemaConfig</span><br><span class="line">cn: openssh-lpk</span><br><span class="line">olcAttributeTypes: ( 1.3.6.1.4.1.24552.500.1.1.1.13 NAME &#39;sshPublicKey&#39;</span><br><span class="line">    DESC &#39;MANDATORY: OpenSSH Public key&#39;</span><br><span class="line">    EQUALITY octetStringMatch</span><br><span class="line">    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )</span><br><span class="line">olcObjectClasses: ( 1.3.6.1.4.1.24552.500.1.1.2.0 NAME &#39;ldapPublicKey&#39;</span><br><span class="line">    DESC &#39;MANDATORY: OpenSSH LPK objectclass&#39;</span><br><span class="line">    SUP top AUXILIARY</span><br><span class="line">    MAY ( sshPublicKey $ uid )</span><br><span class="line">    )</span><br></pre></td></tr></table></figure></li>
+<li>导入配置信息<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># ldapadd -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f openssh-lpk.ldif</span><br><span class="line">SASL&#x2F;EXTERNAL authentication started</span><br><span class="line">SASL username: gidNumber&#x3D;0+uidNumber&#x3D;0,cn&#x3D;peercred,cn&#x3D;external,cn&#x3D;auth</span><br><span class="line">SASL SSF: 0</span><br><span class="line">adding new entry &quot;cn&#x3D;openssh-lpk,cn&#x3D;schema,cn&#x3D;config&quot;</span><br></pre></td></tr></table></figure>
+此时,可以使用sshPublicKey属性进行user登录验证.</li>
+</ol>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ol>
+<li>如何修改默认的数据库文件创建路径?<br>默认的数据库文件路径是/var/lib/ldap</li>
+</ol>
+<ul>
+<li><p>创建存放DB数据的路径,并修改权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># mkdir &#x2F;data&#x2F;ldap&#x2F;data -pv</span><br><span class="line"># chown -R openldap.openldap &#x2F;data&#x2F;ldap&#x2F;data</span><br></pre></td></tr></table></figure></li>
+<li><p>编写修改db路径的ldif文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># cat dbpath.ldif</span><br><span class="line">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config</span><br><span class="line">changetype: modify</span><br><span class="line">replace: olcDbDirectory</span><br><span class="line">olcDbDirectory: &#x2F;data&#x2F;ldap&#x2F;data</span><br></pre></td></tr></table></figure></li>
+<li><p>执行修改命令,提示错误信息如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ldapmodify -Q -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f dbpath.ldif</span><br><span class="line">adding new entry &quot;olcDatabase&#x3D;&#123;1&#125;hdb,cn&#x3D;config&quot;</span><br><span class="line">ldap_add: Other (e.g., implementation specific) error (80)</span><br><span class="line">	additional info: olcDbDirectory: value #0: invalid path: Permission denied</span><br></pre></td></tr></table></figure></li>
+<li><p>log信息<br>ldap启动失败，/var/log/syslog日志显示:olcDbDirectory: value #0: invalid path: Permission denied</p>
+</li>
+<li><p>问题原因<br>AppArmor的配置导致</p>
+<blockquote>
+<p>AppArmor (Application Armor) 是一个类似于 SELinux 的一个强制访问控制方法，通过它你可以指定程序可以读、写或运行哪些文件，是否可以打开网络端口等。AppArmor 配置比 SELinux 更加方便比较适合学习<br>I believe if you want to install the LDAP Db to another directory you would need to add that directory to the apparmor profile for slapd. In my case that would have been editing “/etc/apparmor.d/usr.sbin.slapd” and changing</p>
+</blockquote>
+</li>
+<li><p>解决方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># vim &#x2F;etc&#x2F;apparmor.d&#x2F;usr.sbin.slapd</span><br><span class="line">  # the databases and logs</span><br><span class="line">  &#x2F;var&#x2F;lib&#x2F;ldap&#x2F; r,</span><br><span class="line">  &#x2F;var&#x2F;lib&#x2F;ldap&#x2F;** rwk,</span><br><span class="line"></span><br><span class="line">  # lock file</span><br><span class="line">  &#x2F;var&#x2F;lib&#x2F;ldap&#x2F;alock kw,</span><br><span class="line"></span><br><span class="line">  &#x2F;data&#x2F;ldap&#x2F;data&#x2F; r,</span><br><span class="line">  &#x2F;data&#x2F;ldap&#x2F;data&#x2F;** rwk,</span><br><span class="line"></span><br><span class="line">  # lock file</span><br><span class="line">  &#x2F;data&#x2F;ldap&#x2F;data&#x2F;alock kw,</span><br><span class="line"> 添加DB路径到配置文件中,如上所示</span><br><span class="line">重启apparmor服务</span><br><span class="line"># &#x2F;etc&#x2F;init.d&#x2F;apparmor restart</span><br></pre></td></tr></table></figure></li>
+<li><p>修改路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># ldapmodify -Q -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f dbpath.ldif</span><br><span class="line">modifying entry &quot;olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config&quot;</span><br><span class="line">重启ldap服务</span><br><span class="line"># systemctl restart slapd.service</span><br></pre></td></tr></table></figure></li>
+<li><p>查看验证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -H ldapi:&#x2F;&#x2F; -Y EXTERNAL -b &quot;olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config&quot; &quot;(objectClass&#x3D;olcDatabaseConfig)&quot; olcDbDirectory -LLL</span><br><span class="line">SASL&#x2F;EXTERNAL authentication started</span><br><span class="line">SASL username: gidNumber&#x3D;0+uidNumber&#x3D;0,cn&#x3D;peercred,cn&#x3D;external,cn&#x3D;auth</span><br><span class="line">SASL SSF: 0</span><br><span class="line">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config</span><br><span class="line">olcDbDirectory: &#x2F;data&#x2F;ldap&#x2F;data</span><br></pre></td></tr></table></figure>
+<p><a href="https://yilutongxing.wordpress.com/2013/11/07/ldap/" target="_blank" rel="noopener">参考资料</a></p>
+</li>
+</ul>
+<ol start="2">
+<li>如何设置LDAP管理员密码?</li>
+</ol>
+<ul>
+<li>生成密码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># slappasswd</span><br><span class="line">New password:</span><br><span class="line">Re-enter new password:</span><br><span class="line">&#123;SSHA&#125;XsxctHt+Ae3Saq2Kcead4UdZ0kOTZRn8</span><br></pre></td></tr></table></figure></li>
+<li>生成LDIF文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt; EOF &gt; chrootpw.ldif </span><br><span class="line">dn: olcDatabase&#x3D;&#123;0&#125;config,cn&#x3D;config</span><br><span class="line">changetype: modify</span><br><span class="line">add: olcRootPW</span><br><span class="line">olcRootPW: &#123;SSHA&#125;XsxctHt+Ae3Saq2Kcead4UdZ0kOTZRn8</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></li>
+<li>执行LDIF文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ldapadd -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f chrootpw.ldif</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="refs"><a href="#refs" class="headerlink" title="refs"></a>refs</h3><p><a href="http://www.openldap.org/doc/admin24/quickstart.html" target="_blank" rel="noopener">编译安装</a></p>
+<p>主要参考资料<br><a href="https://help.ubuntu.com/lts/serverguide/openldap-server.html.en" target="_blank" rel="noopener">OpenLDAP Server</a><br><a href="https://wiki.shileizcc.com/confluence/display/openldap/OpenLDAP" target="_blank" rel="noopener">OpenLDAP - OpenLDAP - Wiki.Shileizcc.com</a><br><a href="https://www.openldap.org/doc/admin24/slapdconf2.html" target="_blank" rel="noopener">OpenLDAP Software 2.4 Administrator’s Guide: Configuring slapd</a></p>
+<p>其他参考<br><a href="https://segmentfault.com/a/1190000014683418" target="_blank" rel="noopener">我花了一个五一终于搞懂了OpenLDAP - 日新亭 - SegmentFault 思否</a><br><a href="http://tutoriels.meddeb.net/openldap-tutorial-log/" target="_blank" rel="noopener">Enable the production of Openldap Log file - Tutoriels pour la construction de logiciels</a><br><a href="https://blog.mallux.me/2017/03/03/openldap/" target="_blank" rel="noopener">OpenLDAP 初识 | Mallux - 宁静致远</a><br><a href="https://linuxguideandhints.com/centos/openldap.html" target="_blank" rel="noopener">OpenLDAP — Linux Guide and Hints</a><br><a href="https://www.server-world.info/en/note?os=Ubuntu_17.04&p=ssl" target="_blank" rel="noopener">Ubuntu 17.04 : Create SSL Certificates : Server World</a><br><a href="https://help.ubuntu.com/lts/serverguide/openldap-server.html.en#openldap-server-installation" target="_blank" rel="noopener">OpenLDAP Server</a><br><a href="https://www.howtoing.com/how-to-use-ldif-files-to-make-changes-to-an-openldap-system" target="_blank" rel="noopener">如何使用LDIF文件来进行更改OpenLDAP系统</a><br><a href="https://www.ldapsoft.com/download.html" target="_blank" rel="noopener">LDAP Admin Tool</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">LDAP 部署文档</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月23日 - 15:04</p>
+  <p><span>最后更新:</span>2020年04月23日 - 15:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" title="LDAP 部署文档">https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+
+    </div>
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">LDAP 部署文档</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
+  <p><span>发布时间:</span>2020年04月23日 - 15:04</p>
+  <p><span>最后更新:</span>2020年04月23日 - 15:04</p>
+  <p><span>原始链接:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" title="LDAP 部署文档">https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success",
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LDAP/" <i class="fa fa-tag"></i> LDAP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/23/kafka%E4%B8%93%E9%A2%98/" rel="next" title="kafka专题">
+                <i class="fa fa-chevron-left"></i> kafka专题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/23/mongodb%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" rel="prev" title="mongodb高可用集群部署">
+                mongodb高可用集群部署 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">shuke</p>
+              <p class="site-description motion-element" itemprop="description">shuke's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20history">
+              
+                  <span class="site-state-item-count">128</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shuke163" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shu_ke163@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-emial"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9c09b764fb76" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-简书"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/aslongas" target="_blank" title="CN-Blog">
+                      
+                        <i class="fa fa-fw fa-cn blog"></i>CN-Blog</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LDAP-部署文档"><span class="nav-text">LDAP 部署文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境准备"><span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一-安装"><span class="nav-text">一. 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-查看初始化信息"><span class="nav-text">二. 查看初始化信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-TLS"><span class="nav-text">三. TLS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-验证数据"><span class="nav-text">四. 验证数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-Logging设置"><span class="nav-text">五. Logging设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六-LDAP命令介绍"><span class="nav-text">六. LDAP命令介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七-卸载LDAP"><span class="nav-text">七. 卸载LDAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八-Backup-and-Restore"><span class="nav-text">八. Backup and Restore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ldap3-client-example"><span class="nav-text">ldap3 client example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ldapPublicKey"><span class="nav-text">ldapPublicKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A"><span class="nav-text">Q&amp;A</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#refs"><span class="nav-text">refs</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shuke</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站总访问量<span id="busuanzi_value_site_uv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4
+<span>   |   </span>
+<span id="showDays"></span>
+LANG-HTML | COPY
+</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共259.9k字</span>
+</div>
+
+<span>本站已运行<span id="htmer_time"></span></span>
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }
+    </script>
+
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2018, 2, 20, 14, 0, 0)).getTime() / 1000);  //这里设置建站时间
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+                + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+
+        $(function(){
+            $("#learnmore").click(function(){
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var $target = $(this.hash);
+                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                    if ($target.length) {
+                        var targetOffset = $target.offset().top;
+                    $('html,body').animate({scrollTop: targetOffset},800);
+                    return false;
+                    }
+                }
+            });
+        });
+
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>总访客
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+    <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz',
+        appKey: 'Q4ttAODITJ54wusrC5Tt1G66',
+        placeholder: 'Just Go Go...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("8IBVHqX2Ko48HzOfVbdVNtRy-gzGzoHsz", "Q4ttAODITJ54wusrC5Tt1G66");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/lib/zclip/clipboard.min.js"></script>	
+<script type="text/javascript" src="/js/src/custom.js"></script>
+  <!-- 页面点击小红心，在末尾添加，避免找不到 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
