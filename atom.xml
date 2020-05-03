@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://shuke163.github.io/"/>
-  <updated>2020-05-03T03:09:10.952Z</updated>
+  <updated>2020-05-03T03:30:57.269Z</updated>
   <id>https://shuke163.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python上下文管理器</title>
+    <link href="https://shuke163.github.io/2020/05/03/Python%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/"/>
+    <id>https://shuke163.github.io/2020/05/03/Python%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/</id>
+    <published>2020-05-03T03:30:05.000Z</published>
+    <updated>2020-05-03T03:30:57.269Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="有趣的python上下文管理器"><a href="#有趣的python上下文管理器" class="headerlink" title="有趣的python上下文管理器"></a>有趣的python上下文管理器</h2><p><a href="https://mp.weixin.qq.com/s/h0YYmehLuO8QF5Ry7b7fiQ" target="_blank" rel="noopener">原文链接</a></p>]]></content>
+    
+    <summary type="html">
+    
+      Python上下文管理器
+    
+    </summary>
+    
+    
+      <category term="PYTHON" scheme="https://shuke163.github.io/categories/PYTHON/"/>
+    
+    
+      <category term="PYTHON" scheme="https://shuke163.github.io/tags/PYTHON/"/>
+    
+  </entry>
   
   <entry>
     <title>EditorConfig使用介绍</title>
@@ -444,29 +467,6 @@
     </summary>
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>Python合并两个字典成一个新字典的几种方法分析比较</title>
-    <link href="https://shuke163.github.io/2020/04/23/Python%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E5%AD%97%E5%85%B8%E6%88%90%E4%B8%80%E4%B8%AA%E6%96%B0%E5%AD%97%E5%85%B8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90%E6%AF%94%E8%BE%83/"/>
-    <id>https://shuke163.github.io/2020/04/23/Python%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E5%AD%97%E5%85%B8%E6%88%90%E4%B8%80%E4%B8%AA%E6%96%B0%E5%AD%97%E5%85%B8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90%E6%AF%94%E8%BE%83/</id>
-    <published>2020-04-23T08:08:35.000Z</published>
-    <updated>2020-04-23T08:08:50.333Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Python合并两个字典成一个新字典的几种方法分析比较"><a href="#Python合并两个字典成一个新字典的几种方法分析比较" class="headerlink" title="Python合并两个字典成一个新字典的几种方法分析比较"></a>Python合并两个字典成一个新字典的几种方法分析比较</h2><p>两个字典如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d1 &#x3D; &#123;&#39;name&#39; : &#39;revotu&#39;, &#39;age&#39; : 99&#125;</span><br><span class="line">&gt;&gt;&gt; d2 &#x3D; &#123;&#39;age&#39; : 24, &#39;sex&#39; : &#39;male&#39;&#125;</span><br></pre></td></tr></table></figure><p>合并后的结果如下（即，key相同时后面字典值覆盖前面字典）：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d</span><br><span class="line">&#123;&#39;sex&#39;: &#39;male&#39;, &#39;name&#39;: &#39;revotu&#39;, &#39;age&#39;: 24&#125;</span><br></pre></td></tr></table></figure><p>首先，说明字典并不支持+加法运算：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d1 + d2</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">TypeError: unsupported operand type(s) for +: &#39;dict&#39; and &#39;dict&#39;</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure><p>现总结如下几种方法以及简要分析比较。</p><ol><li><p>多次更新<br>下面是最简单的合并字典的方式：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#125;</span><br><span class="line">&gt;&gt;&gt; d.update(d1)</span><br><span class="line">&gt;&gt;&gt; d.update(d2)</span><br></pre></td></tr></table></figure><blockquote><p>首先创建一个空字典，并使用update方法向字典中添加元素。注意，先添加的是d1，以保证后面添加的d2重复键会覆盖d1。<br>此方法满足了我们的要求，而且清晰明确，可是三行代码总感觉不够Pythonic。</p></blockquote></li><li><p>先复制，后更新<br>先复制d1字典创建一个新字典，然后使用d2来更新前面创建的新字典。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; d1.copy()</span><br><span class="line">&gt;&gt;&gt; d.update(d2)</span><br></pre></td></tr></table></figure><blockquote><p>对比方法一，这种复制d1的方法，更明显的表现出d1作为默认值。</p></blockquote></li><li><p>字典构造器<br>还可以使用字典的构造器dict()复制字典，然后再更新：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; dict(d1)</span><br><span class="line">&gt;&gt;&gt; d.update(d2)</span><br></pre></td></tr></table></figure><blockquote><p>与方法二很相似，但是没有方法二直接明了。</p></blockquote></li><li><p>关键字参数hack<br>你可能见过下面这个巧妙的解决办法：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; dict(d1 , **d2)</span><br></pre></td></tr></table></figure><p>只有一行代码，看上去很酷，但是有一个问题，这种hack技巧只有在字典的键是字符串时才有效。</p><blockquote><p>看上去很cool，但是不通用，字典的键必须是字符串才可以用这种关键字参数方法。</p></blockquote></li><li><p>字典推导式<br>可以用字典推导式解决此问题：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;k:v for d in [d1, d2] for k,v in d.items()&#125;</span><br></pre></td></tr></table></figure><blockquote><p>字典推导式方法满足要求，只是嵌套的字典推导式，不那么清晰，不易于理解。</p></blockquote></li><li><p>元素拼接<br>我们从每个字典中获取一个元素列表，将列表拼接起来，然后再用拼接的列表构造字典：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; dict(list(d1.items()) + list(d2.items()))</span><br></pre></td></tr></table></figure><blockquote><p>而且，d2的元素在列表后面，所以在键重复时可以覆盖d1。如果在Python2中，items()方法本身返回的就是列表，无需用list()转成列表。</p></blockquote></li></ol><p>元素拼接在构造字典可以满足要求，只是看上去代码有些重复。</p><ol start="7"><li><p>元素并集<br>在Python3中，字典返回的是视图对象，键的视图对象是一个类似集合的对象，如果字典中的值可以保证是唯一的可哈希的，此时items返回的视图对象也是一个类似集合的对象：</p><figure class="highlight plain"><figcaption><span>d </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; 这种方法挺有意思，可是并不准确，因为集合是无序的，键重复时不能保证谁覆盖谁，而且字典中的值通常也是不可哈希的，当然也就不能返回一个类似集合的对象。</span><br><span class="line"></span><br><span class="line">8. chain items</span><br><span class="line">目前为止，我们讨论的解决方案中，最符合Python语言习惯而且只有一行代码实现的，是创建两个items的列表，然后拼接成字典。</span><br><span class="line">我们可以用itertools.chain来简化items拼接过程：</span><br><span class="line">&#96;&#96;&#96;&gt;&gt;&gt; d &#x3D; dict(chain(d1.items(), d2.items()))</span><br></pre></td></tr></table></figure><blockquote><p>这种方案很不错，可能比另外创建两个不必要的列表更高效。</p></blockquote></li><li><p>ChainMap<br>collections.ChainMap可以将多个字典或映射，在逻辑上将它们合并为一个单独的映射结构：</p><figure class="highlight plain"><figcaption><span>from collections import ChainMap</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; dict(ChainMap(d1, d2))</span><br></pre></td></tr></table></figure><blockquote><p>这种方法也很pythonic，而且也是通用方法。</p></blockquote></li><li><p>字典拆分<br>在Python3.5+中，可以使用一种全新的字典合并方式：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;**d1, **d2&#125;</span><br></pre></td></tr></table></figure><blockquote><p>这行代码很pythonic，如果是你的python版本是3.5+，用这种方法是很不错的选择。</p></blockquote></li></ol><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>上面说了十种可以合并两个字典成一个新字典的方式，具体用哪个取决于你。<br>如果使用的是Python3.5+的版本，那么字典拆分这种新语法应该很适合你：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;**d1, **d2&#125;</span><br></pre></td></tr></table></figure><p><a href="http://www.revotu.com/python-merge-two-dicts-into-one-dict.html#more" target="_blank" rel="noopener">原文博客</a></p>]]></content>
-    
-    <summary type="html">
-    
-      Python合并两个字典成一个新字典的几种方法分析比较
-    
-    </summary>
-    
-    
-      <category term="PYTHON" scheme="https://shuke163.github.io/categories/PYTHON/"/>
-    
-    
-      <category term="PYTHON" scheme="https://shuke163.github.io/tags/PYTHON/"/>
     
   </entry>
   
