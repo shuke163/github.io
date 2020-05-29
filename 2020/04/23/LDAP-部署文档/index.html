@@ -89,7 +89,7 @@
 <meta property="og:description" content="LDAP 部署文档">
 <meta property="og:image" content="https://www.openldap.org/doc/admin24/config_dit.png">
 <meta property="article:published_time" content="2020-04-23T07:57:24.000Z">
-<meta property="article:modified_time" content="2020-05-27T07:04:25.377Z">
+<meta property="article:modified_time" content="2020-05-29T02:19:44.571Z">
 <meta property="article:author" content="shuke">
 <meta property="article:tag" content="LDAP">
 <meta name="twitter:card" content="summary">
@@ -448,7 +448,7 @@ $(function() {
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">字数统计:</span>
-            <span class="post-count">3.7k(字)</span>
+            <span class="post-count">3.9k(字)</span>
             </span>
 
             <span class="post-time">
@@ -457,7 +457,7 @@ $(function() {
             <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">阅读时长≈</span>
-            <span class="post-count">20(分)</span>
+            <span class="post-count">21(分)</span>
             </span>
 
               <span class="post-meta-item-icon">
@@ -622,7 +622,10 @@ anonymous是匿名用户的查询结果,因为我们运行ldapwhoami而不登录
 <li>restart the rsyslog daemon<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart syslog.service</span><br></pre></td></tr></table></figure>
 此时,<code>tail -f /var/log/syslog</code>查看日志文件内容,可以查看到LDAP相关log</li>
 </ol>
-<h3 id="六-LDAP命令介绍"><a href="#六-LDAP命令介绍" class="headerlink" title="六. LDAP命令介绍"></a>六. LDAP命令介绍</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ldapmodrdn 命令用于对 OpenLDAP 目录树中 RDN 条目的修改，可以从标准的条目信息输入或者使用 -f 指定 LDIF 文件的格式输入。</span><br><span class="line"># ldapmodrdn -x -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -w weopenldap -H ldapi:&#x2F;&#x2F;&#x2F; &quot;cn&#x3D;dba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot; cn&#x3D;wedba</span><br><span class="line">ldappasswd 命令用于修改密码</span><br><span class="line"># ldappasswd -x -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -w weopenldap -H ldapi:&#x2F;&#x2F;&#x2F; &quot;cn&#x3D;wedba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot; -S</span><br><span class="line">ldapdelete 命令用于从目录树中删除指定条目，并根据 DN 条目删除一个或多个条目，但必须提供所要删除指定条目的权限所绑定的 DN（整个目录树的唯一标识名称）。</span><br><span class="line"># ldapdelete -x -w weopenldap -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net &quot;cn&#x3D;tester,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot;</span><br><span class="line">要检测配置文件的可用性，可设置输出级别:</span><br><span class="line"># slaptest -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">config file testing succeeded</span><br><span class="line"># slaptest -d 3 -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">slapcat 命令用于将数据条目转换为 OpenLDAP 的 LDIF 文件，可用于 OpenLDAP 条目的备份以及结合 slapdadd 指定用于恢复条目。</span><br><span class="line">下面通过slapcat 备份 OpenLDAP 所有目录树条目：</span><br><span class="line"># slapcat -v -l openldap.ldif</span><br><span class="line">LDAP客户端机器验证:</span><br><span class="line"># getent passwd shuke</span><br><span class="line">shuke:*:12514:10202:shuke:&#x2F;home&#x2F;shuke:&#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+<h3 id="六-LDAP命令介绍"><a href="#六-LDAP命令介绍" class="headerlink" title="六. LDAP命令介绍"></a>六. LDAP命令介绍</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ldapmodrdn 命令用于对 OpenLDAP 目录树中 RDN 条目的修改，可以从标准的条目信息输入或者使用 -f 指定 LDIF 文件的格式输入。</span><br><span class="line"># ldapmodrdn -x -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -w weopenldap -H ldapi:&#x2F;&#x2F;&#x2F; &quot;cn&#x3D;dba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot; cn&#x3D;wedba</span><br><span class="line">ldappasswd 命令用于修改密码</span><br><span class="line"># ldappasswd -x -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net -w weopenldap -H ldapi:&#x2F;&#x2F;&#x2F; &quot;cn&#x3D;wedba,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot; -S</span><br><span class="line">ldapdelete 命令用于从目录树中删除指定条目，并根据 DN 条目删除一个或多个条目，但必须提供所要删除指定条目的权限所绑定的 DN（整个目录树的唯一标识名称）。</span><br><span class="line"># ldapdelete -x -w weopenldap -D cn&#x3D;admin,dc&#x3D;wecash,dc&#x3D;net &quot;cn&#x3D;tester,ou&#x3D;Groups,dc&#x3D;wecash,dc&#x3D;net&quot;</span><br><span class="line">要检测配置文件的可用性，可设置输出级别:</span><br><span class="line"># slaptest -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">config file testing succeeded</span><br><span class="line"># slaptest -d 3 -F &#x2F;etc&#x2F;ldap&#x2F;slapd.d</span><br><span class="line">slapcat 命令用于将数据条目转换为 OpenLDAP 的 LDIF 文件，可用于 OpenLDAP 条目的备份以及结合 slapdadd 指定用于恢复条目。</span><br><span class="line">下面通过slapcat 备份 OpenLDAP 所有目录树条目：</span><br><span class="line"># slapcat -v -l openldap.ldif</span><br><span class="line"># 通过 ldapsearch 查看 shuke 用户及 sre 组相关信息，命令如下:</span><br><span class="line"># ldapsearch -x -LLL uid&#x3D;shuke</span><br></pre></td></tr></table></figure>
+<p>dn: uid=shuke,ou=stuff,dc=shuke,dc=com<br>givenName: shu<br>sn: ke<br>userPassword:: e01ENX00UXJjT1VtNldhdStWdUJYOGcrSVBnPT0=<br>gidNumber: 5000<br>homeDirectory: /home/shuke<br>loginShell: /bin/bash<br>cn: shuke<br>uid: shuke<br>uidNumber: 1100<br>objectClass: inetOrgPerson<br>objectClass: posixAccount<br>objectClass: top<br>objectClass: shadowAccount<br>objectClass: person<br>objectClass: ldapPublicKey<br>sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDRMPwi6Q/Zcb1N6sWnFf5/EwTv<br> mpfEZyRI0XUnCtZKWEPPCbgjPfQ2ZKYPCsmfvqA6uaVolBzLM04BZEbbeHmC1mB3kpvOXmZtH7iAt<br> 22khCyS5A/jzaE9lwgyGzO/mhJQ83EIBt4MtO/UgGyk1EAyQH0gAGgfqQ2Htyp44wxul0plpbcmTE<br> lQQUZiLMNUspKS4i3BDGSWwu+Y2q7h3jTfgMpyLweqnt4vuUwhaGouP1P6q7M7HCRMKbXL5MH3K0s<br> z5G1WpiqsXxtHbFgQZiniOwO/EaUvca9MQRwY5zeMxkUJ38HlpvRjp16HevpuLqvUqy2Uw2migJNW<br> 52ZubtGlOzc8mJh/qSLUTV1238Z6dgR6nELa260RnsPNp3Utb7HkhY6WZSRYxNxjvsGWDIKMczPHb<br> fhHf0iuuxGt96dPhpM6V8UH0zbPUEL/6+VRTMThflewLA+2/9J5VzG+Ugqm3vU3jVZxgMqqFlJmI9<br> nfw0/H+1H+6AEU556fNTqBFQAEQDNKltv4hv/YLmpcYh7lSJU9TjHaHCXpbLDaAQPLcNBFzA1lL3K<br> U+rx1xwww4Tbn77qU/JmSACLP/oczrLvb+kLjO2dyi0WfEjqgeIn83OPPv4CtTMlpHZj2kP2L7Sw8<br> RZHXurL1wLqBnVrCGzHcC2huB9jn3QUedWjVqdA6Sw== shuke@shukes-mbp</p>
+<p>[root@tldap ldap]# ldapsearch -x -LLL cn=sre<br>dn: cn=sre,ou=groups,dc=shuke,dc=com<br>cn: sre<br>objectClass: posixGroup<br>objectClass: top<br>gidNumber: 5000<br>description: sre group<br>memberUid: uid=wangwu,ou=stuff,dc=shuke,dc=com<br>memberUid: uid=guoliman,ou=stuff,dc=shuke,dc=com<br>memberUid: uid=fengfengzhao,ou=stuff,dc=shuke,dc=com<br>memberUid: uid=shuke,ou=stuff,dc=shuke,dc=com<br>memberUid: uid=mazengsui,ou=stuff,dc=shuke,dc=com</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LDAP客户端机器验证:</span><br><span class="line"># getent passwd shuke</span><br><span class="line">shuke:*:12514:10202:shuke:&#x2F;home&#x2F;shuke:&#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
 <p><a href="https://wiki.shileizcc.com/confluence/pages/viewpage.action?pageId=39223593#OpenLDAP%E5%91%BD%E4%BB%A4%E4%BB%8B%E7%BB%8D-ldapsearch%E5%91%BD%E4%BB%A4" target="_blank" rel="noopener">OpenLDAP 命令介绍-OpenLDAP</a></p>
 <h3 id="七-卸载LDAP"><a href="#七-卸载LDAP" class="headerlink" title="七. 卸载LDAP"></a>七. 卸载LDAP</h3><ol>
 <li>命令卸载<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># apt-get purge --auto-remove slapd ldap-utils</span><br></pre></td></tr></table></figure></li>
@@ -700,7 +703,7 @@ anonymous是匿名用户的查询结果,因为我们运行ldapwhoami而不登录
   <p><span>本文标题:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">LDAP 部署文档</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
   <p><span>发布时间:</span>2020年04月23日 - 15:04</p>
-  <p><span>最后更新:</span>2020年05月27日 - 15:05</p>
+  <p><span>最后更新:</span>2020年05月29日 - 10:05</p>
   <p><span>原始链接:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" title="LDAP 部署文档">https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/"  aria-label="复制成功！"></i></span>
   </p>
@@ -746,7 +749,7 @@ anonymous是匿名用户的查询结果,因为我们运行ldapwhoami而不登录
   <p><span>本文标题:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">LDAP 部署文档</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
   <p><span>发布时间:</span>2020年04月23日 - 15:04</p>
-  <p><span>最后更新:</span>2020年05月27日 - 15:05</p>
+  <p><span>最后更新:</span>2020年05月29日 - 10:05</p>
   <p><span>原始链接:</span><a href="/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" title="LDAP 部署文档">https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/04/23/LDAP-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/"  aria-label="复制成功！"></i></span>
   </p>
@@ -1037,7 +1040,7 @@ LANG-HTML | COPY
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共262.2k字</span>
+  <span class="post-count">博客全站共262.4k字</span>
 </div>
 
 <span>本站已运行<span id="htmer_time"></span></span>
