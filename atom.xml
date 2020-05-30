@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://shuke163.github.io/"/>
-  <updated>2020-05-28T01:43:45.303Z</updated>
+  <updated>2020-05-30T13:46:26.771Z</updated>
   <id>https://shuke163.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux Shell cat EOF 中变量引用</title>
+    <link href="https://shuke163.github.io/2020/05/30/Linux-Shell-cat-EOF-%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8/"/>
+    <id>https://shuke163.github.io/2020/05/30/Linux-Shell-cat-EOF-%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8/</id>
+    <published>2020-05-30T13:38:18.000Z</published>
+    <updated>2020-05-30T13:46:26.771Z</updated>
+    
+    <content type="html"><![CDATA[<p>cat输出多行文本到文件的方法很常用，如何在里面引用变量呢？看下面的代码:<br>设置环境变量<code>LDAP_SERVER_URI</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export LDAP_SERVER_URI&#x3D;&quot;ldaps:&#x2F;&#x2F;tldap.shuke.com&quot;</span><br></pre></td></tr></table></figure><p><code>cat-eof.sh</code>文件内容如下:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env bash</span><br><span class="line">cat &lt;&lt;EOF &gt; .&#x2F;test.yml</span><br><span class="line">123</span><br><span class="line">shuke</span><br><span class="line">example: $&#123;LDAP_SERVER_URI&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure><p>查看文件内容:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  &#x2F;tmp bash cat-eof.sh</span><br><span class="line">➜  &#x2F;tmp cat test.yml</span><br><span class="line">123</span><br><span class="line">shuke</span><br><span class="line">example: ldaps:&#x2F;&#x2F;tldap.shuke.com</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      Linux Shell cat EOF 中变量引用
+    
+    </summary>
+    
+    
+      <category term="LINUX" scheme="https://shuke163.github.io/categories/LINUX/"/>
+    
+    
+      <category term="LINUX" scheme="https://shuke163.github.io/tags/LINUX/"/>
+    
+  </entry>
   
   <entry>
     <title>GitOps for k8s</title>
@@ -46,7 +69,7 @@
     <published>2020-05-22T03:53:30.000Z</published>
     <updated>2020-05-28T01:44:24.495Z</updated>
     
-    <content type="html"><![CDATA[<img src="/2020/05/22/DevOps%E5%B7%A5%E5%85%B7%E4%B8%BB%E9%A2%98%E6%95%B4%E7%90%86/DevOps.svg">]]></content>
+    <content type="html"><![CDATA[<img src="DevOps工具主题整理/DevOps.svg">]]></content>
     
     <summary type="html">
     
@@ -442,29 +465,6 @@
     <summary type="html">
     
       Python中的一些高级技巧
-    
-    </summary>
-    
-    
-      <category term="PYTHON" scheme="https://shuke163.github.io/categories/PYTHON/"/>
-    
-    
-      <category term="PYTHON" scheme="https://shuke163.github.io/tags/PYTHON/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python之禅</title>
-    <link href="https://shuke163.github.io/2020/04/23/Python%E4%B9%8B%E7%A6%85/"/>
-    <id>https://shuke163.github.io/2020/04/23/Python%E4%B9%8B%E7%A6%85/</id>
-    <published>2020-04-23T08:12:23.000Z</published>
-    <updated>2020-04-23T08:14:05.187Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Python之禅"><a href="#Python之禅" class="headerlink" title="Python之禅"></a>Python之禅</h2><blockquote><p>在Python交互式解释器中输 入import this就会显示Tim Peters的The Zen of python</p></blockquote><p><img src="https://pic4.zhimg.com/v2-3c27b47e4d5ef618a86252b39bb6db94_1200x500.jpg" alt="python"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import this</span><br><span class="line">The Zen of Python, by Tim Peters</span><br><span class="line"></span><br><span class="line">Beautiful is better than ugly.</span><br><span class="line">Explicit is better than implicit.</span><br><span class="line">Simple is better than complex.</span><br><span class="line">Complex is better than complicated.</span><br><span class="line">Flat is better than nested.</span><br><span class="line">Sparse is better than dense.</span><br><span class="line">Readability counts.</span><br><span class="line">Special cases aren&#39;t special enough to break the rules.</span><br><span class="line">Although practicality beats purity.</span><br><span class="line">Errors should never pass silently.</span><br><span class="line">Unless explicitly silenced.</span><br><span class="line">In the face of ambiguity, refuse the temptation to guess.</span><br><span class="line">There should be one-- and preferably only one --obvious way to do it.</span><br><span class="line">Although that way may not be obvious at first unless you&#39;re Dutch.</span><br><span class="line">Now is better than never.</span><br><span class="line">Although never is often better than *right* now.</span><br><span class="line">If the implementation is hard to explain, it&#39;s a bad idea.</span><br><span class="line">If the implementation is easy to explain, it may be a good idea.</span><br><span class="line">Namespaces are one honking great idea -- let&#39;s do more of those!</span><br></pre></td></tr></table></figure><p>翻译和解释:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Python之禅 by Tim Peters</span><br><span class="line"></span><br><span class="line">优美胜于丑陋（Python 以编写优美的代码为目标）</span><br><span class="line">明了胜于晦涩（优美的代码应当是明了的，命名规范，风格相似）</span><br><span class="line">简洁胜于复杂（优美的代码应当是简洁的，不要有复杂的内部实现）</span><br><span class="line">复杂胜于凌乱（如果复杂不可避免，那代码间也不能有难懂的关系，要保持接口简洁）</span><br><span class="line">扁平胜于嵌套（优美的代码应当是扁平的，不能有太多的嵌套）</span><br><span class="line">间隔胜于紧凑（优美的代码有适当的间隔，不要奢望一行代码解决问题）</span><br><span class="line">可读性很重要（优美的代码是可读的）</span><br><span class="line">即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上）</span><br><span class="line">不要包容所有错误，除非你确定需要这样做（精准地捕获异常，不写 except:pass 风格的代码）</span><br><span class="line">当存在多种可能，不要尝试去猜测</span><br><span class="line">而是尽量找一种，最好是唯一一种明显的解决方案（如果不确定，就用穷举法）</span><br><span class="line">虽然这并不容易，因为你不是 Python 之父（这里的 Dutch 是指 Guido ）</span><br><span class="line">做也许好过不做，但不假思索就动手还不如不做（动手之前要细思量）</span><br><span class="line">如果你无法向人描述你的方案，那肯定不是一个好方案；反之亦然（方案测评标准）</span><br><span class="line">命名空间是一种绝妙的理念，我们应当多加利用（倡导与号召）</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      Python之禅
     
     </summary>
     

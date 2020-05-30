@@ -402,6 +402,34 @@ $(function() {
 
       <h2 class="post-title">
         
+            <a class="post-title-link" href="/2020/05/30/Linux-Shell-cat-EOF-%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8/" itemprop="url">
+              
+                <span itemprop="name">Linux Shell cat EOF 中变量引用</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2020-05-30T21:38:18+08:00"
+              content="2020-05-30" >
+          05-30
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
             <a class="post-title-link" href="/2020/04/23/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E7%94%A8Strace%E8%AF%8A%E6%96%AD%E9%97%AE%E9%A2%98/" itemprop="url">
               
                 <span itemprop="name">手把手教你用Strace诊断问题</span>
@@ -474,7 +502,7 @@ $(function() {
               
                 <a href="/archives%7C%7C%20history">
               
-                  <span class="site-state-item-count">138</span>
+                  <span class="site-state-item-count">139</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -610,7 +638,7 @@ LANG-HTML | COPY
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共262.4k字</span>
+  <span class="post-count">博客全站共262.5k字</span>
 </div>
 
 <span>本站已运行<span id="htmer_time"></span></span>
@@ -1394,31 +1422,7 @@ $(function() {
   <script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>
-rs = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
+        for(var i = 0; i < entries.length; i++) {
             var url = entries[i];
             var element = document.getElementById(url);
             var countSpan = $(element).find(COUNT_CONTAINER_REF);
