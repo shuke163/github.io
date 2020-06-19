@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://shuke163.github.io/"/>
-  <updated>2020-06-08T09:35:52.075Z</updated>
+  <updated>2020-06-19T16:08:07.610Z</updated>
   <id>https://shuke163.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Go语言数据类型</title>
+    <link href="https://shuke163.github.io/2020/06/20/Go%E8%AF%AD%E8%A8%80%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/"/>
+    <id>https://shuke163.github.io/2020/06/20/Go%E8%AF%AD%E8%A8%80%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</id>
+    <published>2020-06-19T16:07:04.000Z</published>
+    <updated>2020-06-19T16:08:07.610Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Go语言数据类型"><a href="#Go语言数据类型" class="headerlink" title="Go语言数据类型"></a>Go语言数据类型</h2><h3 id="1-1-整形与字符串之间的转换"><a href="#1-1-整形与字符串之间的转换" class="headerlink" title="1.1 整形与字符串之间的转换"></a>1.1 整形与字符串之间的转换</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同类型之间可以进行相加</span></span><br><span class="line"><span class="keyword">var</span> v1 <span class="keyword">int8</span> = <span class="number">10</span></span><br><span class="line"><span class="keyword">var</span> v2 <span class="keyword">int16</span> = <span class="number">8</span></span><br><span class="line">v3 := <span class="keyword">int16</span>(v1) + v2</span><br><span class="line">fmt.Println(v3)</span><br><span class="line">fmt.Println(v3, reflect.TypeOf(v3))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 整形与字符串之间的转换</span></span><br><span class="line">v5 := <span class="number">19</span></span><br><span class="line"><span class="keyword">var</span> v4 <span class="keyword">int</span> = <span class="number">19</span></span><br><span class="line">res := strconv.Itoa(v5)</span><br><span class="line">fmt.Println(v4, reflect.TypeOf(res))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 字符串转换为整形</span></span><br><span class="line">v6 := <span class="string">"shuke"</span></span><br><span class="line">result, err := strconv.Atoi(v6)</span><br><span class="line"><span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"转换成功!"</span>, result)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"转换失败!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="1-2常见数学运算"><a href="#1-2常见数学运算" class="headerlink" title="1.2常见数学运算"></a>1.2常见数学运算</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"math"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">fmt.Println(math.Abs(<span class="number">-10</span>))                 <span class="comment">// 取绝对值</span></span><br><span class="line">fmt.Println(math.Floor(<span class="number">3.14</span>))              <span class="comment">// 向下取整</span></span><br><span class="line">fmt.Println(math.Ceil(<span class="number">3.14</span>))               <span class="comment">// 向下取整</span></span><br><span class="line">fmt.Println(math.Round(<span class="number">3.34789</span>))           <span class="comment">// 就近取整</span></span><br><span class="line">fmt.Println(math.Round(<span class="number">3.34789</span>*<span class="number">100</span>) / <span class="number">100</span>) <span class="comment">// 保留小数点后两位</span></span><br><span class="line">fmt.Println(math.Mod(<span class="number">11</span>, <span class="number">3</span>))               <span class="comment">// 取余数， 同 11 % 3</span></span><br><span class="line">fmt.Println(math.Pow(<span class="number">2</span>, <span class="number">5</span>))                <span class="comment">// 计算次方,如 2 的5次方</span></span><br><span class="line">fmt.Println(math.Pow10(<span class="number">2</span>))                 <span class="comment">// 计算10次方,如 2 的10次方</span></span><br><span class="line">fmt.Println(math.Max(<span class="number">1</span>, <span class="number">2</span>))                <span class="comment">// 两个值， 取较大值</span></span><br><span class="line">fmt.Println(math.Min(<span class="number">1</span>, <span class="number">2</span>))                <span class="comment">// 两个值， 取较小值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">3.35</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">32</span></span><br><span class="line"><span class="number">100</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure><h3 id="1-3-指针"><a href="#1-3-指针" class="headerlink" title="1.3 指针"></a>1.3 指针</h3><blockquote><p>  nil 使用new关键字进行变量声明</p></blockquote><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明一个变量</span></span><br><span class="line"><span class="keyword">var</span> v1 <span class="keyword">int</span></span><br><span class="line">v1 = <span class="number">99</span></span><br><span class="line">v2 := <span class="number">88</span></span><br><span class="line">fmt.Println(v1, v2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指针</span></span><br><span class="line"><span class="keyword">var</span> v3 *<span class="keyword">int</span>   <span class="comment">// &lt;nil&gt;</span></span><br><span class="line">v4 := <span class="built_in">new</span>(<span class="keyword">int</span>)  <span class="comment">// 0xc00001c0d0 -&gt; 初始值为0</span></span><br><span class="line">fmt.Println(v3, v4)</span><br></pre></td></tr></table></figure><ul><li>new关键字创建内存并进行内部数据的初始化，并返回一个指针类型。</li><li>nil nil在<code>go</code>语言中表示空值。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      Go语言数据类型
+    
+    </summary>
+    
+    
+      <category term="GO" scheme="https://shuke163.github.io/categories/GO/"/>
+    
+    
+      <category term="GO" scheme="https://shuke163.github.io/tags/GO/"/>
+    
+  </entry>
   
   <entry>
     <title>How to Automate Jenkins job configurations as code</title>
@@ -113,7 +136,7 @@
     <link href="https://shuke163.github.io/2020/05/22/DevOps%E5%B7%A5%E5%85%B7%E4%B8%BB%E9%A2%98%E6%95%B4%E7%90%86/"/>
     <id>https://shuke163.github.io/2020/05/22/DevOps%E5%B7%A5%E5%85%B7%E4%B8%BB%E9%A2%98%E6%95%B4%E7%90%86/</id>
     <published>2020-05-22T03:53:30.000Z</published>
-    <updated>2020-05-28T01:44:24.495Z</updated>
+    <updated>2020-06-08T09:40:32.157Z</updated>
     
     <content type="html"><![CDATA[<img src="DevOps工具主题整理/DevOps.svg">]]></content>
     
@@ -450,29 +473,6 @@
     
     
       <category term="Vim" scheme="https://shuke163.github.io/tags/Vim/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SFTP</title>
-    <link href="https://shuke163.github.io/2020/04/23/SFTP/"/>
-    <id>https://shuke163.github.io/2020/04/23/SFTP/</id>
-    <published>2020-04-23T08:14:52.000Z</published>
-    <updated>2020-04-23T08:15:18.680Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="SFTP"><a href="#SFTP" class="headerlink" title="SFTP"></a>SFTP</h2><p>服务器地址：10.40.14.26(内网)  47.94.162.132(公网)   域名：ftp.wecash.net</p><p>SFTP配置过程<br>   1 连接用户根据用户需求添加系统用户配置密码，例：</p><pre><code>useradd sftp_testpasswd sftp_test</code></pre><p>   2  将用户加入sftp-group组（已预先添加）</p><pre><code>usermod -a -G  sftp-group sftp_test</code></pre><p>   3 创建chroot目录，该目录为sftp用户登录的目录，权限为root，限制用户在此目录操作权限，并且创建用户的操作目录</p><pre><code>mkdir /data/sftpmkdir /data/sftp/test 授权操作目录chown sftp_test:sftp-group /data/sftp/test</code></pre><p>4 配置ssh配置文件</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># cat &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line">Protocol 2</span><br><span class="line">Port 22</span><br><span class="line">AddressFamily any</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">AllowGroups root</span><br><span class="line">AllowGroups yunwei deploy sftp-group</span><br><span class="line">AuthorizedKeysCommand &#x2F;usr&#x2F;bin&#x2F;sss_ssh_authorizedkeys</span><br><span class="line">AuthorizedKeysCommandUser root</span><br><span class="line">ChallengeResponseAuthentication yes</span><br><span class="line">LogLevel INFO</span><br><span class="line">PasswordAuthentication yes</span><br><span class="line">PermitEmptyPasswords no</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line">Subsystem sftp-user &#x2F;usr&#x2F;lib&#x2F;openssh&#x2F;sftp-server</span><br><span class="line">SyslogFacility AUTHPRIV</span><br><span class="line">UsePAM yes</span><br><span class="line">X11Forwarding yes</span><br><span class="line">Subsystem sftp &#x2F;usr&#x2F;lib&#x2F;openssh&#x2F;sftp-server</span><br><span class="line">Match Group sftp-group</span><br><span class="line">ChrootDirectory &#x2F;data&#x2F;sftp</span><br><span class="line">AllowTcpForwarding no</span><br><span class="line">PermitTunnel no</span><br><span class="line">ForceCommand internal-sftp</span><br></pre></td></tr></table></figure><p>新增配置：<br>         AllowGroups yunwei deploy sftp-group<br>         Subsystem sftp /usr/lib/openssh/sftp-servers<br>         Match Group sftp-group<br>         ChrootDirectory /data/sftp<br>         AllowTcpForwarding no<br>         PermitTunnel no<br>         ForceCommand internal-sftp<br>    重启sshd服务</p><pre><code>连接方式： sftp sftp_test@10.40.14.26使用ssh连接会提示仅用sftp连接：        This service allows sftp connections only.        Connection to 10.40.14.26 closed.</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      SFTP
-    
-    </summary>
-    
-    
-      <category term="SFTP" scheme="https://shuke163.github.io/categories/SFTP/"/>
-    
-    
-      <category term="SFTP" scheme="https://shuke163.github.io/tags/SFTP/"/>
     
   </entry>
   
