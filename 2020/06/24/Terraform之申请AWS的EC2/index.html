@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="infra," />
 
 
 
@@ -88,10 +88,9 @@
 <meta property="og:site_name" content="shuke&#39;s Blog">
 <meta property="og:description" content="Terraform之申请AWS的EC2">
 <meta property="article:published_time" content="2020-06-24T13:57:00.000Z">
-<meta property="article:modified_time" content="2020-06-24T13:59:22.730Z">
+<meta property="article:modified_time" content="2020-06-24T14:06:42.614Z">
 <meta property="article:author" content="shuke">
-<meta property="article:tag" content="SRE">
-<meta property="article:tag" content=" DevOPS">
+<meta property="article:tag" content="infra">
 <meta name="twitter:card" content="summary">
 
 
@@ -439,6 +438,45 @@ $(function() {
           </span>
 
           
+            <span class="post-category" >
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">字数统计:</span>
+            <span class="post-count">949(字)</span>
+            </span>
+
+            <span class="post-time">
+              &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">阅读时长≈</span>
+            <span class="post-count">5(分)</span>
+            </span>
+
+              <span class="post-meta-item-icon">
+                &nbsp; | &nbsp;
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/infra/" itemprop="url" rel="index">
+                    <span itemprop="name">infra</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -490,10 +528,10 @@ $(function() {
       
 
       
-        <h2 id="Terraform之申请AWS的EC2"><a href="#Terraform之申请AWS的EC2" class="headerlink" title="Terraform之申请AWS的EC2"></a>Terraform之申请AWS的EC2</h2><h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">├── cloud_init.sh  # 开机执行脚本 </span><br><span class="line">├── instance.tf    # 申请资源的主机</span><br><span class="line">├── main.tf        # 主配置文件</span><br><span class="line">├── output.tf      # 输出变量</span><br><span class="line">├── start.sh       # terraform 命令 </span><br><span class="line">└── variables.tf   # 输入变量</span><br></pre></td></tr></table></figure>
+        <h2 id="Terraform之申请AWS的EC2"><a href="#Terraform之申请AWS的EC2" class="headerlink" title="Terraform之申请AWS的EC2"></a>Terraform之申请AWS的EC2</h2><h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">├── cloud_init.sh  # 开机执行脚本 </span><br><span class="line">├── instance.tf    # 申请资源的主机</span><br><span class="line">├── main.tf        # 主配置文件</span><br><span class="line">├── output.tf      # 输出变量</span><br><span class="line">├── start.sh       # terraform 命令 </span><br><span class="line">└── variables.tf   # 输入变量</span><br></pre></td></tr></table></figure>
 
 <h3 id="variables-tf"><a href="#variables-tf" class="headerlink" title="variables.tf"></a>variables.tf</h3><p>输入变量 一个AWS 账号的基础信息</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">variable <span class="string">"region"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  description = <span class="string">"请输入创建的region"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"region_az"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  description = <span class="string">"请输入创建资源所在的AZ"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"instance_type"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  <span class="keyword">default</span>     = <span class="string">"t3.nano"</span></span><br><span class="line">  #<span class="keyword">default</span>     = <span class="string">"m5.large"</span></span><br><span class="line">  description = <span class="string">"请输入创建的实例类型"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"tag_name"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  description = <span class="string">"请输入机器的名字"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"tag_project"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  description = <span class="string">"请输入计费的tag标签"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"storage_number"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  <span class="keyword">default</span>     = <span class="number">1</span></span><br><span class="line">  description = <span class="string">"请输入要创建的硬盘数量"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"key_name"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>        = <span class="keyword">string</span></span><br><span class="line">  <span class="keyword">default</span>     = <span class="string">"xxx"</span></span><br><span class="line">  description = <span class="string">"请输入连接服务器使用的ssh名字"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"iams"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>    = <span class="keyword">map</span></span><br><span class="line">  <span class="keyword">default</span> = &#123;</span><br><span class="line">    <span class="string">"us-east-2"</span> = <span class="string">"ami-xxx"</span></span><br><span class="line">    <span class="string">"ap-northeast-1"</span> = <span class="string">"ami-xxx"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"vpcs"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>    = <span class="keyword">map</span></span><br><span class="line">  <span class="keyword">default</span> = &#123;</span><br><span class="line">    <span class="string">"us-east-2"</span> = <span class="string">"vpc-xxx"</span></span><br><span class="line">    <span class="string">"ap-northeast-1"</span> = <span class="string">"vpc-xxx"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"subnetes"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>    = <span class="keyword">map</span></span><br><span class="line">  <span class="keyword">default</span> = &#123;</span><br><span class="line">    <span class="string">"us-east-2a"</span> = <span class="string">"subnet-xxx"</span></span><br><span class="line">    <span class="string">"us-east-2b"</span> = <span class="string">"subnet-xxx"</span></span><br><span class="line">    <span class="string">"us-east-2c"</span> = <span class="string">"subnet-xxx"</span></span><br><span class="line">    <span class="string">"ap-northeast-1a"</span> = <span class="string">"subnet-xxx"</span></span><br><span class="line">    <span class="string">"ap-northeast-1c"</span> = <span class="string">"subnet-xxx"</span></span><br><span class="line">    <span class="string">"ap-northeast-1d"</span> = <span class="string">"subnet-xxx"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable <span class="string">"storage_dev"</span> &#123;</span><br><span class="line">  <span class="keyword">type</span>    = <span class="keyword">map</span></span><br><span class="line">  <span class="keyword">default</span> = &#123;</span><br><span class="line">    <span class="string">"0"</span> = <span class="string">"/dev/sdh"</span></span><br><span class="line">    <span class="string">"1"</span> = <span class="string">"/dev/sdi"</span></span><br><span class="line">    <span class="string">"2"</span> = <span class="string">"/dev/sdj"</span></span><br><span class="line">    <span class="string">"3"</span> = <span class="string">"/dev/sdk"</span></span><br><span class="line">    <span class="string">"4"</span> = <span class="string">"/dev/sdl"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">variable &quot;region&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  description &#x3D; &quot;请输入创建的region&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;region_az&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  description &#x3D; &quot;请输入创建资源所在的AZ&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;instance_type&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  default     &#x3D; &quot;t3.nano&quot;</span><br><span class="line">  #default     &#x3D; &quot;m5.large&quot;</span><br><span class="line">  description &#x3D; &quot;请输入创建的实例类型&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;tag_name&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  description &#x3D; &quot;请输入机器的名字&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;tag_project&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  description &#x3D; &quot;请输入计费的tag标签&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;storage_number&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  default     &#x3D; 1</span><br><span class="line">  description &#x3D; &quot;请输入要创建的硬盘数量&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;key_name&quot; &#123;</span><br><span class="line">  type        &#x3D; string</span><br><span class="line">  default     &#x3D; &quot;xxx&quot;</span><br><span class="line">  description &#x3D; &quot;请输入连接服务器使用的ssh名字&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;iams&quot; &#123;</span><br><span class="line">  type    &#x3D; map</span><br><span class="line">  default &#x3D; &#123;</span><br><span class="line">    &quot;us-east-2&quot; &#x3D; &quot;ami-xxx&quot;</span><br><span class="line">    &quot;ap-northeast-1&quot; &#x3D; &quot;ami-xxx&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;vpcs&quot; &#123;</span><br><span class="line">  type    &#x3D; map</span><br><span class="line">  default &#x3D; &#123;</span><br><span class="line">    &quot;us-east-2&quot; &#x3D; &quot;vpc-xxx&quot;</span><br><span class="line">    &quot;ap-northeast-1&quot; &#x3D; &quot;vpc-xxx&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;subnetes&quot; &#123;</span><br><span class="line">  type    &#x3D; map</span><br><span class="line">  default &#x3D; &#123;</span><br><span class="line">    &quot;us-east-2a&quot; &#x3D; &quot;subnet-xxx&quot;</span><br><span class="line">    &quot;us-east-2b&quot; &#x3D; &quot;subnet-xxx&quot;</span><br><span class="line">    &quot;us-east-2c&quot; &#x3D; &quot;subnet-xxx&quot;</span><br><span class="line">    &quot;ap-northeast-1a&quot; &#x3D; &quot;subnet-xxx&quot;</span><br><span class="line">    &quot;ap-northeast-1c&quot; &#x3D; &quot;subnet-xxx&quot;</span><br><span class="line">    &quot;ap-northeast-1d&quot; &#x3D; &quot;subnet-xxx&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">variable &quot;storage_dev&quot; &#123;</span><br><span class="line">  type    &#x3D; map</span><br><span class="line">  default &#x3D; &#123;</span><br><span class="line">    &quot;0&quot; &#x3D; &quot;&#x2F;dev&#x2F;sdh&quot;</span><br><span class="line">    &quot;1&quot; &#x3D; &quot;&#x2F;dev&#x2F;sdi&quot;</span><br><span class="line">    &quot;2&quot; &#x3D; &quot;&#x2F;dev&#x2F;sdj&quot;</span><br><span class="line">    &quot;3&quot; &#x3D; &quot;&#x2F;dev&#x2F;sdk&quot;</span><br><span class="line">    &quot;4&quot; &#x3D; &quot;&#x2F;dev&#x2F;sdl&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="main-tf"><a href="#main-tf" class="headerlink" title="main.tf"></a>main.tf</h2><p>主配置文件,声明使用的认证信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">provider &quot;aws&quot; &#123;</span><br><span class="line">  region                  &#x3D; var.region</span><br><span class="line">  shared_credentials_file &#x3D; &quot;&#x2F;opt&#x2F;terraform&#x2F;aws&#x2F;.creds&#x2F;xxxx&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -529,7 +567,7 @@ $(function() {
   <p><span>本文标题:</span><a href="/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/">Terraform之申请AWS的EC2</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
   <p><span>发布时间:</span>2020年06月24日 - 21:06</p>
-  <p><span>最后更新:</span>2020年06月24日 - 21:06</p>
+  <p><span>最后更新:</span>2020年06月24日 - 22:06</p>
   <p><span>原始链接:</span><a href="/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/" title="Terraform之申请AWS的EC2">https://shuke163.github.io/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/"  aria-label="复制成功！"></i></span>
   </p>
@@ -575,7 +613,7 @@ $(function() {
   <p><span>本文标题:</span><a href="/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/">Terraform之申请AWS的EC2</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
   <p><span>发布时间:</span>2020年06月24日 - 21:06</p>
-  <p><span>最后更新:</span>2020年06月24日 - 21:06</p>
+  <p><span>最后更新:</span>2020年06月24日 - 22:06</p>
   <p><span>原始链接:</span><a href="/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/" title="Terraform之申请AWS的EC2">https://shuke163.github.io/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2020/06/24/Terraform%E4%B9%8B%E7%94%B3%E8%AF%B7AWS%E7%9A%84EC2/"  aria-label="复制成功！"></i></span>
   </p>
@@ -606,6 +644,12 @@ $(function() {
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/infra/" <i class="fa fa-tag"></i> infra</a>
+          
+        </div>
       
 
       
@@ -715,7 +759,7 @@ $(function() {
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-count">40</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -726,7 +770,7 @@ $(function() {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -856,7 +900,7 @@ LANG-HTML | COPY
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共270.2k字</span>
+  <span class="post-count">博客全站共270.3k字</span>
 </div>
 
 <span>本站已运行<span id="htmer_time"></span></span>
