@@ -412,9 +412,9 @@
     <link href="https://shuke163.github.io/2020/04/30/%E6%8E%A8%E8%8D%90%E5%87%A0%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84DevOps%E5%B0%8F%E5%B7%A5%E5%85%B7/"/>
     <id>https://shuke163.github.io/2020/04/30/%E6%8E%A8%E8%8D%90%E5%87%A0%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84DevOps%E5%B0%8F%E5%B7%A5%E5%85%B7/</id>
     <published>2020-04-30T15:26:36.000Z</published>
-    <updated>2020-06-21T09:24:54.628Z</updated>
+    <updated>2020-06-27T14:11:03.601Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h2><ol><li>文档管理</li></ol><ul><li>wiki</li><li>MM-wiki</li><li>gitbook(推荐)</li><li>Docusaurus(推荐)</li><li>hexo</li><li>Docsite(推荐)</li></ul><ol start="2"><li>bug管理</li></ol><ul><li>git-bug</li><li>蝉道</li><li>Readme</li></ul><ol start="3"><li>code review</li></ol><ul><li>Phabricator(PHA)</li></ul><ol start="4"><li>markdown 绘图工具</li></ol><ul><li>PlantUML</li><li>Graphviz</li><li>Mermaid</li></ul>]]></content>
+    <content type="html"><![CDATA[<h2 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h2><ol><li>文档管理</li></ol><ul><li>wiki</li><li>MM-wiki</li><li>gitbook(推荐)</li><li>Docusaurus(推荐)</li><li>hexo</li><li>Docsite(推荐)</li></ul><ol start="2"><li>bug管理</li></ol><ul><li>git-bug</li><li>蝉道</li><li>Readme</li></ul><ol start="3"><li>code review</li></ol><ul><li>Phabricator(PHA)</li></ul><ol start="4"><li>markdown 绘图工具</li></ol><ul><li>PlantUML</li><li>Graphviz</li><li>Mermaid</li></ul><ol start="5"><li>k8s</li></ol><ul><li>wayne</li><li>Lens</li><li>IcePanel</li></ul>]]></content>
     
     <summary type="html">
     
