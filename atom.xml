@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://shuke163.github.io/"/>
-  <updated>2020-07-03T01:32:06.639Z</updated>
+  <updated>2020-07-03T10:33:18.083Z</updated>
   <id>https://shuke163.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>go interface</title>
+    <link href="https://shuke163.github.io/2020/07/03/go-interface/"/>
+    <id>https://shuke163.github.io/2020/07/03/go-interface/</id>
+    <published>2020-07-03T10:20:41.000Z</published>
+    <updated>2020-07-03T10:33:18.083Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="接口的定义"><a href="#接口的定义" class="headerlink" title="接口的定义"></a>接口的定义</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type 接口名 interface &#123;</span><br><span class="line">    方法名1(参数1, 参数2...)(返回值1, 返回值2...)</span><br><span class="line">    方法名2(参数1, 参数2...)(返回值1, 返回值2...)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="example"><a href="#example" class="headerlink" title="example"></a>example</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 接口类型</span><br><span class="line">type speaker interface &#123;</span><br><span class="line">speak() &#x2F;&#x2F; 只要实现了speak方法的变量都是speaker类型</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type cat struct &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type dog struct &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type car interface &#123;</span><br><span class="line">runCar()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type falali struct &#123;</span><br><span class="line">brand string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (f falali) runCar() &#123;</span><br><span class="line">fmt.Printf(&quot;%s速度70迈~\n&quot;, f.brand)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type baoshijie struct &#123;</span><br><span class="line">brand string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (f baoshijie) runCar() &#123;</span><br><span class="line">fmt.Printf(&quot;%s速度700迈~\n&quot;, f.brand)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func drive(c car) &#123;</span><br><span class="line">c.runCar()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (c cat) speak() &#123;</span><br><span class="line">fmt.Println(&quot;喵喵喵...&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (d dog) speak() &#123;</span><br><span class="line">fmt.Println(&quot;汪汪汪...&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func run(x speaker) &#123;</span><br><span class="line">&#x2F;&#x2F; 接收一个参数，传进来什么，就run什么</span><br><span class="line">x.speak()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 在编程中会遇到以下场景: 我不关心一个变量是什么类型，只关心调用它的方法</span><br><span class="line">func main() &#123;</span><br><span class="line">var c1 cat</span><br><span class="line">var d1 dog</span><br><span class="line"></span><br><span class="line">run(c1)</span><br><span class="line">run(d1)</span><br><span class="line"></span><br><span class="line">var f falali</span><br><span class="line">var b baoshijie</span><br><span class="line">drive(f)</span><br><span class="line">drive(b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      go interface
+    
+    </summary>
+    
+    
+      <category term="GO" scheme="https://shuke163.github.io/categories/GO/"/>
+    
+    
+      <category term="GO" scheme="https://shuke163.github.io/tags/GO/"/>
+    
+  </entry>
   
   <entry>
     <title>zerorpc框架尝鲜</title>
@@ -450,29 +473,6 @@
     
     
       <category term="Seafile" scheme="https://shuke163.github.io/tags/Seafile/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>推荐几个好用的DevOps小工具</title>
-    <link href="https://shuke163.github.io/2020/04/30/%E6%8E%A8%E8%8D%90%E5%87%A0%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84DevOps%E5%B0%8F%E5%B7%A5%E5%85%B7/"/>
-    <id>https://shuke163.github.io/2020/04/30/%E6%8E%A8%E8%8D%90%E5%87%A0%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84DevOps%E5%B0%8F%E5%B7%A5%E5%85%B7/</id>
-    <published>2020-04-30T15:26:36.000Z</published>
-    <updated>2020-06-27T14:11:03.601Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h2><ol><li>文档管理</li></ol><ul><li>wiki</li><li>MM-wiki</li><li>gitbook(推荐)</li><li>Docusaurus(推荐)</li><li>hexo</li><li>Docsite(推荐)</li></ul><ol start="2"><li>bug管理</li></ol><ul><li>git-bug</li><li>蝉道</li><li>Readme</li></ul><ol start="3"><li>code review</li></ol><ul><li>Phabricator(PHA)</li></ul><ol start="4"><li>markdown 绘图工具</li></ol><ul><li>PlantUML</li><li>Graphviz</li><li>Mermaid</li></ul><ol start="5"><li>k8s</li></ol><ul><li>wayne</li><li>Lens</li><li>IcePanel</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      推荐几个好用的DevOps小工具
-    
-    </summary>
-    
-    
-      <category term="DevOps" scheme="https://shuke163.github.io/categories/DevOps/"/>
-    
-    
-      <category term="DevOps" scheme="https://shuke163.github.io/tags/DevOps/"/>
     
   </entry>
   

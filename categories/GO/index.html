@@ -502,7 +502,7 @@ $(function() {
               
                 <a href="/archives%7C%7C%20history">
               
-                  <span class="site-state-item-count">149</span>
+                  <span class="site-state-item-count">150</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -638,7 +638,7 @@ LANG-HTML | COPY
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共271.4k字</span>
+  <span class="post-count">博客全站共271.7k字</span>
 </div>
 
 <span>本站已运行<span id="htmer_time"></span></span>
@@ -1422,7 +1422,23 @@ $(function() {
   <script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>
-   },
+ud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
               error: function(counter, error) {
                 console.log('Failed to save Visitor num, with error message: ' + error.message);
               }
