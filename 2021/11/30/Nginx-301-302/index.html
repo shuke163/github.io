@@ -81,14 +81,14 @@
 
 
 
-<meta name="description" content="Nginx 301 302">
+<meta name="description" content="Nginx相关知识点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nginx 301 302">
+<meta property="og:title" content="Nginx相关知识点">
 <meta property="og:url" content="https://shuke163.github.io/2021/11/30/Nginx-301-302/index.html">
 <meta property="og:site_name" content="shuke&#39;s Blog">
-<meta property="og:description" content="Nginx 301 302">
+<meta property="og:description" content="Nginx相关知识点">
 <meta property="article:published_time" content="2021-11-30T06:52:56.000Z">
-<meta property="article:modified_time" content="2021-11-30T06:54:32.637Z">
+<meta property="article:modified_time" content="2021-11-30T07:06:56.515Z">
 <meta property="article:author" content="shuke">
 <meta property="article:tag" content="WEB">
 <meta name="twitter:card" content="summary">
@@ -127,7 +127,7 @@
 
 
 
-  <title>Nginx 301 302 | shuke's Blog</title>
+  <title>Nginx相关知识点 | shuke's Blog</title>
   
 
 
@@ -415,7 +415,7 @@ $(function() {
 
         
         
-          <h1 class="post-title" itemprop="name headline">Nginx 301 302</h1>
+          <h1 class="post-title" itemprop="name headline">Nginx相关知识点</h1>
         
 
         <div class="post-meta">
@@ -446,7 +446,7 @@ $(function() {
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">字数统计:</span>
-            <span class="post-count">505(字)</span>
+            <span class="post-count">567(字)</span>
             </span>
 
             <span class="post-time">
@@ -455,7 +455,7 @@ $(function() {
             <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">阅读时长≈</span>
-            <span class="post-count">1(分)</span>
+            <span class="post-count">2(分)</span>
             </span>
 
               <span class="post-meta-item-icon">
@@ -494,7 +494,7 @@ $(function() {
 
           
           
-             <span id="/2021/11/30/Nginx-301-302/" class="leancloud_visitors" data-flag-title="Nginx 301 302">
+             <span id="/2021/11/30/Nginx-301-302/" class="leancloud_visitors" data-flag-title="Nginx相关知识点">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -511,7 +511,7 @@ $(function() {
 
           
               <div class="post-description">
-                  Nginx 301 302
+                  Nginx相关知识点
               </div>
           
 
@@ -528,7 +528,8 @@ $(function() {
       
 
       
-        <p>什么是301永久重定向?<br>301跳转也叫301重定向，也叫301跳转，也叫301永久重定向，是网站建设过程中的一个功能。一般用于2个域名同时指向同一个网站。一般来说，利用跳转，对网站的排名没有影响，但不会转移全部权重，只能说把损失降到最低。<br>302跳转就网址重定向的一种，它区别于301跳转，301是网址永久重定向，302则是网址的临时定向。302转向或者302重定向（302 redirect）指的是当浏览器要求一个网页的时候，主机所返回的状态码。302状态码的意义是暂时转向到另外一个网址。</p>
+        <h3 id="什么是301永久重定向"><a href="#什么是301永久重定向" class="headerlink" title="什么是301永久重定向?"></a>什么是301永久重定向?</h3><p>301跳转也叫301重定向，也叫301跳转，也叫301永久重定向，是网站建设过程中的一个功能。一般用于2个域名同时指向同一个网站。一般来说，利用跳转，对网站的排名没有影响，但不会转移全部权重，只能说把损失降到最低。</p>
+<h3 id="什么是302临时重定向？"><a href="#什么是302临时重定向？" class="headerlink" title="什么是302临时重定向？"></a>什么是302临时重定向？</h3><p>302跳转就网址重定向的一种，它区别于301跳转，301是网址永久重定向，302则是网址的临时定向。302转向或者302重定向（302 redirect）指的是当浏览器要求一个网页的时候，主机所返回的状态码。302状态码的意义是暂时转向到另外一个网址。</p>
 <p>所以当我们在做页面跳转的时分必定要正视，利用的不能够是302重定向，而是301重定向。</p>
 <p>server {<br>    listen 80;<br>    server_name <a href="http://www.shuke.com" target="_blank" rel="noopener">www.shuke.com</a>;<br>    rewrite ^/(.*) <a href="http://shuke.edu.com" target="_blank" rel="noopener">http://shuke.edu.com</a> permanent; # 301<br>    access_log off;<br>}</p>
 <p>server {<br>    listen 80;<br>    server_name <a href="http://www.shuke.com" target="_blank" rel="noopener">www.shuke.com</a>;<br>    rewrite ^/(.*) <a href="http://shuke.edu.com" target="_blank" rel="noopener">http://shuke.edu.com</a> redirect; # 302<br>    access_log off;<br>}</p>
@@ -543,6 +544,14 @@ $(function() {
 <p>条件和目录判断<br>-f和!-f为判断文件是否存在<br>-d和!-d为判断是否存在文件<br>-e和!-e为判断是否存在文件或目录<br>-x和!-x为判断是否有执行权限</p>
 <p>判断文件或目录不存在的时候进行重定向操作<br>if (!-e $request_filename) {<br>    proxy_pass <a href="http://127.0.0.1" target="_blank" rel="noopener">http://127.0.0.1</a>;<br>}<br>return</p>
 <p>设置NGINX防盗链<br>location ~* .(gif|jpg|png|swf|flv) {<br>    valid_referers none blocked <a href="http://www.test.com" target="_blank" rel="noopener">www.test.com</a> <a href="http://www.shuke01.com" target="_blank" rel="noopener">www.shuke01.com</a>;<br>    if ($valiad_referers) {<br>        return 404;<br>    }<br>}</p>
+<h3 id="NGINX-常见负载均衡"><a href="#NGINX-常见负载均衡" class="headerlink" title="NGINX 常见负载均衡"></a>NGINX 常见负载均衡</h3><ul>
+<li>轮训 默认模式</li>
+<li>weight 权重方式</li>
+<li>ip_hash 依据IP分配方式</li>
+<li>least_conn 最少连接数</li>
+<li>fair(第三方) 响应时间方式</li>
+<li>url_hash(第三方) 依据URL分配方式</li>
+</ul>
 
       
     </div>
@@ -558,11 +567,11 @@ $(function() {
   <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
-  <p><span>本文标题:</span><a href="/2021/11/30/Nginx-301-302/">Nginx 301 302</a></p>
+  <p><span>本文标题:</span><a href="/2021/11/30/Nginx-301-302/">Nginx相关知识点</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
   <p><span>发布时间:</span>2021年11月30日 - 14:11</p>
-  <p><span>最后更新:</span>2021年11月30日 - 14:11</p>
-  <p><span>原始链接:</span><a href="/2021/11/30/Nginx-301-302/" title="Nginx 301 302">https://shuke163.github.io/2021/11/30/Nginx-301-302/</a>
+  <p><span>最后更新:</span>2021年11月30日 - 15:11</p>
+  <p><span>原始链接:</span><a href="/2021/11/30/Nginx-301-302/" title="Nginx相关知识点">https://shuke163.github.io/2021/11/30/Nginx-301-302/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2021/11/30/Nginx-301-302/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
@@ -604,11 +613,11 @@ $(function() {
   <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
-  <p><span>本文标题:</span><a href="/2021/11/30/Nginx-301-302/">Nginx 301 302</a></p>
+  <p><span>本文标题:</span><a href="/2021/11/30/Nginx-301-302/">Nginx相关知识点</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 shuke 的个人博客">shuke</a></p>
   <p><span>发布时间:</span>2021年11月30日 - 14:11</p>
-  <p><span>最后更新:</span>2021年11月30日 - 14:11</p>
-  <p><span>原始链接:</span><a href="/2021/11/30/Nginx-301-302/" title="Nginx 301 302">https://shuke163.github.io/2021/11/30/Nginx-301-302/</a>
+  <p><span>最后更新:</span>2021年11月30日 - 15:11</p>
+  <p><span>原始链接:</span><a href="/2021/11/30/Nginx-301-302/" title="Nginx相关知识点">https://shuke163.github.io/2021/11/30/Nginx-301-302/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://shuke163.github.io/2021/11/30/Nginx-301-302/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
@@ -717,8 +726,17 @@ $(function() {
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -814,6 +832,22 @@ $(function() {
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是301永久重定向"><span class="nav-text">什么是301永久重定向?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是302临时重定向？"><span class="nav-text">什么是302临时重定向？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NGINX-常见负载均衡"><span class="nav-text">NGINX 常见负载均衡</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -869,7 +903,7 @@ LANG-HTML | COPY
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共273.8k字</span>
+  <span class="post-count">博客全站共273.9k字</span>
 </div>
 
 <span>本站已运行<span id="htmer_time"></span></span>
